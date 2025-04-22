@@ -1,3 +1,5 @@
+import java.util.Date;
+
 public class Voucher {
     private String id;
     private int sisaPemakaian;

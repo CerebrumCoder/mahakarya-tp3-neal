@@ -1,5 +1,3 @@
-import user.User;
-
 public class Penjual extends User {
     private ProductRepository productRepo; // Menyimpan seluruh Product yang dimiliki penjual
 
@@ -11,5 +9,11 @@ public class Penjual extends User {
 
     public ProductRepository getRepo() {
         return productRepo;
+    }
+
+    @Override
+    public void getRiwayatTransaksi(Transaksi[] transaksi) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRiwayatTransaksi'");
     }
 }

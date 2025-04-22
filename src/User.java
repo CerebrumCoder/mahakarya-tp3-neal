@@ -1,6 +1,6 @@
-package user;
 
 import java.util.UUID;
+
 
 public abstract class User {
     private UUID id; // Identifier unik dari User

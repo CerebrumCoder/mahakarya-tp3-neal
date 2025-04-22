@@ -1,4 +1,4 @@
-import user.User;
+
 
 public class Pembeli extends User {
     private Cart keranjang; // 1-to-1 relationship, satu pembeli memiliki satu cart
@@ -10,5 +10,11 @@ public class Pembeli extends User {
 
     public Cart getCart() {
         return keranjang;
+    }
+
+    @Override
+    public void getRiwayatTransaksi(Transaksi[] transaksi) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRiwayatTransaksi'");
     }
 }
