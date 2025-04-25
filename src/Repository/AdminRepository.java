@@ -2,7 +2,7 @@ package Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import Components.Admin;
+import Models.Admin;
 
 
 public class AdminRepository {

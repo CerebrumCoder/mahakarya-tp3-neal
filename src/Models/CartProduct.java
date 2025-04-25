@@ -1,4 +1,4 @@
-package Components;
+package Models;
 import java.util.UUID;
 
 public class CartProduct {

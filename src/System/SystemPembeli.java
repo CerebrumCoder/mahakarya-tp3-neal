@@ -1,7 +1,7 @@
 package System;
 import java.util.Scanner;
 
-import Components.Pembeli;
+import Models.Pembeli;
 import Main.Burhanpedia;
 
 public class SystemPembeli implements SystemMenu {
@@ -18,7 +18,7 @@ public class SystemPembeli implements SystemMenu {
     public String showMenu() {
         return """
                 === Menu Pembeli ===
-                1. Cel Saldo
+                1. Cek Saldo
                 2. Topup Saldo
                 3. Cek Daftar Barang
                 4. Tambah Barang ke Keranjang

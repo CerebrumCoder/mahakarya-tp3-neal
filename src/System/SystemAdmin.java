@@ -1,7 +1,7 @@
 package System;
 import java.util.Scanner;
 
-import Components.Admin;
+import Models.Admin;
 import Main.Burhanpedia;
 
 public class SystemAdmin implements SystemMenu {

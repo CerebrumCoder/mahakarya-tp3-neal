@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import Components.Product;
+import Models.Product;
 
 public class ProductRepository {
     private String namaToko; // Nama toko penjual

@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "MainMenuSystem",
+        "request": "launch",
+        "mainClass": "Main.MainMenuSystem",
+        "projectName": "tp3_acfd4c12"
+      },
+      {
+        "type": "java",
+        "name": "Run MainMenuSystem",
+        "request": "launch",
+        "mainClass": "Main.MainMenuSystem",
+        "projectName": "tugas-pemrograman"
+      }
+    ]
+  }

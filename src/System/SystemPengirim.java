@@ -1,7 +1,7 @@
 package System;
 import java.util.Scanner;
 
-import Components.Pengirim;
+import Models.Pengirim;
 import Main.Burhanpedia;
 
 public class SystemPengirim implements SystemMenu {

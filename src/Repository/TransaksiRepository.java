@@ -2,7 +2,7 @@ package Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import Components.Transaksi;
+import Models.Transaksi;
 
 public class TransaksiRepository {
     private List<Transaksi> transaksiList; // Menyimpan seluruh objek Transaksi

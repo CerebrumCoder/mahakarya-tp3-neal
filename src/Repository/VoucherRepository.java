@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import Components.Voucher;
+import Models.Voucher;
 
 public class VoucherRepository implements DiskonRepository<Voucher> {
     private List<Voucher> voucherList; // Menyimpan seluruh objek Voucher

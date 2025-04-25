@@ -1,4 +1,4 @@
-package Components;
+package Models;
 
 
 public class Pembeli extends User {

@@ -2,7 +2,7 @@ package Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import Components.User;
+import Models.User;
 
 public class UserRepository {
     private List<User> userList; // Menyimpan seluruh objek User

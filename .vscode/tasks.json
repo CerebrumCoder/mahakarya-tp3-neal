@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Clean and Compile Java",
+      "type": "shell",
+      "command": "sh",
+      "args": [
+        "-c",
+        "rm -rf bin && javac -d bin -sourcepath src $(find src -name '*.java')"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

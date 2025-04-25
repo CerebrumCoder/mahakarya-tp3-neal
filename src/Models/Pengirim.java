@@ -1,4 +1,4 @@
-package Components;
+package Models;
 public class Pengirim extends User {
 
     public Pengirim(String username, String password) {

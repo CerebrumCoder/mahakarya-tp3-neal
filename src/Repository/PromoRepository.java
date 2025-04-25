@@ -5,7 +5,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-import Components.Promo;
+import Models.Promo;
 
 public class PromoRepository implements DiskonRepository<Promo> {
     private List<Promo> promoList; // Menyimpan seluruh objek Promo
