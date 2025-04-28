@@ -27,7 +27,7 @@ public class Burhanpedia {
     }
 
     public Burhanpedia() {
-        this.userRepo = new UserRepository();  
+        this.userRepo = new UserRepository();
         this.adminRepo = new AdminRepository();
         this.voucherRepo = new VoucherRepository();
         this.promoRepo = new PromoRepository();

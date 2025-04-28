@@ -1,4 +1,5 @@
 package System;
+
 import java.util.Scanner;
 
 import Models.Pembeli;
@@ -50,7 +51,7 @@ public class SystemPembeli implements SystemMenu {
                     System.out.println("Logout berhasil.");
                     return;
                 }
-            
+
                 default -> System.out.println("Pilihan tidak valid.");
             }
         }

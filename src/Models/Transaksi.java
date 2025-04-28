@@ -16,7 +16,7 @@ public class Transaksi {
     private long biayaOngkir; // Biaya ongkir berdasarkan jenis transaksi
     private List<TransactionStatus> historyStatus; // History status pengiriman dari transaksi
 
-    public Transaksi(String id, String namePembeli, String namePenjual, String namePengirim, String idDiskon, 
+    public Transaksi(String id, String namePembeli, String namePenjual, String namePengirim, String idDiskon,
                      List<TransactionProduct> produkDibeli, String jenisTransaksi) {
         this.id = id;
         this.namePembeli = namePembeli;

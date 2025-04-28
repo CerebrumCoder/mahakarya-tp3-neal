@@ -1,6 +1,5 @@
 package Models;
 
-
 public class Pembeli extends User {
     private Cart keranjang; // 1-to-1 relationship, satu pembeli memiliki satu cart
 

@@ -1,6 +1,5 @@
 package Models;
 
-
 public class Admin {
     private String username; // Username dari admin
     private String password; // Password dari admin
