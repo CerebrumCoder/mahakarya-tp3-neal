@@ -4,6 +4,7 @@ import java.util.Date;
 public class TransactionStatus {
     private Date timestamp; // Tanggal status transaksi
     private String status; // Status transaksi
+    private int amount;
 
     public TransactionStatus(String status) {
         this.timestamp = new Date(); // Set timestamp ke waktu saat ini
