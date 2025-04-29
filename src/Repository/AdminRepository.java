@@ -43,7 +43,7 @@ public class AdminRepository {
         return adminList.toArray(new Admin[0]);
     }
 
-    // Method untuk mengecek apakah username sudah ada
+    // Method untuk mengecek apakah username sudah ada. Ini sepertinya udah engga dipake lagi
     public boolean isUsernameExists(String username) {
         for (Admin admin : adminList) {
             if (admin.getUsername().equalsIgnoreCase(username)) {
@@ -54,7 +54,7 @@ public class AdminRepository {
         return false;
     }
 
-    // Method untuk login
+    // Method untuk login. Ini sepertinya udah engga dipake lagi
     public String login(String username, String password) {
         for (Admin admin : adminList) {
             if (admin.getUsername().equalsIgnoreCase(username)) {

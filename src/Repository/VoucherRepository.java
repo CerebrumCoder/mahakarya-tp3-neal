@@ -1,5 +1,7 @@
 package Repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +19,7 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
     public Voucher getById(String id) {
         for (Voucher voucher : voucherList) {
             if (voucher.getId().equals(id)) {
-                return voucher;
+                return voucher; // Jika ditemukan objek Voucher sesuai ID, maka akan mengembalikan objek Voucher tersebut
             }
         }
         return null; // Jika tidak ditemukan, kembalikan null
@@ -30,13 +32,32 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
 
     @Override
     public void generate() {
-        // Tidak digunakan karena ada parameter tambahan di metode generate(int, Date)
-        throw new UnsupportedOperationException("Gunakan generate(int, Date) untuk membuat voucher.");
+        // Tidak digunakan karena ada parameter tambahan di metode generate(String)
+        throw new UnsupportedOperationException("Gunakan generate(String) untuk membuat voucher.");
     }
 
     public void generate(int usageLimit, Date expiryDate) {
         String id = "VCR-" + (voucherList.size() + 1); // Generate ID unik untuk voucher
         Voucher newVoucher = new Voucher(id, usageLimit, expiryDate);
         voucherList.add(newVoucher); // Tambahkan voucher baru ke daftar
+    }
+
+    // Method generate dengan parameter String untuk batas tanggal waktu pemakaian. Ini kurang tahu dipakai ato engga
+    // ini ada sesuai diagram class di file TP3
+    public void generate(String expiryDateInput) {
+        try {
+            // Parse input tanggal menjadi objek Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date expiryDate = dateFormat.parse(expiryDateInput);
+
+            // Generate ID unik untuk voucher
+            String id = "VCR-" + (voucherList.size() + 1);
+
+            // Buat voucher baru dengan batas waktu pemakaian
+            Voucher newVoucher = new Voucher(id, 1, expiryDate); // Default sisa pemakaian = 1
+            voucherList.add(newVoucher); // Tambahkan voucher baru ke daftar
+        } catch (ParseException e) {
+            System.out.println("Format tanggal tidak valid. Gunakan format yyyy-MM-dd.");
+        }
     }
 }
