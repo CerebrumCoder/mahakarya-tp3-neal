@@ -11,7 +11,7 @@ public class Penjual extends User {
     }
 
     public ProductRepository getRepo() {
-        return productRepo;
+        return this.productRepo;
     }
 
     @Override

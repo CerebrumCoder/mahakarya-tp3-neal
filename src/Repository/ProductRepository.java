@@ -26,7 +26,7 @@ public class ProductRepository {
 
     // Method untuk mendapatkan nama toko
     public String getNamaToko() {
-        return namaToko;
+        return this.namaToko;
     }
 
     // Method untuk mendapatkan daftar produk

@@ -11,11 +11,11 @@ public class CartProduct {
     }
 
     public UUID getProductId() {
-        return productId;
+        return this.productId;
     }
 
     public int getProductAmount() {
-        return amount;
+        return this.amount;
     }
 
     public void setAmount(int amount) {

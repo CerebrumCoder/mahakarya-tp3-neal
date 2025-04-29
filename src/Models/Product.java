@@ -15,19 +15,19 @@ public class Product {
     }
 
     public UUID getProductId() {
-        return productId;
+        return this.productId;
     }
 
     public String getProductName() {
-        return name;
+        return this.name;
     }
 
     public int getProductStock() {
-        return stok;
+        return this.stok;
     }
 
     public long getProductPrice() {
-        return price;
+        return this.price;
     }
 
     public void setProductStock(int stok) {

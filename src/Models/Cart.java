@@ -23,6 +23,7 @@ public class Cart {
     }
 
     // Method untuk menghapus suatu Product di dalam Cart
+    // dan mengembalikan String yang berupa pesan sukses atau error
     public String deleteFromCart(UUID productId) {
         for (CartProduct product : keranjang) {
             if (product.getProductId().equals(productId)) {

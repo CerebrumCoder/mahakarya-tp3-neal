@@ -9,7 +9,7 @@ public class Pembeli extends User {
     }
 
     public Cart getCart() {
-        return keranjang;
+        return this.keranjang;
     }
 
     @Override

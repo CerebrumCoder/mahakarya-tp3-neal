@@ -1,6 +1,8 @@
 package Repository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import Models.Admin;
 
 
@@ -14,6 +16,15 @@ public class AdminRepository {
         adminList.add(new Admin("admin", "admin"));
         adminList.add(new Admin("root", "toor"));
         adminList.add(new Admin("dekdepe", "aku_CinTaJaVa"));
+    }
+
+    public Admin getUserById(UUID id) {
+        for (Admin admin : adminList) {
+            if (admin.getId().equals(id)) {
+                return admin;
+            }
+        }
+        return null; // Return null jika admin tidak ditemukan
     }
 
     // Method untuk mendapatkan admin berdasarkan username
