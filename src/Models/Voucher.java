@@ -6,6 +6,9 @@ public class Voucher {
     private int sisaPemakaian;
     private Date berlakuHingga;
 
+    /**
+     * Catatan, jika transaksi dilakukan pada tanggal yang sama dengan
+     * batas tanggal berlaku voucher, maka voucher masih bisa digunakan*/
     public Voucher(String id, int sisaPemakaian, Date berlakuHingga) {
         this.id = id;
         this.sisaPemakaian = sisaPemakaian;

@@ -19,7 +19,7 @@ public class PromoRepository implements DiskonRepository<Promo> {
     public Promo getById(String id) {
         for (Promo promo : promoList) {
             if (promo.getId().equals(id)) {
-                return promo;
+                return promo; // Jika terdapat objek Promo yang sesuai dengan ID, maka akan mengembalikan objek Promo tersebut
             }
         }
         return null; // Jika tidak ditemukan, kembalikan null
