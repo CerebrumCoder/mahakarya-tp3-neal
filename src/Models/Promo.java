@@ -6,6 +6,8 @@ public class Promo {
     private int usageLimit;
     private Date berlakuHingga; // Tanggal expired dari promo
 
+    // Jika transaksi dilakukan pada tanggal yang sama dengan
+    // batas tanggal berlaku promo, maka promo masih bisa digunakan
     public Promo(String id, Date berlakuHingga) {
         this.id = id;
         this.berlakuHingga = berlakuHingga;
@@ -18,11 +20,11 @@ public class Promo {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public Date getBerlakuHingga() {
-        return berlakuHingga;
+        return this.berlakuHingga;
     }
 
     public void setBerlakuHingga(Date berlakuHingga) {
