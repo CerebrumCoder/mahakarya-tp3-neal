@@ -11,11 +11,11 @@ public class TransactionProduct {
     }
 
     public UUID getProductId() {
-        return productId;
+        return this.productId;
     }
 
     public int getProductAmount() {
-        return amount;
+        return this.amount;
     }
 }
 
