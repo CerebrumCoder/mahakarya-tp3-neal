@@ -1,6 +1,9 @@
 package Main;
+import java.util.Arrays;
 import java.util.Scanner;
 
+import Models.Pembeli;
+import Models.Pengirim;
 import Models.Penjual;
 import System.SystemAdmin;
 import System.SystemMenu;
@@ -77,27 +80,54 @@ public class MainMenuSystem implements SystemMenu {
         System.out.print("Masukkan password: ");
         String password = input.next();
 
-        System.out.println("\nPilih role:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Batalkan register\n");
-        System.out.print("Perintah : ");
-        int roleChoice = input.nextInt();
+        // Berjalan loop
+        boolean aktif = true;
+        while (aktif) {
+            System.out.println("\nPilih role:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Batalkan register\n");
+            System.out.print("Perintah : ");
+            int roleChoice = input.nextInt();
 
-        // Penjual
-        if (roleChoice == 1) {
-            System.out.print("Masukkan nama toko: ");
-            String namaToko = input.next();
-            // Buat penjualBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
-            // sesuai dia itu Pembeli/Penjual/Pengirim
+            // Penentuan roleChoice berdasarkan pilihan dari pengguna
+            // Penjual baru
+            if (roleChoice == 1) {
+                if (mainRepository.getUserRepo().getUserByName(username) != null && mainRepository.getUserRepo().getUserByName(username).getRole().equals("Penjual")) {
+                    System.out.println("Role sudah ada. Silahkan pilih role lain!");
+                } else {
+                    System.out.print("Masukkan nama toko: ");
+                    String namaToko = input.next();
+                    // Buat penjualBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
+                    // sesuai dia itu Pembeli/Penjual/Pengirim
 
-            if (!mainRepository.getUserRepo().getUserRoles(username).equals(username)) {
-                Penjual penjualBaru = new Penjual(username, password, namaToko);
-                mainRepository.getUserRepo().addUser(penjualBaru);
+                    Penjual penjualBaru = new Penjual(username, password, namaToko);
+                    mainRepository.getUserRepo().addUser(penjualBaru);
 
-                System.out.println("Registrasi akun penjual berhasil!");
+                    System.out.println("Registrasi akun penjual berhasil!");
+                    aktif = false;
+                }
             }
-            System.out.println("Role sudah ada. Silahkan pilih role lain!");
-
-        } else {
-            System.out.println("Pilihan tidak valid!");
+            // Pembeli baru
+            else if (roleChoice == 2) {
+                // Buat pembeliBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
+                // sesuai dia itu Pembeli/Penjual/Pengirim
+                Pembeli pembeliBaru = new Pembeli(username, password);
+                mainRepository.getUserRepo().addUser(pembeliBaru);
+                System.out.println("Registrasi akun pembeli berhasil!");
+                aktif = false;
+            }
+            // Pengirim baru
+            else if (roleChoice == 3) {
+                // Buat pengirimBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
+                Pengirim pengirimBaru = new Pengirim(username, password);
+                mainRepository.getUserRepo().addUser(pengirimBaru);
+                System.out.println("Registrasi akun pengirim berhasil!");
+                aktif = false;
+            }
+            // Batalkan register
+            else if (roleChoice == 4) {
+                System.out.println("Registrasi dibatalkan, kembali ke menu utama...");
+                aktif = false;
+            }
+            System.out.println(Arrays.toString(mainRepository.getUserRepo().getAll()));
         }
 
     }
@@ -125,6 +155,7 @@ public class MainMenuSystem implements SystemMenu {
         System.out.println("=============================================================");
         System.out.println("============== Selamat datang di Burhanpedia! ===============");
         System.out.println("=============================================================");
+
         // Initialize the mainRepository before passing it to MainMenuSystem
         mainRepository = new Burhanpedia(); // Assuming Burhanpedia has a default constructor
         MainMenuSystem systemMenu = new MainMenuSystem(mainRepository);

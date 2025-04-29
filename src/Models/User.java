@@ -30,7 +30,7 @@ public abstract class User {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -38,7 +38,7 @@ public abstract class User {
     }
 
     public String getRole() {
-        return role;
+        return this.role;
     }
 
     public String getBalance() {
