@@ -20,7 +20,7 @@ public class SystemPembeli implements SystemMenu {
         return """
                 === Menu Pembeli ===
                 1. Cek Saldo
-                2. Topup Saldo
+                2. Top Up Saldo
                 3. Cek Daftar Barang
                 4. Tambah Barang ke Keranjang
                 5. Checkout Keranjang
@@ -92,6 +92,8 @@ public class SystemPembeli implements SystemMenu {
         // Implementasi untuk melihat laporan pengeluaran
     }
 
+    /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
+     * keterangan seluruh transaksi-transaksi yang dibuat oleh Pembeli yang logged in saat ini.*/
     public void handleRiwayatTransaksi() {
         System.out.println("Lihat Riwayat Transaksi dipilih. Implementasi di sini.");
         // Implementasi untuk melihat riwayat transaksi

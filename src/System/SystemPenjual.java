@@ -26,7 +26,8 @@ public class SystemPenjual implements SystemMenu {
                 5. Kirim Barang
                 6. Lihat Laporan Pendapatan
                 7. Cek Saldo
-                8. Logout
+                8. Lihat Riwayat Transaksi
+                9. Logout
                 """;
     }
 
@@ -45,7 +46,8 @@ public class SystemPenjual implements SystemMenu {
                 case 5 -> handleKirimBarang();
                 case 6 -> handleLaporanPendapatan();
                 case 7 -> handleCekSaldo();
-                case 8 -> {
+                case 8 -> handleRiwayatTransaksi();
+                case 9 -> {
                     System.out.println("Logout berhasil.");
                     return;
                 }
@@ -87,5 +89,12 @@ public class SystemPenjual implements SystemMenu {
     public void handleCekSaldo() {
         System.out.println("Cek Saldo dipilih. Implementasi di sini.");
         // Implementasi untuk cek saldo penjual
+    }
+
+    /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
+     * keterangan seluruh transaksi-transaksi yang dibuat oleh Penjual yang logged in saat ini.*/
+    public void handleRiwayatTransaksi() {
+        System.out.println("Lihat Riwayat Transaksi dipilih. Implementasi di sini.");
+        // Implementasi untuk melihat riwayat transaksi
     }
 }
