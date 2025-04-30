@@ -72,6 +72,8 @@ public class MainMenuSystem implements SystemMenu {
         System.out.println("\n===== REGISTRASI =====");
 
         String username;
+        String password;
+
         System.out.print("Masukkan username: ");
         username = input.next();
 
@@ -80,26 +82,25 @@ public class MainMenuSystem implements SystemMenu {
 
         if (existingUser != null) {
             // Cek apakah User sudah memiliki semua role
-            boolean hasAllRoles = Arrays.asList("Pembeli", "Penjual", "Pengirim").contains(existingUser.getRole());
-
-            if (hasAllRoles) {
+            if (existingUser instanceof Pembeli && existingUser instanceof Penjual && existingUser instanceof Pengirim) {
                 System.out.println("Username sudah ada! Username " + username + " tidak dapat menambahkan role lagi karena sudah memiliki semua role, registrasi dibatalkan.");
                 return;
             }
 
             // Konfirmasi password jika ingin menambahkan user baru
+            System.out.println("Username sudah ada! Silahkan konfirmasi password untuk menambahkan role lain.");
             System.out.print("Masukkan password: ");
-            String password = input.next();
+            password = input.next();
             // Kalo input passwordnya salah
             if (!existingUser.getPassword().equals(password)) {
                 System.out.println("Password salah! Registrasi dibatalkan.");
                 return;
             }
+        } else {
+            // Ini input password kalo User memang baru pertama kali ditambah
+            System.out.print("Masukkan password: ");
+            password = input.next();
         }
-
-        // Ini input password kalo User memang baru pertama kali ditambah
-        System.out.print("Masukkan password: ");
-        String password = input.next();
 
         // Berjalan loop
         boolean aktif = true;
@@ -111,7 +112,7 @@ public class MainMenuSystem implements SystemMenu {
             // Penentuan roleChoice berdasarkan pilihan dari pengguna
             // Penjual baru
             if (roleChoice == 1) {
-                if (existingUser != null && existingUser.getRole().equals("Penjual")) {
+                if (existingUser != null && existingUser instanceof Penjual) {
                     System.out.println("Role sudah ada. Silahkan pilih role lain!");
                 } else {
                     System.out.print("Masukkan nama toko: ");
@@ -129,7 +130,7 @@ public class MainMenuSystem implements SystemMenu {
             }
             // Pembeli baru
             else if (roleChoice == 2) {
-                if (existingUser != null && existingUser.getRole().equals("Pembeli")) {
+                if (existingUser != null && existingUser instanceof Pembeli) {
                     System.out.println("Role sudah ada. Silahkan pilih role lain!");
                 } else {
                     // Buat pembeliBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
@@ -142,7 +143,7 @@ public class MainMenuSystem implements SystemMenu {
             }
             // Pengirim baru
             else if (roleChoice == 3) {
-                if (existingUser != null && existingUser.getRole().equals("Pengirim")) {
+                if (existingUser != null && existingUser instanceof Pengirim) {
                     System.out.println("Role sudah ada. Silahkan pilih role lain!");
                 } else {
                     // Buat pengirimBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
