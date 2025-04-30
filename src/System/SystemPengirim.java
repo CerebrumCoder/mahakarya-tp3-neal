@@ -18,7 +18,7 @@ public class SystemPengirim implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                ===== Menu Pengirim =====
+                ===== MENU PENGIRIM =====
                 1. Find Job
                 2. Take Job
                 3. Confirm Job
@@ -40,7 +40,6 @@ public class SystemPengirim implements SystemMenu {
                 case 3 -> handleConfirmJob();
                 case 4 -> handleRiwayatTransaksi();
                 case 5 -> {
-                    System.out.println("Logout berhasil.");
                     return;
                 }
                 default -> System.out.println("Pilihan tidak valid.");

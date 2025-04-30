@@ -18,7 +18,7 @@ public class SystemPenjual implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                ===== Menu Penjual =====
+                ===== MENU PENJUAL =====
                 1. Cek Produk
                 2. Tambah Produk
                 3. Tambah Stok

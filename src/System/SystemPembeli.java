@@ -18,7 +18,7 @@ public class SystemPembeli implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                ===== Menu Pembeli =====
+                ===== MENU PEMBELI =====
                 1. Cek Saldo
                 2. Top Up Saldo
                 3. Cek Daftar Barang
@@ -27,7 +27,7 @@ public class SystemPembeli implements SystemMenu {
                 6. Lacak Barang
                 7. Lihat Laporan Pengeluaran
                 8. Lihat Riwayat Transaksi
-                9. Logout
+                9. Kembali ke menu utama
                 """;
     }
 
@@ -48,7 +48,6 @@ public class SystemPembeli implements SystemMenu {
                 case 7 -> handleLaporanPengeluaran();
                 case 8 -> handleRiwayatTransaksi();
                 case 9 -> {
-                    System.out.println("Logout berhasil.");
                     return;
                 }
 

@@ -199,8 +199,8 @@ public class MainMenuSystem implements SystemMenu {
                     // Penentuan roleChoice berdasarkan pilihan dari pengguna
                     // Penjual baru
                     if (roleChoice == 1) {
-                        // Condition 'existingUser != null' covered by subsequent condition 'existingUser instanceof Penjual'
-                        if (existingUser instanceof Penjual) {
+                        // Cek apakah existingUser null atau tidak dan juga cek apakah memiliki role "Penjual"
+                        if (existingUser != null && Arrays.asList(mainRepository.getUserRepo().getUserRoles(username)).contains("Penjual")) {
                             System.out.println("Role sudah ada. Silahkan pilih role lain!");
                         } else {
                             System.out.print("Masukkan nama toko: ");
@@ -218,8 +218,8 @@ public class MainMenuSystem implements SystemMenu {
                     }
                     // Pembeli baru
                     else if (roleChoice == 2) {
-                        // Condition 'existingUser != null' covered by subsequent condition 'existingUser instanceof Pembeli'
-                        if (existingUser instanceof Pembeli) {
+                        // Cek apakah existingUser null atau tidak dan juga cek apakah memiliki role "Pembeli"
+                        if (existingUser != null && Arrays.asList(mainRepository.getUserRepo().getUserRoles(username)).contains("Pembeli")) {
                             System.out.println("Role sudah ada. Silahkan pilih role lain!");
                         } else {
                             // Buat pembeliBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
@@ -232,8 +232,8 @@ public class MainMenuSystem implements SystemMenu {
                     }
                     // Pengirim baru
                     else if (roleChoice == 3) {
-                        // Condition 'existingUser != null' covered by subsequent condition 'existingUser instanceof Pengirim'
-                        if (existingUser instanceof Pengirim) {
+                        // Cek apakah existingUser null atau tidak dan juga cek apakah memiliki role "Pengirim"
+                        if (existingUser != null && Arrays.asList(mainRepository.getUserRepo().getUserRoles(username)).contains("Pengirim")) {
                             System.out.println("Role sudah ada. Silahkan pilih role lain!");
                         } else {
                             // Buat pengirimBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
@@ -274,7 +274,7 @@ public class MainMenuSystem implements SystemMenu {
 
         // Header tabel dengan format yang sama seperti data
         System.out.printf("%-10s | %s%n", "Role", "Saldo");
-        System.out.println("==================");
+        System.out.println("=======================");
 
         // Ambil semua role yang dimiliki user dari mainRepository
         String[] roles = mainRepository.getUserRepo().getUserRoles(username);
@@ -286,7 +286,7 @@ public class MainMenuSystem implements SystemMenu {
         for (String role : roles) {
             System.out.printf("%-10s | %.2f%n", role, (double) existingUser.getBalance());
         }
-        System.out.println("==================");
+        System.out.println("=======================");
     }
 
     public static void main(String[] args) {
