@@ -43,19 +43,24 @@ public class MainMenuSystem implements SystemMenu {
     @Override
     public void handleMenu() {
         while (true) {
-            System.out.print("\n");
-            System.out.println(showMenu());
-            System.out.print("Pilih menu: ");
-            input = new java.util.Scanner(System.in);
-            int choice = input.nextInt();
-            switch (choice) {
-                case 1 -> handleLogin();
-                case 2 -> handleRegister();
-                case 3 -> handleNextDay();
-                case 4 -> {
-                    return;
+            // try dan catch untuk antisipasi input bukan merupakan integer
+            try {
+                System.out.print("\n");
+                System.out.println(showMenu());
+                System.out.print("Pilih menu: ");
+                input = new java.util.Scanner(System.in);
+                int choice = input.nextInt();
+                switch (choice) {
+                    case 1 -> handleLogin();
+                    case 2 -> handleRegister();
+                    case 3 -> handleNextDay();
+                    case 4 -> {
+                        return;
+                    }
+                    default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
                 }
-                default -> System.out.println("Pilihan tidak valid.");
+            } catch (Exception e) {
+                System.out.println("Input bukan merupakan integer.");
             }
         }
 
@@ -78,7 +83,7 @@ public class MainMenuSystem implements SystemMenu {
     }
 
     public void handleRegister() {
-        // Implementasi try dan catch, untuk materi Exception dan catch
+        // Implementasi try dan catch, untuk materi DDP 2: Exception dan catch
         try {
             // Implementasi mekanisme register dengan overlapping role
             System.out.println("\n===== REGISTRASI =====");
@@ -124,6 +129,7 @@ public class MainMenuSystem implements SystemMenu {
             // Berjalan loop
             boolean aktif = true;
             while (aktif) {
+                // try dan catch untuk input yang bukan merupakan integer
                 try {
                     System.out.println("\nPilih role:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Batalkan register\n");
                     System.out.print("Perintah : ");
