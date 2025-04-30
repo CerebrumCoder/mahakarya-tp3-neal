@@ -30,7 +30,6 @@ public class MainMenuSystem implements SystemMenu {
 
     @Override
     public String showMenu() {
-
         return """
                 Pilih menu
                 1. Login
@@ -73,11 +72,71 @@ public class MainMenuSystem implements SystemMenu {
         String password;
 
         // Input username dan password untuk login
-        System.out.print("Username: ");
+        System.out.print("Masukkan username: ");
         username = input.next();
-        System.out.print("Password: ");
+        System.out.print("Masukkan password: ");
         password = input.next();
 
+        // Cek apakah username ada di repository
+        User existingUser = mainRepository.getUserRepo().getUserByName(username);
+
+        // Cek jika existingUser null
+        if (existingUser == null) {
+            System.out.println("Username tidak ditemukan!");
+            return;
+        }
+
+        // Validasi password
+        if (!existingUser.getPassword().equals(password)) {
+            System.out.println("Password salah!");
+            return;
+        }
+
+        // Tampilkan opsi login berdasarkan role yang dimiliki
+        String[] roles = mainRepository.getUserRepo().getUserRoles(username);
+        // Berjalan loop
+        boolean aktif = true;
+        while (aktif) {
+            System.out.println("\nPilih opsi login:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Cek Saldo Antar Role\n5. Batal Login\n");
+
+            System.out.print("Perintah: ");
+            int roleChoice = input.nextInt();
+
+            // Handle pilihan login
+            switch (roleChoice) {
+                case 1 -> {
+                    if (Arrays.asList(roles).contains("Penjual")) {
+                        System.out.println("Login berhasil! Selamat datang, " + username + "!");
+                        systemPenjual.handleMenu();
+                    } else {
+                        System.out.println("Username " + username + "tidak memiliki role penjual!");
+                    }
+                }
+                case 2 -> {
+                    if (Arrays.asList(roles).contains("Pembeli")) {
+                        System.out.println("Login berhasil! Selamat datang, " + username + "!");
+                        systemPenjual.handleMenu();
+                    } else {
+                        System.out.println("Username " + username + "tidak memiliki role pembeli!");
+                    }
+                }
+                case 3 -> {
+                    if (Arrays.asList(roles).contains("Pengirim")) {
+                        System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                        systemPenjual.handleMenu();
+                    } else {
+                        System.out.println("Username " + username + "tidak memiliki role pengirim!");
+                    }
+                }
+                case 4 -> handleCekSaldoAntarAkun("Cek Saldo Antar Role");
+                case 5 -> {
+                    System.out.println("Login dibatalkan, kembali ke menu utama...");
+                    aktif = false;
+                }
+                default -> System.out.println("Pilihan tidak valid. Input bukan angka!");
+
+            }
+        }
 
 
     }

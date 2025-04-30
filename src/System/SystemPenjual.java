@@ -18,7 +18,7 @@ public class SystemPenjual implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                === Menu Penjual ===
+                ===== Menu Penjual =====
                 1. Cek Produk
                 2. Tambah Produk
                 3. Tambah Stok
@@ -27,7 +27,7 @@ public class SystemPenjual implements SystemMenu {
                 6. Lihat Laporan Pendapatan
                 7. Cek Saldo
                 8. Lihat Riwayat Transaksi
-                9. Logout
+                9. Kembali ke Menu Utama
                 """;
     }
 
@@ -48,7 +48,6 @@ public class SystemPenjual implements SystemMenu {
                 case 7 -> handleCekSaldo();
                 case 8 -> handleRiwayatTransaksi();
                 case 9 -> {
-                    System.out.println("Logout berhasil.");
                     return;
                 }
                 default -> System.out.println("Pilihan tidak valid.");
