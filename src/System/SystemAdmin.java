@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import Models.Admin;
 import Main.Burhanpedia;
+import Models.Promo;
 import Models.Voucher;
 
 public class SystemAdmin implements SystemMenu {
@@ -143,9 +144,62 @@ public class SystemAdmin implements SystemMenu {
 
     public void handleLihatPromo() {
         // Implementasi untuk melihat semua promo
-        System.out.println("=================================");
-        System.out.println("Belum ada promo yang dibuat!");
-        System.out.println("=================================\n");
+
+        // Ambil semua promoList di dalam PromoRepository.java
+        List<Promo> promoList = mainRepository.getPromoRepo().getAll();
+
+        // Jika promoList kosong
+        if (promoList.isEmpty()) {
+            System.out.println("=================================");
+            System.out.println("Belum ada promo yang dibuat!");
+            System.out.println("=================================\n");
+        } else {
+            while (true) {
+                System.out.println("===== MENU LIHAT PROMO =====\n1. Lihat Semua\n2. Lihat Berdasarkan ID\n3. Kembali\n");
+                System.out.print("Perintah: ");
+                int roleChoice = input.nextInt();
+
+                switch (roleChoice) {
+                    case 1 -> {
+                        System.out.println("=================================");
+                        for (Promo promo : promoList) {
+                            // Format tanggal output dd/MM/yyyy
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            String formattedDate = dateFormat.format(promo.getBerlakuHingga());
+
+                            System.out.println(promo.getId() + " [Sampai dengan " + formattedDate + "]");
+                        }
+                        System.out.println("=================================\n");
+                    }
+                    case 2 -> {
+                        System.out.print("Masukkan id Promo: ");
+                        String id = input.next();
+                        Promo promo = mainRepository.getPromoRepo().getById(id);
+                        if (promo == null) {
+                            System.out.println("\n================================");
+                            System.out.println("Tidak ada Promo dengan id " + id);
+                            System.out.println("===============================\n");
+                        } else {
+                            // Format tanggal output dd/MM/yyyy
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            String formattedDate = dateFormat.format(promo.getBerlakuHingga());
+
+                            System.out.println("\n================================");
+                            System.out.println(promo.getId() + " [Sampai dengan " + formattedDate + "]");
+                            System.out.println("===============================\n");
+
+                        }
+                    }
+                    case 3 -> {
+                        System.out.print("\n");
+                        return;
+                    }
+                    default -> System.out.println("Pilihan tidak valid. Pastikan pilihan antara angka 1 hingga 3.");
+                }
+            }
+        }
+
+
     }
 
     // ===== Untuk Generate Voucher =====
