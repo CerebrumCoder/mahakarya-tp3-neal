@@ -137,7 +137,7 @@ public class MainMenuSystem implements SystemMenu {
                     System.out.println("Login dibatalkan, kembali ke menu utama...");
                     return; // Keluar dari opsi logi dan kembali ke menu utama
                 }
-                default -> System.out.println("Pilihan tidak valid. Input bukan angka!");
+                default -> System.out.println("Pilihan tidak valid. Input bukan angka atau bukan angka dari 1 hingga 5!");
 
             }
         }
