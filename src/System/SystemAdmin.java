@@ -86,8 +86,11 @@ public class SystemAdmin implements SystemMenu {
 
     public void handleLihatVoucher() {
         // Implementasi untuk melihat semua voucher
+
+        // Ambil semua voucherList di dalam VoucherRepository.java
         List<Voucher> voucherList = mainRepository.getVoucherRepo().getAll();
 
+        // Jika voucherList kosong
         if (voucherList.isEmpty()) {
             System.out.println("=================================");
             System.out.println("Belum ada voucher yang dibuat!");
@@ -102,7 +105,11 @@ public class SystemAdmin implements SystemMenu {
                     case 1 -> {
                         System.out.println("=================================");
                         for (Voucher voucher : voucherList) {
-                            System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + voucher.getBerlakuHingga() + "]");
+                            // Format tanggal output dd/MM/yyyy
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            String formattedDate = dateFormat.format(voucher.getBerlakuHingga());
+
+                            System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + formattedDate + "]");
                         }
                         System.out.println("=================================\n");
                     }
@@ -111,12 +118,16 @@ public class SystemAdmin implements SystemMenu {
                         String id = input.next();
                         Voucher voucher = mainRepository.getVoucherRepo().getById(id);
                         if (voucher == null) {
-                            System.out.println("=================================");
+                            System.out.println("\n=================================");
                             System.out.println("Tidak ada Voucher dengan id " + id);
                             System.out.println("=================================\n");
                         } else {
-                            System.out.println("=================================");
-                            System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + voucher.getBerlakuHingga() + "]");
+                            // Format tanggal output dd/MM/yyyy
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            String formattedDate = dateFormat.format(voucher.getBerlakuHingga());
+
+                            System.out.println("\n=================================");
+                            System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + formattedDate + "]");
                             System.out.println("=================================\n");
                         }
                     }
