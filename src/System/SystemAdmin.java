@@ -66,7 +66,7 @@ public class SystemAdmin implements SystemMenu {
             String numericCode = convertToNumericCode(voucherCode);
 
             // Tambahkan voucher ke repository
-            mainRepository.getVoucherRepo().generate(1, expiryDate);
+            mainRepository.getVoucherRepo().generate(numericCode, 1, expiryDate);
 
             // Tampilkan hasil
             System.out.println("\nVoucher berhasil dibuat: " + numericCode + "\n");
@@ -104,22 +104,30 @@ public class SystemAdmin implements SystemMenu {
                         for (Voucher voucher : voucherList) {
                             System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + voucher.getBerlakuHingga() + "]");
                         }
-                        System.out.println("=================================");
+                        System.out.println("=================================\n");
                     }
                     case 2 -> {
-
+                        System.out.print("Masukkan id Voucher: ");
+                        String id = input.next();
+                        Voucher voucher = mainRepository.getVoucherRepo().getById(id);
+                        if (voucher == null) {
+                            System.out.println("=================================");
+                            System.out.println("Tidak ada Voucher dengan id " + id);
+                            System.out.println("=================================\n");
+                        } else {
+                            System.out.println("=================================");
+                            System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + voucher.getBerlakuHingga() + "]");
+                            System.out.println("=================================\n");
+                        }
                     }
                     case 3 -> {
+                        System.out.print("\n");
                         return;
                     }
+                    default -> System.out.println("Pilihan tidak valid. Pastikan pilihan antara angka 1 hingga 3.");
                 }
             }
-
-
-
         }
-
-
     }
 
     public void handleLihatPromo() {

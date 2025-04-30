@@ -36,10 +36,12 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
         throw new UnsupportedOperationException("Gunakan generate(String) untuk membuat voucher.");
     }
 
-    public void generate(int usageLimit, Date expiryDate) {
-        String id = "VCR-" + (voucherList.size() + 1); // Generate ID unik untuk voucher
-        Voucher newVoucher = new Voucher(id, usageLimit, expiryDate);
-        voucherList.add(newVoucher); // Tambahkan voucher baru ke daftar
+    public void generate(String voucherCode, int usageLimit, Date expiryDate) {
+        // Buat objek Voucher baru
+        Voucher newVoucher = new Voucher(voucherCode, usageLimit, expiryDate);
+
+        // Tambahkan voucher baru ke daftar
+        voucherList.add(newVoucher);
 
         // Debugging
         System.out.println("Voucher berhasil ditambahkan");
