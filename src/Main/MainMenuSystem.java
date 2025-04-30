@@ -139,8 +139,6 @@ public class MainMenuSystem implements SystemMenu {
 
             }
         }
-
-
     }
 
     public void handleRegister() {

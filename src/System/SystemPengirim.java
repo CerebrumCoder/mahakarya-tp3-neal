@@ -18,12 +18,12 @@ public class SystemPengirim implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                === Menu Pengirim ===
+                ===== Menu Pengirim =====
                 1. Find Job
                 2. Take Job
                 3. Confirm Job
                 4. Lihat Riwayat Transaksi
-                5. Logout
+                5. Kembali ke menu utama
                 """;
     }
 

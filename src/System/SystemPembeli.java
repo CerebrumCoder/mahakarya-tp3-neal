@@ -18,7 +18,7 @@ public class SystemPembeli implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                === Menu Pembeli ===
+                ===== Menu Pembeli =====
                 1. Cek Saldo
                 2. Top Up Saldo
                 3. Cek Daftar Barang
