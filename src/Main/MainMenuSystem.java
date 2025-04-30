@@ -81,8 +81,15 @@ public class MainMenuSystem implements SystemMenu {
         User existingUser = mainRepository.getUserRepo().getUserByName(username);
 
         if (existingUser != null) {
+            // Gunakan getUserRoles untuk mendapatkan semua role yang dimiliki user
+            String[] roles = mainRepository.getUserRepo().getUserRoles(username);
+
+            boolean hasPembeli = Arrays.asList(roles).contains("Pembeli");
+            boolean hasPenjual = Arrays.asList(roles).contains("Penjual");
+            boolean hasPengirim = Arrays.asList(roles).contains("Pengirim");
+
             // Cek apakah User sudah memiliki semua role
-            if (existingUser instanceof Pembeli && existingUser instanceof Penjual && existingUser instanceof Pengirim) {
+            if (hasPembeli && hasPenjual && hasPengirim) {
                 System.out.println("Username sudah ada! Username " + username + " tidak dapat menambahkan role lagi karena sudah memiliki semua role, registrasi dibatalkan.");
                 return;
             }
