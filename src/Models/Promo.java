@@ -13,6 +13,7 @@ public class Promo {
         this.berlakuHingga = berlakuHingga;
     }
 
+    // Untuk promo tidak memiliki batas jumlah pemakaian
     public Promo(String id, int usageLimit, Date berlakuHingga) {
         this.id = id;
         this.usageLimit = usageLimit;

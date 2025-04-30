@@ -1,9 +1,14 @@
 package System;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 import Models.Admin;
 import Main.Burhanpedia;
+import Models.Voucher;
 
 public class SystemAdmin implements SystemMenu {
     private Admin activeAdmin; // Admin yang sedang login
@@ -49,21 +54,71 @@ public class SystemAdmin implements SystemMenu {
 
     public void handleGenerateVoucher() {
         // Implementasi untuk generate voucher
-        System.out.println("Voucher berlaku hingga : ");
+        System.out.print("Voucher berlaku hingga : ");
+        String expiryDateInput = input.next();
+        try {
+            // Parse input tanggal menjadi objek Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date expiryDate = dateFormat.parse(expiryDateInput);
 
-        System.out.println("Voucher berhasil dibuat : ");
+            // Generate kode voucher
+            String voucherCode = generateCode();
+            String numericCode = convertToNumericCode(voucherCode);
+
+            // Tambahkan voucher ke repository
+            mainRepository.getVoucherRepo().generate(1, expiryDate);
+
+            // Tampilkan hasil
+            System.out.println("\nVoucher berhasil dibuat: " + numericCode + "\n");
+        } catch (ParseException e) {
+            System.out.println("Format tanggal tidak valid. Gunakan format yyyy-MM-dd");
+        }
     }
 
     public void handleGeneratePromo() {
-        System.out.println("Generate Promo dipilih. Implementasi di sini.");
         // Implementasi untuk generate promo
+        System.out.print("Promo berlaku hingga : ");
+        String expiryDateInput = input.next();
+
+        // Panggil metode generate di PromoRepository
+        mainRepository.getPromoRepo().generate(expiryDateInput);
     }
 
     public void handleLihatVoucher() {
         // Implementasi untuk melihat semua voucher
-        System.out.println("=================================");
-        System.out.println("Belum ada voucher yang dibuat!");
-        System.out.println("=================================\n");
+        List<Voucher> voucherList = mainRepository.getVoucherRepo().getAll();
+
+        if (voucherList.isEmpty()) {
+            System.out.println("=================================");
+            System.out.println("Belum ada voucher yang dibuat!");
+            System.out.println("=================================\n");
+        } else {
+            while (true) {
+                System.out.println("===== MENU LIHAT VOUCHER =====\n1. Lihat Semua\n2. Lihat Berdasarkan ID\n3. Kembali\n");
+                System.out.print("Perintah: ");
+                int roleChoice = input.nextInt();
+
+                switch (roleChoice) {
+                    case 1 -> {
+                        System.out.println("=================================");
+                        for (Voucher voucher : voucherList) {
+                            System.out.println(voucher.getId() + " [Dapat digunakan " + voucher.getSisaPemakaian() + " kali]" + " [Sampai dengan " + voucher.getBerlakuHingga() + "]");
+                        }
+                        System.out.println("=================================");
+                    }
+                    case 2 -> {
+
+                    }
+                    case 3 -> {
+                        return;
+                    }
+                }
+            }
+
+
+
+        }
+
 
     }
 
@@ -74,6 +129,7 @@ public class SystemAdmin implements SystemMenu {
         System.out.println("=================================\n");
     }
 
+    // ===== Untuk Generate Voucher =====
     // Method untuk generateVoucherCode. Sesuai dengan TP 2. private, karena hanya untuk SystemAdmin.java
     private static String generateCode() {
         Random random = new Random();
@@ -86,7 +142,7 @@ public class SystemAdmin implements SystemMenu {
         return code;
     }
 
-    // Method untuk convert to numeric version using the formula
+    // Method untuk convert to numeric version using the formula. Sesuai dengan TP 2. private, karena hanya untuk SystemAdmin.java
     private static String convertToNumericCode(String voucherCode) {
         String numericCode = "";
 

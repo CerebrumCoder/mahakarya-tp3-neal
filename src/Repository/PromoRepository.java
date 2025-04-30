@@ -1,6 +1,8 @@
 package Repository;
 
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -36,10 +38,25 @@ public class PromoRepository implements DiskonRepository<Promo> {
         throw new UnsupportedOperationException("Gunakan generate(String) untuk membuat promo.");
     }
 
-    public void generate(String usageLimit) {
-        String id = generatePromoCode(); // Generate kode promo
-        Promo newPromo = new Promo(id, Integer.parseInt(usageLimit), new Date());
-        promoList.add(newPromo); // Tambahkan promo baru ke daftar
+    public void generate(String expiryDateInput) {
+        try {
+            // Parse input tanggal menjadi objek Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date expiryDate = dateFormat.parse(expiryDateInput);
+
+            // Generate ID unik untuk promo
+            String id = generatePromoCode();
+
+            // Buat promo baru dengan batas waktu pemakaian
+            Promo newPromo = new Promo(id, expiryDate);
+            promoList.add(newPromo); // Tambahkan promo baru ke daftar
+
+            // Kasih output promo baru
+            System.out.println("\nPromo berhasil dibuat: " + id + "\n");
+
+        } catch (ParseException e) {
+            System.out.println("Format tanggal tidak valid. Gunakan format yyyy-MM-dd.");
+        }
     }
 
     private String generatePromoCode() {

@@ -40,6 +40,10 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
         String id = "VCR-" + (voucherList.size() + 1); // Generate ID unik untuk voucher
         Voucher newVoucher = new Voucher(id, usageLimit, expiryDate);
         voucherList.add(newVoucher); // Tambahkan voucher baru ke daftar
+
+        // Debugging
+        System.out.println("Voucher berhasil ditambahkan");
+        System.out.println("Voucher: " + newVoucher);
     }
 
     // Method generate dengan parameter String untuk batas tanggal waktu pemakaian. Ini kurang tahu dipakai ato engga
