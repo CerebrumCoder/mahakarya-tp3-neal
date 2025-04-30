@@ -1,4 +1,5 @@
 package System;
+import java.util.Random;
 import java.util.Scanner;
 
 import Models.Admin;
@@ -47,8 +48,10 @@ public class SystemAdmin implements SystemMenu {
     }
 
     public void handleGenerateVoucher() {
-        System.out.println("Generate Voucher dipilih. Implementasi di sini.");
         // Implementasi untuk generate voucher
+        System.out.println("Voucher berlaku hingga : ");
+
+        System.out.println("Voucher berhasil dibuat : ");
     }
 
     public void handleGeneratePromo() {
@@ -69,5 +72,32 @@ public class SystemAdmin implements SystemMenu {
         System.out.println("=================================");
         System.out.println("Belum ada promo yang dibuat!");
         System.out.println("=================================\n");
+    }
+
+    // Method untuk generateVoucherCode. Sesuai dengan TP 2. private, karena hanya untuk SystemAdmin.java
+    private static String generateCode() {
+        Random random = new Random();
+        String code = "";
+
+        for (int i = 0; i < 10; i++) {
+            char randomChar = (char) ('A' + random.nextInt(26));
+            code += randomChar;
+        }
+        return code;
+    }
+
+    // Method untuk convert to numeric version using the formula
+    private static String convertToNumericCode(String voucherCode) {
+        String numericCode = "";
+
+        for (int i = 0; i < voucherCode.length(); i++) {
+            // Ubah jadi Code 93
+            char character = voucherCode.charAt(i);
+            // Formula: (ASCII - 65)/Code 93 * index mod 10
+            int numericValue = ((character - 'A') * i) % 10;
+            numericCode += numericValue;
+        }
+
+        return numericCode;
     }
 }
