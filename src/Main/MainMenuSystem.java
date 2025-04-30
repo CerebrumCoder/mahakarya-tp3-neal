@@ -63,113 +63,135 @@ public class MainMenuSystem implements SystemMenu {
 
     public void handleLogin() {
         // Implementasi mekanisme login dengan overlapping role
-        System.out.println("Login dipilih. Implementasi login di sini.");
+        System.out.println("\n===== LOGIN =====");
+        String username;
+        String password;
+
+        // Input username dan password untuk login
+        System.out.print("Username: ");
+        username = input.next();
+        System.out.print("Password: ");
+        password = input.next();
+
+
 
     }
 
     public void handleRegister() {
-        // Implementasi mekanisme register dengan overlapping role
-        System.out.println("\n===== REGISTRASI =====");
+        // Implementasi try dan catch, untuk materi Exception dan catch
+        try {
+            // Implementasi mekanisme register dengan overlapping role
+            System.out.println("\n===== REGISTRASI =====");
 
-        String username;
-        String password;
+            String username;
+            String password;
 
-        System.out.print("Masukkan username: ");
-        username = input.next();
+            System.out.print("Masukkan username: ");
+            username = input.next();
 
-        // Untuk cek apakah class User dengan username sudah ada atau belum di Repository.
-        User existingUser = mainRepository.getUserRepo().getUserByName(username);
+            // Untuk cek apakah class User dengan username sudah ada atau belum di Repository.
+            User existingUser = mainRepository.getUserRepo().getUserByName(username);
 
-        if (existingUser != null) {
-            // Gunakan getUserRoles untuk mendapatkan semua role yang dimiliki user
-            String[] roles = mainRepository.getUserRepo().getUserRoles(username);
+            if (existingUser != null) {
+                // Gunakan getUserRoles untuk mendapatkan semua role yang dimiliki user
+                String[] roles = mainRepository.getUserRepo().getUserRoles(username);
 
-            boolean hasPembeli = Arrays.asList(roles).contains("Pembeli");
-            boolean hasPenjual = Arrays.asList(roles).contains("Penjual");
-            boolean hasPengirim = Arrays.asList(roles).contains("Pengirim");
+                boolean hasPembeli = Arrays.asList(roles).contains("Pembeli");
+                boolean hasPenjual = Arrays.asList(roles).contains("Penjual");
+                boolean hasPengirim = Arrays.asList(roles).contains("Pengirim");
 
-            // Cek apakah User sudah memiliki semua role
-            if (hasPembeli && hasPenjual && hasPengirim) {
-                System.out.println("Username sudah ada! Username " + username + " tidak dapat menambahkan role lagi karena sudah memiliki semua role, registrasi dibatalkan.");
-                return;
-            }
-
-            // Konfirmasi password jika ingin menambahkan user baru
-            System.out.println("Username sudah ada! Silahkan konfirmasi password untuk menambahkan role lain.");
-            System.out.print("Masukkan password: ");
-            password = input.next();
-            // Kalo input passwordnya salah
-            if (!existingUser.getPassword().equals(password)) {
-                System.out.println("Password salah! Registrasi dibatalkan.");
-                return;
-            }
-        } else {
-            // Ini input password kalo User memang baru pertama kali ditambah
-            System.out.print("Masukkan password: ");
-            password = input.next();
-        }
-
-        // Berjalan loop
-        boolean aktif = true;
-        while (aktif) {
-            System.out.println("\nPilih role:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Batalkan register\n");
-            System.out.print("Perintah : ");
-            int roleChoice = input.nextInt();
-
-            // Penentuan roleChoice berdasarkan pilihan dari pengguna
-            // Penjual baru
-            if (roleChoice == 1) {
-                if (existingUser != null && existingUser instanceof Penjual) {
-                    System.out.println("Role sudah ada. Silahkan pilih role lain!");
-                } else {
-                    System.out.print("Masukkan nama toko: ");
-                    String namaToko = input.next();
-
-                    // Buat penjualBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
-                    // sesuai dia itu Pembeli/Penjual/Pengirim
-                    Penjual penjualBaru = new Penjual(username, password, namaToko);
-                    mainRepository.getUserRepo().addUser(penjualBaru);
-
-                    // Konfirmasi registrasi akun penjual berhasil
-                    System.out.println("Registrasi akun penjual berhasil!");
-                    aktif = false;
+                // Cek apakah User sudah memiliki semua role
+                if (hasPembeli && hasPenjual && hasPengirim) {
+                    System.out.println("Username sudah ada! Username " + username + " tidak dapat menambahkan role lagi karena sudah memiliki semua role, registrasi dibatalkan.");
+                    return;
                 }
-            }
-            // Pembeli baru
-            else if (roleChoice == 2) {
-                if (existingUser != null && existingUser instanceof Pembeli) {
-                    System.out.println("Role sudah ada. Silahkan pilih role lain!");
-                } else {
-                    // Buat pembeliBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
-                    // sesuai dia itu Pembeli/Penjual/Pengirim
-                    Pembeli pembeliBaru = new Pembeli(username, password);
-                    mainRepository.getUserRepo().addUser(pembeliBaru);
-                    System.out.println("Registrasi akun pembeli berhasil!");
-                    aktif = false;
+
+                // Konfirmasi password jika ingin menambahkan user baru
+                System.out.println("Username sudah ada! Silahkan konfirmasi password untuk menambahkan role lain.");
+                System.out.print("Masukkan password: ");
+                password = input.next();
+                // Kalo input passwordnya salah
+                if (!existingUser.getPassword().equals(password)) {
+                    System.out.println("Password salah! Registrasi dibatalkan.");
+                    return;
                 }
-            }
-            // Pengirim baru
-            else if (roleChoice == 3) {
-                if (existingUser != null && existingUser instanceof Pengirim) {
-                    System.out.println("Role sudah ada. Silahkan pilih role lain!");
-                } else {
-                    // Buat pengirimBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
-                    Pengirim pengirimBaru = new Pengirim(username, password);
-                    mainRepository.getUserRepo().addUser(pengirimBaru);
-                    System.out.println("Registrasi akun pengirim berhasil!");
-                    aktif = false;
-                }
-            }
-            // Batalkan register
-            else if (roleChoice == 4) {
-                System.out.println("Registrasi dibatalkan, kembali ke menu utama...");
-                aktif = false;
             } else {
-                System.out.println("Pilihan tidak valid.");
+                // Ini input password kalo User memang baru pertama kali ditambah
+                System.out.print("Masukkan password: ");
+                password = input.next();
             }
-            System.out.println(Arrays.toString(mainRepository.getUserRepo().getAll()));
-        }
 
+            // Berjalan loop
+            boolean aktif = true;
+            while (aktif) {
+                try {
+                    System.out.println("\nPilih role:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Batalkan register\n");
+                    System.out.print("Perintah : ");
+                    int roleChoice = input.nextInt();
+
+                    // Penentuan roleChoice berdasarkan pilihan dari pengguna
+                    // Penjual baru
+                    if (roleChoice == 1) {
+                        if (existingUser instanceof Penjual) {
+                            System.out.println("Role sudah ada. Silahkan pilih role lain!");
+                        } else {
+                            System.out.print("Masukkan nama toko: ");
+                            String namaToko = input.next();
+
+                            // Buat penjualBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
+                            // sesuai dia itu Pembeli/Penjual/Pengirim
+                            Penjual penjualBaru = new Penjual(username, password, namaToko);
+                            mainRepository.getUserRepo().addUser(penjualBaru);
+
+                            // Konfirmasi registrasi akun penjual berhasil
+                            System.out.println("Registrasi akun penjual berhasil!");
+                            aktif = false;
+                        }
+                    }
+                    // Pembeli baru
+                    else if (roleChoice == 2) {
+                        if (existingUser != null && existingUser instanceof Pembeli) {
+                            System.out.println("Role sudah ada. Silahkan pilih role lain!");
+                        } else {
+                            // Buat pembeliBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
+                            // sesuai dia itu Pembeli/Penjual/Pengirim
+                            Pembeli pembeliBaru = new Pembeli(username, password);
+                            mainRepository.getUserRepo().addUser(pembeliBaru);
+                            System.out.println("Registrasi akun pembeli berhasil!");
+                            aktif = false;
+                        }
+                    }
+                    // Pengirim baru
+                    else if (roleChoice == 3) {
+                        if (existingUser != null && existingUser instanceof Pengirim) {
+                            System.out.println("Role sudah ada. Silahkan pilih role lain!");
+                        } else {
+                            // Buat pengirimBaru lalu ditambah addUser lewat mainRepository tambah kelasnya
+                            Pengirim pengirimBaru = new Pengirim(username, password);
+                            mainRepository.getUserRepo().addUser(pengirimBaru);
+                            System.out.println("Registrasi akun pengirim berhasil!");
+                            aktif = false;
+                        }
+                    }
+                    // Batalkan register
+                    else if (roleChoice == 4) {
+                        System.out.println("Registrasi dibatalkan, kembali ke menu utama...");
+                        aktif = false;
+                    } else {
+                        System.out.println("Pilihan tidak valid. Masukkan angka antara 1 hingga 4 saja.");
+                    }
+
+                    // Untuk debugging
+                    System.out.println(Arrays.toString(mainRepository.getUserRepo().getAll()));
+                } catch (Exception e) {
+                    System.out.println("Input bukan integer. Silahkan coba lagi.");
+                    input.nextLine(); // Untuk membersihkan input buffer
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println("Terjadi kesalahan: " + e.getMessage());
+        }
     }
 
     public void handleNextDay() {
