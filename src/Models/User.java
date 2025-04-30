@@ -41,8 +41,8 @@ public abstract class User {
         return this.role;
     }
 
-    public String getBalance() {
-        return String.valueOf(balance);
+    public long getBalance() {
+        return this.balance;
     }
 
     public void setBalance(long balance) {
