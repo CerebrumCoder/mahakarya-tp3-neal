@@ -66,7 +66,7 @@ public class SystemAdmin implements SystemMenu {
             String numericCode = convertToNumericCode(voucherCode);
 
             // Tambahkan voucher ke repository
-            mainRepository.getVoucherRepo().generate(numericCode, 1, expiryDate);
+            mainRepository.getVoucherRepo().generate(numericCode, expiryDate);
 
             // Tampilkan hasil
             System.out.println("\nVoucher berhasil dibuat: " + numericCode + "\n");

@@ -1,5 +1,6 @@
 package Models;
 import java.util.Date;
+import java.util.Random;
 
 public class Voucher {
     private String id;
@@ -9,9 +10,9 @@ public class Voucher {
     /**
      * Catatan, jika transaksi dilakukan pada tanggal yang sama dengan
      * batas tanggal berlaku voucher, maka voucher masih bisa digunakan*/
-    public Voucher(String id, int sisaPemakaian, Date berlakuHingga) {
+    public Voucher(String id, Date berlakuHingga) {
         this.id = id;
-        this.sisaPemakaian = sisaPemakaian;
+        this.sisaPemakaian = randomSisaPemakaian();
         this.berlakuHingga = berlakuHingga;
     }
 
@@ -23,8 +24,23 @@ public class Voucher {
         return this.sisaPemakaian;
     }
 
-    public void setSisaPemakaian(int sisaPemakaian) {
-        this.sisaPemakaian = sisaPemakaian;
+    public int randomSisaPemakaian() {
+        // Generate nilai acak antara 0 sampai 9
+        Random random = new Random();
+        int randomIndex = random.nextInt(10);
+
+        // Ambil karakter pada indeks randomIndex dari ID voucher
+        char characterAtIndex = this.id.charAt(randomIndex);
+
+        // Konversi karakter menjadi nilai numerik
+        int sisaPemakaian = Character.getNumericValue(characterAtIndex);
+
+        // Jika nilai numerik adalah 0, maka sisa pemakaian diatur menjadi 1
+        if (sisaPemakaian == 0) {
+            sisaPemakaian = 1;
+        }
+
+        return this.sisaPemakaian = sisaPemakaian;
     }
 
     public Date getBerlakuHingga() {
