@@ -11,8 +11,8 @@ public class AdminRepository {
 
     public AdminRepository() {
         this.adminList = new ArrayList<>();
-        // Hardcode 3 admin sesuai TP sebelumnya
 
+        // Hardcode 3 admin sesuai TP sebelumnya
         adminList.add(new Admin("admin", "admin"));
         adminList.add(new Admin("root", "toor"));
         adminList.add(new Admin("dekdepe", "aku_CinTaJaVa"));

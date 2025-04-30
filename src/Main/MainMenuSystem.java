@@ -2,6 +2,7 @@ package Main;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import Models.Admin;
 import Models.Pembeli;
 import Models.Pengirim;
 import Models.Penjual;
@@ -79,6 +80,13 @@ public class MainMenuSystem implements SystemMenu {
 
         // Cek apakah username ada di repository
         User existingUser = mainRepository.getUserRepo().getUserByName(username);
+        Admin existingAdmin = mainRepository.getAdminRepo().getUserByName(username);
+
+        // Cek apakah admin atau bukan
+        if (existingAdmin.getUsername().equals(username) && existingAdmin.getPassword().equals(password)) {
+            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+            systemAdmin.handleMenu(); //Menu Admin
+        }
 
         // Cek jika existingUser null
         if (existingUser == null) {

@@ -17,12 +17,12 @@ public class SystemAdmin implements SystemMenu {
     @Override
     public String showMenu() {
         return """
-                === Menu Admin ===
+                ===== MENU ADMIN =====
                 1. Generate Voucher
                 2. Generate Promo
                 3. Lihat Voucher
                 4. Lihat Promo
-                5. Logout
+                5. Kembali ke menu utama
                 """;
     }
 
@@ -39,7 +39,6 @@ public class SystemAdmin implements SystemMenu {
                 case 3 -> handleLihatVoucher();
                 case 4 -> handleLihatPromo();
                 case 5 -> {
-                    System.out.println("Logout berhasil.");
                     return;
                 }
                 default -> System.out.println("Pilihan tidak valid.");
@@ -58,12 +57,17 @@ public class SystemAdmin implements SystemMenu {
     }
 
     public void handleLihatVoucher() {
-        System.out.println("Lihat Voucher dipilih. Implementasi di sini.");
         // Implementasi untuk melihat semua voucher
+        System.out.println("=================================");
+        System.out.println("Belum ada voucher yang dibuat!");
+        System.out.println("=================================\n");
+
     }
 
     public void handleLihatPromo() {
-        System.out.println("Lihat Promo dipilih. Implementasi di sini.");
         // Implementasi untuk melihat semua promo
+        System.out.println("=================================");
+        System.out.println("Belum ada promo yang dibuat!");
+        System.out.println("=================================\n");
     }
 }

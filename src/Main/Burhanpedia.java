@@ -9,22 +9,22 @@ public class Burhanpedia {
     private TransaksiRepository transaksiRepo;
 
     public UserRepository getUserRepo() {
-        return userRepo;
+        return this.userRepo;
     }
 
     public AdminRepository getAdminRepo() {
-        return adminRepo;
+        return this.adminRepo;
     }
 
     public VoucherRepository getVoucherRepo() {
-        return voucherRepo;
+        return this.voucherRepo;
     }
 
     public PromoRepository getPromoRepo() {
-        return promoRepo;
+        return this.promoRepo;
     }
 
-    public TransaksiRepository getTransaksiRepo() { return transaksiRepo; }
+    public TransaksiRepository getTransaksiRepo() { return this.transaksiRepo; }
 
     public Burhanpedia() {
         this.userRepo = new UserRepository();
