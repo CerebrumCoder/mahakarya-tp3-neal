@@ -107,7 +107,7 @@ public class MainMenuSystem implements SystemMenu {
                     if (Arrays.asList(roles).contains("Penjual")) {
                         System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
                         systemPenjual.handleMenu(); //Menu Penjual
-                        return;
+                        return; // Ketika systemPenjual input angka 9, maka dia akan membawa balik ke menu utama
                     } else {
                         System.out.println("Username " + username + " tidak memiliki role penjual!");
                     }
@@ -116,7 +116,7 @@ public class MainMenuSystem implements SystemMenu {
                     if (Arrays.asList(roles).contains("Pembeli")) {
                         System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
                         systemPembeli.handleMenu(); //Menu Pembeli
-                        return;
+                        return; // Ketika systemPembeli input angka 9, maka dia akan membawa balik ke menu utama
                     } else {
                         System.out.println("Username " + username + " tidak memiliki role pembeli!");
                     }
@@ -125,7 +125,7 @@ public class MainMenuSystem implements SystemMenu {
                     if (Arrays.asList(roles).contains("Pengirim")) {
                         System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
                         systemPengirim.handleMenu(); //Menu Pengirim
-                        return;
+                        return; // Ketika systemPengirim input angka 9, maka dia akan membawa balik ke menu utama
                     } else {
                         System.out.println("Username " + username + " tidak memiliki role pengirim!");
                     }
