@@ -36,6 +36,7 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
         throw new UnsupportedOperationException("Gunakan generate(String) untuk membuat voucher.");
     }
 
+    // Tanyain ini ke asdos
     public void generate(String voucherCode, Date expiryDate) {
         // Buat objek Voucher baru
         Voucher newVoucher = new Voucher(voucherCode, expiryDate);

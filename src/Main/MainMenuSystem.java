@@ -44,23 +44,19 @@ public class MainMenuSystem implements SystemMenu {
     public void handleMenu() {
         while (true) {
             // try dan catch untuk antisipasi input bukan merupakan integer
-            try {
-                System.out.print("\n");
-                System.out.println(showMenu());
-                System.out.print("Pilih menu: ");
-                input = new java.util.Scanner(System.in);
-                int choice = input.nextInt();
-                switch (choice) {
-                    case 1 -> handleLogin();
-                    case 2 -> handleRegister();
-                    case 3 -> handleNextDay();
-                    case 4 -> {
-                        return;
-                    }
-                    default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
+            System.out.print("\n");
+            System.out.println(showMenu());
+            System.out.print("Pilih menu: ");
+            input = new java.util.Scanner(System.in);
+            int choice = input.nextInt();
+            switch (choice) {
+                case 1 -> handleLogin();
+                case 2 -> handleRegister();
+                case 3 -> handleNextDay();
+                case 4 -> {
+                    return;
                 }
-            } catch (Exception e) {
-                System.out.println("Input bukan merupakan integer.");
+                default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
             }
         }
 
@@ -82,71 +78,74 @@ public class MainMenuSystem implements SystemMenu {
         User existingUser = mainRepository.getUserRepo().getUserByName(username);
         Admin existingAdmin = mainRepository.getAdminRepo().getUserByName(username);
 
-        // Cek apakah admin atau bukan
-        if (existingAdmin.getUsername().equals(username) && existingAdmin.getPassword().equals(password)) {
-            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-            systemAdmin.handleMenu(); //Menu Admin
-        }
+        // Switch apakah ini Admin atau User. Dibuat terpisah karena Admin tidak memiliki parent User
+        if (existingAdmin != null) {
+            // Cek apakah admin atau bukan
+            if (existingAdmin.getUsername().equals(username) && existingAdmin.getPassword().equals(password)) {
+                System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                systemAdmin.handleMenu(); //Menu Admin
+            }
+        } else {
+            // Cek jika existingUser null
+            if (existingUser == null) {
+                System.out.println("Username tidak ditemukan!");
+                return;
+            }
 
-        // Cek jika existingUser null
-        if (existingUser == null) {
-            System.out.println("Username tidak ditemukan!");
-            return;
-        }
+            // Validasi password
+            if (!existingUser.getPassword().equals(password)) {
+                System.out.println("Password salah!");
+                return;
+            }
 
-        // Validasi password
-        if (!existingUser.getPassword().equals(password)) {
-            System.out.println("Password salah!");
-            return;
-        }
+            // Tampilkan opsi login berdasarkan role yang dimiliki
+            String[] roles = mainRepository.getUserRepo().getUserRoles(username);
+            // Berjalan loop
+            while (true) {
+                System.out.println("\nPilih opsi login:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Cek Saldo Antar Role\n5. Batal Login\n");
 
-        // Tampilkan opsi login berdasarkan role yang dimiliki
-        String[] roles = mainRepository.getUserRepo().getUserRoles(username);
-        // Berjalan loop
-        while (true) {
-            System.out.println("\nPilih opsi login:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Cek Saldo Antar Role\n5. Batal Login\n");
+                System.out.print("Perintah: ");
+                int roleChoice = input.nextInt();
 
-            System.out.print("Perintah: ");
-            int roleChoice = input.nextInt();
-
-            // Handle pilihan login
-            switch (roleChoice) {
-                case 1 -> {
-                    if (Arrays.asList(roles).contains("Penjual")) {
-                        System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-                        systemPenjual.handleMenu(); //Menu Penjual
-                        return; // Ketika systemPenjual input angka 9, maka dia akan membawa balik ke menu utama
-                    } else {
-                        System.out.println("Username " + username + " tidak memiliki role penjual!");
+                // Handle pilihan login
+                switch (roleChoice) {
+                    case 1 -> {
+                        if (Arrays.asList(roles).contains("Penjual")) {
+                            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                            systemPenjual.handleMenu(); //Menu Penjual
+                            return; // Ketika systemPenjual input angka 9, maka dia akan membawa balik ke menu utama
+                        } else {
+                            System.out.println("Username " + username + " tidak memiliki role penjual!");
+                        }
                     }
-                }
-                case 2 -> {
-                    if (Arrays.asList(roles).contains("Pembeli")) {
-                        System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-                        systemPembeli.handleMenu(); //Menu Pembeli
-                        return; // Ketika systemPembeli input angka 9, maka dia akan membawa balik ke menu utama
-                    } else {
-                        System.out.println("Username " + username + " tidak memiliki role pembeli!");
+                    case 2 -> {
+                        if (Arrays.asList(roles).contains("Pembeli")) {
+                            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                            systemPembeli.handleMenu(); //Menu Pembeli
+                            return; // Ketika systemPembeli input angka 9, maka dia akan membawa balik ke menu utama
+                        } else {
+                            System.out.println("Username " + username + " tidak memiliki role pembeli!");
+                        }
                     }
-                }
-                case 3 -> {
-                    if (Arrays.asList(roles).contains("Pengirim")) {
-                        System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-                        systemPengirim.handleMenu(); //Menu Pengirim
-                        return; // Ketika systemPengirim input angka 9, maka dia akan membawa balik ke menu utama
-                    } else {
-                        System.out.println("Username " + username + " tidak memiliki role pengirim!");
+                    case 3 -> {
+                        if (Arrays.asList(roles).contains("Pengirim")) {
+                            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                            systemPengirim.handleMenu(); //Menu Pengirim
+                            return; // Ketika systemPengirim input angka 9, maka dia akan membawa balik ke menu utama
+                        } else {
+                            System.out.println("Username " + username + " tidak memiliki role pengirim!");
+                        }
                     }
-                }
-                case 4 -> {
-                    handleCekSaldoAntarAkun(username);
-                }
-                case 5 -> {
-                    System.out.println("Login dibatalkan, kembali ke menu utama...");
-                    return; // Keluar dari opsi logi dan kembali ke menu utama
-                }
-                default -> System.out.println("Pilihan tidak valid. Input bukan angka atau bukan angka dari 1 hingga 5!");
+                    case 4 -> {
+                        handleCekSaldoAntarAkun(username);
+                    }
+                    case 5 -> {
+                        System.out.println("Login dibatalkan, kembali ke menu utama...");
+                        return; // Keluar dari opsi logi dan kembali ke menu utama
+                    }
+                    default -> System.out.println("Pilihan tidak valid. Input bukan angka atau bukan angka dari 1 hingga 5!");
 
+                }
             }
         }
     }
