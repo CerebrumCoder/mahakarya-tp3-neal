@@ -10,7 +10,7 @@ public class Penjual extends User {
         this.productRepo = new ProductRepository(namaToko); // Inisialisasi repository produk untuk penjual
     }
 
-    public ProductRepository getRepo() {
+    public ProductRepository getProductRepo() {
         return this.productRepo;
     }
 

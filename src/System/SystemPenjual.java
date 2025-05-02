@@ -2,8 +2,10 @@ package System;
 
 import java.util.Scanner;
 
+import Models.Pembeli;
 import Models.Penjual;
 import Main.Burhanpedia;
+import Models.Product;
 
 public class SystemPenjual implements SystemMenu {
     private Penjual activePenjual; // Penjual yang sedang login
@@ -56,13 +58,26 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleCekProduk() {
-        System.out.println("Cek Produk dipilih. Implementasi di sini.");
-        // Implementasi untuk cek produk
+        System.out.println("=================================");
+        System.out.println("Toko belum memiliki produk!");
+        System.out.println("=================================\n");
     }
 
     public void handleTambahProduk() {
-        System.out.println("Tambah Produk dipilih. Implementasi di sini.");
-        // Implementasi untuk tambah produk
+        // User memasukkan nama produk, jumlah stok, harga produk.
+        System.out.print("Masukkan nama produk: ");
+        String namaProduk = input.next();
+        System.out.print("Masukkan stok produk: ");
+        int stokProduk = input.nextInt();
+        System.out.print("Masukkan harga produk: ");
+        long price = input.nextLong();
+
+        // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
+        Product produkBaru = new Product(namaProduk, stokProduk, price);
+        activePenjual.getProductRepo().addProduct(produkBaru);
+
+        // Debugging
+        activePenjual.getProductRepo().getProductList();
     }
 
     public void handleTambahStok() {
