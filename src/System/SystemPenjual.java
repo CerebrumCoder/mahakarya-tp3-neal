@@ -115,7 +115,7 @@ public class SystemPenjual implements SystemMenu {
         System.out.print("Masukkan nama barang: ");
         String namaBarang = input.next();
 
-        // Ambil nama produk
+        // Ambil nama produk berdasarkan UUID
         Product getProduct = activePenjual.getProductRepo().getProductById(activePenjual.getId());
 
     }
