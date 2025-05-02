@@ -111,8 +111,13 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleTambahStok() {
-        System.out.println("Tambah Stok dipilih. Implementasi di sini.");
-        // Implementasi untuk tambah stok
+        // User memasukkan nama barang dalam produk.
+        System.out.print("Masukkan nama barang: ");
+        String namaBarang = input.next();
+
+        // Ambil nama produk
+        Product getProduct = activePenjual.getProductRepo().getProductById(activePenjual.getId());
+
     }
 
     public void handleUbahHarga() {
