@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import Models.Product;
+import Models.Voucher;
 
 public class ProductRepository {
     private String namaToko; // Nama toko penjual
@@ -30,8 +31,10 @@ public class ProductRepository {
     }
 
     // Method untuk mendapatkan daftar produk
-    public Product[] getProductList() {
-        return productList.toArray(new Product[0]);
+    public List<Product> getProductList() {
+        return new ArrayList<>(productList);
+        // Awalnya ini:
+        // productList.toArray(new Product[0]);
     }
 
     // Method untuk menambahkan produk ke daftar

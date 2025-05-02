@@ -1,5 +1,6 @@
 package System;
 
+import java.util.List;
 import java.util.Scanner;
 
 import Models.Pembeli;
@@ -56,11 +57,39 @@ public class SystemPenjual implements SystemMenu {
             }
         }
     }
+    /**
+     * Ini berfungsi untuk set activePenjual di file SystemPenjual.java terdefinisi.
+     * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau add User Penjual.
+     * Lalu datanya di pass lewat parameter terus di definisikan di this.activePenjual */
+    public void setActivePenjual(String username) {
+        // Ambil penjual dari repository berdasarkan username
+        Penjual getPenjual = (Penjual) mainRepository.getUserRepo().getUserByName(username);
+
+        if (getPenjual != null && getPenjual.getRole().equals("Penjual")) {
+            this.activePenjual = getPenjual;
+        } else {
+            System.out.println("Penjual dengan username " + username + " tidak ditemukan atau bukan penjual.");
+        }
+    }
 
     public void handleCekProduk() {
-        System.out.println("=================================");
-        System.out.println("Toko belum memiliki produk!");
-        System.out.println("=================================\n");
+        // Implementasi untuk cekProduk
+
+        // Ambil semua productList di dalam ProductRepository.java
+        List<Product> productList = activePenjual.getProductRepo().getProductList();
+
+        // Jika productList kosong
+        if (productList.isEmpty()) {
+            System.out.println("=================================");
+            System.out.println("Toko belum memiliki produk!");
+            System.out.println("=================================\n");
+        } else {
+            System.out.println("=================================");
+            for (Product product : productList) {
+                System.out.printf("%-15s %-10.2f %d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+            }
+            System.out.println("=================================\n");
+        }
     }
 
     public void handleTambahProduk() {
@@ -75,6 +104,7 @@ public class SystemPenjual implements SystemMenu {
         // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
         Product produkBaru = new Product(namaProduk, stokProduk, price);
         activePenjual.getProductRepo().addProduct(produkBaru);
+        System.out.println("Berhasil menambahkan produk baru!\n");
 
         // Debugging
         activePenjual.getProductRepo().getProductList();
