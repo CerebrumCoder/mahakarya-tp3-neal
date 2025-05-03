@@ -117,14 +117,23 @@ public class SystemPenjual implements SystemMenu {
         System.out.print("Masukkan jumlah stok yang ingin ditambah: ");
         int tambahStok = input.nextInt();
 
-        // Ambil nama produk berdasarkan UUID
-        Product getProduct = activePenjual.getProductRepo().getProductById(activePenjual.getId());
+        // Ambil semua productList di dalam ProductRepository.java
+        List<Product> productList = activePenjual.getProductRepo().getProductList();
 
-        if (getProduct != null && getProduct.getProductName().equals(namaBarang)) {
+        // Cari produk berdasarkan nama
+        Product getProduct = null;
+        for (Product product : productList) {
+            if (product.getProductName().equals(namaBarang)) {
+                getProduct = product;
+                break;
+            }
+        }
+
+        if (getProduct != null) {
             getProduct.setProductStock(tambahStok);
             System.out.println("Stok " + getProduct.getProductName() + " berhasil ditambah!" + " Stok saat ini: " + getProduct.getProductStock());
         } else {
-            System.out.println("Stok " + getProduct.getProductName() + " tidak ditemukan!");
+            System.out.println("Stok " + namaBarang + " tidak ditemukan!");
         }
 
     }
