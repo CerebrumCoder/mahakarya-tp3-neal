@@ -161,7 +161,7 @@ public class SystemPenjual implements SystemMenu {
 
         if (getProduct != null) {
             getProduct.setProductPrice(price);
-            System.out.println("Harga " + getProduct.getProductName().toLowerCase() + " diperbarui: " + getProduct.getProductPrice() + "\n");
+            System.out.printf("Harga %s diperbarui: %.2f%n", getProduct.getProductName().toLowerCase(), (double) getProduct.getProductPrice());
         } else {
             System.out.println("Harga " + namaBarang + " tidak ditemukan!");
         }
@@ -169,8 +169,9 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleKirimBarang() {
-        System.out.println("Kirim Barang dipilih. Implementasi di sini.");
         // Implementasi untuk kirim barang
+        System.out.println("Kirim Barang dipilih. Implementasi di sini.");
+
     }
 
     public void handleLaporanPendapatan() {
