@@ -86,7 +86,7 @@ public class SystemPenjual implements SystemMenu {
         } else {
             System.out.println("=================================");
             for (Product product : productList) {
-                System.out.printf("%-15s %-10.2f %d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+                System.out.printf("%-15s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
             }
             System.out.println("=================================\n");
         }
@@ -107,16 +107,25 @@ public class SystemPenjual implements SystemMenu {
         System.out.println("Berhasil menambahkan produk baru!\n");
 
         // Debugging
-        activePenjual.getProductRepo().getProductList();
+        System.out.println(activePenjual.getProductRepo().getProductList());
     }
 
     public void handleTambahStok() {
         // User memasukkan nama barang dalam produk.
         System.out.print("Masukkan nama barang: ");
         String namaBarang = input.next();
+        System.out.print("Masukkan jumlah stok yang ingin ditambah: ");
+        int tambahStok = input.nextInt();
 
         // Ambil nama produk berdasarkan UUID
         Product getProduct = activePenjual.getProductRepo().getProductById(activePenjual.getId());
+
+        if (getProduct != null && getProduct.getProductName().equals(namaBarang)) {
+            getProduct.setProductStock(tambahStok);
+            System.out.println("Stok " + getProduct.getProductName() + " berhasil ditambah!" + " Stok saat ini: " + getProduct.getProductStock());
+        } else {
+            System.out.println("Stok " + getProduct.getProductName() + " tidak ditemukan!");
+        }
 
     }
 
