@@ -86,7 +86,7 @@ public class SystemPenjual implements SystemMenu {
         } else {
             System.out.println("=================================");
             for (Product product : productList) {
-                System.out.printf("%-15s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+                System.out.printf("%-10s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
             }
             System.out.println("=================================\n");
         }
@@ -111,7 +111,7 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleTambahStok() {
-        // User memasukkan nama barang dalam produk.
+        // User memasukkan namaBarang dan tambahStok dalam produk.
         System.out.print("Masukkan nama barang: ");
         String namaBarang = input.next();
         System.out.print("Masukkan jumlah stok yang ingin ditambah: ");
@@ -123,7 +123,7 @@ public class SystemPenjual implements SystemMenu {
         // Cari produk berdasarkan nama
         Product getProduct = null;
         for (Product product : productList) {
-            if (product.getProductName().equals(namaBarang)) {
+            if (product.getProductName().equalsIgnoreCase(namaBarang)) {
                 getProduct = product;
                 break;
             }
@@ -131,7 +131,7 @@ public class SystemPenjual implements SystemMenu {
 
         if (getProduct != null) {
             getProduct.setProductStock(tambahStok);
-            System.out.println("Stok " + getProduct.getProductName() + " berhasil ditambah!" + " Stok saat ini: " + getProduct.getProductStock());
+            System.out.println("Stok " + getProduct.getProductName().toLowerCase() + " berhasil ditambah!" + " Stok saat ini: " + getProduct.getProductStock() + "\n");
         } else {
             System.out.println("Stok " + namaBarang + " tidak ditemukan!");
         }
@@ -139,8 +139,33 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleUbahHarga() {
-        System.out.println("Ubah Harga Barang dipilih. Implementasi di sini.");
         // Implementasi untuk ubah harga barang
+
+        // User memasukkan namaBarang dalam produk.
+        System.out.print("Masukkan nama barang: ");
+        String namaBarang = input.next();
+        System.out.print("Masukkan harga barang yang baru: ");
+        long price = input.nextInt();
+
+        // Ambil semua productList di dalam ProductRepository.java
+        List<Product> productList = activePenjual.getProductRepo().getProductList();
+
+        // Cari produk berdasarkan nama
+        Product getProduct = null;
+        for (Product product : productList) {
+            if (product.getProductName().equalsIgnoreCase(namaBarang)) {
+                getProduct = product;
+                break;
+            }
+        }
+
+        if (getProduct != null) {
+            getProduct.setProductPrice(price);
+            System.out.println("Harga " + getProduct.getProductName().toLowerCase() + " diperbarui: " + getProduct.getProductPrice() + "\n");
+        } else {
+            System.out.println("Harga " + namaBarang + " tidak ditemukan!");
+        }
+
     }
 
     public void handleKirimBarang() {
