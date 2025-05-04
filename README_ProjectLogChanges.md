@@ -8,6 +8,8 @@ supaya lebih gampang.
 5. handleKirimBarang() nanti keknya diintegrasi sama SystemPengirim
 6. Property "keranjang" diubah namanya menjadi "keranjangList" dan tipenya diubah menjadi List[CartProduct]
 7. Ditambah getUserByNameAndRole() supaya bisa dapet nama sekaligus rolenya lebih spesifik. Dan class castingnya lebih gampangg
+8. Pro tip: kalo mau ilangin buffer dan bisa nerima lebih spasi, pakai nextLine()
+
 
 Barang yang dibeli akan berkurang dan update di datanya yaa!
 

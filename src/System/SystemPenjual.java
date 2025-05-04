@@ -36,24 +36,31 @@ public class SystemPenjual implements SystemMenu {
     @Override
     public void handleMenu() {
         while (true) {
-            System.out.println(showMenu());
-            System.out.print("Pilih menu: ");
-            int choice = input.nextInt();
+            // try dan catch untuk antisipasi input bukan merupakan integer
+            try {
+                System.out.println(showMenu());
+                System.out.print("Pilih menu: ");
+                int choice = input.nextInt();
 
-            switch (choice) {
-                case 1 -> handleCekProduk();
-                case 2 -> handleTambahProduk();
-                case 3 -> handleTambahStok();
-                case 4 -> handleUbahHarga();
-                case 5 -> handleKirimBarang();
-                case 6 -> handleLaporanPendapatan();
-                case 7 -> handleCekSaldo();
-                case 8 -> handleRiwayatTransaksi();
-                case 9 -> {
-                    return;
+                switch (choice) {
+                    case 1 -> handleCekProduk();
+                    case 2 -> handleTambahProduk();
+                    case 3 -> handleTambahStok();
+                    case 4 -> handleUbahHarga();
+                    case 5 -> handleKirimBarang();
+                    case 6 -> handleLaporanPendapatan();
+                    case 7 -> handleCekSaldo();
+                    case 8 -> handleRiwayatTransaksi();
+                    case 9 -> {
+                        return;
+                    }
+                    default -> System.out.println("Pilihan tidak valid.");
                 }
-                default -> System.out.println("Pilihan tidak valid.");
+            } catch (Exception e) {
+                System.out.println("Input bukan integer. Input angka dari 1 hingga 4 saja.");
+                input.nextLine(); // Untuk membersihkan input buffer
             }
+
         }
     }
     /**
@@ -100,25 +107,29 @@ public class SystemPenjual implements SystemMenu {
         // Implementasi try catch dan while loop untuk antisipasi kesalahan input
         while (true) {
             try {
+                String namaProduk;
+                int stokProduk;
+                long price;
+
                 // User memasukkan nama produk, jumlah stok, harga produk.
                 System.out.print("Masukkan nama produk: ");
-                String namaProduk = input.next(); //
 
                 input.nextLine(); // Bersihkan input buffer setelah next()
+                namaProduk = input.nextLine();
 
                 // User memasukkan stok produk
                 System.out.print("Masukkan stok produk: ");
                 if (!input.hasNextInt()) {
                     throw new InputMismatchException("Stok produk harus berupa angka");
                 }
-                int stokProduk = input.nextInt();
+                stokProduk = input.nextInt();
 
                 // User memasukkan harga produk
                 System.out.print("Masukkan harga produk: ");
                 if (!input.hasNextLong()) {
                     throw new InputMismatchException("Harga produk harus berupa angka");
                 }
-                long price = input.nextLong();
+                price = input.nextLong();
 
                 // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
                 Product produkBaru = new Product(namaProduk, stokProduk, price);

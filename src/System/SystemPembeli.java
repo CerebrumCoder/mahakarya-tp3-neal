@@ -103,6 +103,7 @@ public class SystemPembeli implements SystemMenu {
 
         System.out.println("=================================");
         boolean adaBarang = false;
+        int tokoCount = 0; // Counter untuk jumlah toko
 
         // Iterasi semua user untuk mencari penjual
         for (User user : userList) {
@@ -113,9 +114,19 @@ public class SystemPembeli implements SystemMenu {
                 // Jika penjual memiliki produk, tampilkan nama toko dan produk
                 if (!productList.isEmpty()) {
                     adaBarang = true;
+
+                    // Tambahkan garus pemisah jika ini bukan toko pertama
+                    if (tokoCount > 0) {
+                        System.out.println("---------------------------------");
+                    }
+                    tokoCount++;
+
+                    // Tampilkan nama toko
                     System.out.println(penjual.getProductRepo().getNamaToko());
+
+                    // Tampilkan daftar produk
                     for (Product product : productList) {
-                        System.out.printf("%-8s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+                        System.out.printf("%-10s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
                     }
                 }
 
@@ -134,11 +145,12 @@ public class SystemPembeli implements SystemMenu {
 
         // Input toko penjual
         System.out.print("Masukkan toko penjual barang yang ingin dibeli: ");
-        String namaToko = input.next();
+        input.nextLine(); // Membersihkan buffer sebelum membaca input
+        String namaToko = input.nextLine(); // Gunakan nextLine() untuk membaca namaToko
 
         // Input nama barang
         System.out.print("Masukkan nama barang yang ingin dibeli: ");
-        String namaBarang = input.next();
+        String namaBarang = input.nextLine(); // Gunakan nextLine() untuk membaca namaBarang
 
         // Input jumlah barang
         System.out.print("Masukkan jumlah barang yang ingin dibeli: ");

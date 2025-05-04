@@ -44,22 +44,27 @@ public class MainMenuSystem implements SystemMenu {
     public void handleMenu() {
         while (true) {
             // try dan catch untuk antisipasi input bukan merupakan integer
-            System.out.print("\n");
-            System.out.println(showMenu());
-            System.out.print("Pilih menu: ");
-            input = new java.util.Scanner(System.in);
-            int choice = input.nextInt();
-            switch (choice) {
-                case 1 -> handleLogin();
-                case 2 -> handleRegister();
-                case 3 -> handleNextDay();
-                case 4 -> {
-                    return;
+            try {
+                System.out.print("\n");
+                System.out.println(showMenu());
+                System.out.print("Pilih menu: ");
+                input = new java.util.Scanner(System.in);
+                int choice = input.nextInt();
+                switch (choice) {
+                    case 1 -> handleLogin();
+                    case 2 -> handleRegister();
+                    case 3 -> handleNextDay();
+                    case 4 -> {
+                        return;
+                    }
+                    default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
                 }
-                default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
+            } catch (Exception e) {
+                System.out.println("Input bukan integer. Input angka dari 1 hingga 4 saja.");
+                input.nextLine(); // Untuk membersihkan input buffer
             }
-        }
 
+        }
     }
 
     public void handleLogin() {
