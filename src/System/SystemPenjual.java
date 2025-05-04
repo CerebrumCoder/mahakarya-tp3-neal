@@ -65,13 +65,11 @@ public class SystemPenjual implements SystemMenu {
         User user = mainRepository.getUserRepo().getUserByName(username);
 
         // Debugging untuk memastikan tipe objek
-        System.out.println("Debug: User ditemukan dengan tipe: " + user != null ? user.getClass().getSimpleName() : "null");
+        System.out.println(user.getClass().getSimpleName());
 
         // Periksa apakah User adalah instance dari Penjual
         if (user instanceof Penjual penjual) {
             this.activePenjual = penjual;
-        } else {
-            System.out.println("Penjual dengan username " + username + " tidak ditemukan atau bukan penjual.");
         }
     }
 

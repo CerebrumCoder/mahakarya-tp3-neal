@@ -326,6 +326,7 @@ public class SystemPembeli implements SystemMenu {
         // Filter transaksi berdasarkan nama pembeli
         boolean adaTransaksi = false;
         double totalPengeluaran = 0;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
 
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
@@ -334,7 +335,7 @@ public class SystemPembeli implements SystemMenu {
                 // Tampilkan laporan pengeluaran
                 System.out.println("\n===== LAPORAN PENGELUARAN =====");
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy").format(new Date()));
+                System.out.printf("Tanggal         %s%n", formatter.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy"))));
                 System.out.println("---------------------------------");
 
                 // Tampilkan produk yang dibeli
@@ -381,13 +382,12 @@ public class SystemPembeli implements SystemMenu {
 
                 // Tampilkan ringkasan transaksi
                 System.out.println("---------------------------------");
-                System.out.printf("Subtotal    %10.2f%n", subtotal);
-                System.out.printf("Diskon      %10.2f%n", hargaDiskon);
-                System.out.printf("Pajak (3%%)  %10.2f%n", pajak);
-                System.out.printf("Pengiriman  %10.2f%n", (double) transaksi.getBiayaOngkir());
+                System.out.printf("Subtotal   %10.2f%n", subtotal);
+                System.out.printf("Diskon     %10.2f%n", hargaDiskon);
+                System.out.printf("Pajak (3%%) %10.2f%n", pajak);
+                System.out.printf("Pengiriman %10.2f%n", (double) transaksi.getBiayaOngkir());
                 System.out.println("---------------------------------");
-                System.out.printf("Total       %10.2f%n", total);
-                System.out.println("=================================\n");
+                System.out.printf("Total      %10.2f%n", total);
             }
         }
 
@@ -396,8 +396,9 @@ public class SystemPembeli implements SystemMenu {
             System.out.println("Laporan pengeluaran masih kosong!");
             System.out.println("=================================\n");
         } else {
+            System.out.println("=================================");
             System.out.printf("Total Keseluruhan: %.2f%n", totalPengeluaran);
-            System.out.println("=================================\n");
+            System.out.println("\n");
         }
     }
 
