@@ -7,6 +7,7 @@ supaya lebih gampang.
 4. Ada perubahan di dalam UserRepository.java yang awalnya getAll() tipe datanya User[], diubah menjadi List[User]. Tujuannya supaya lebih gampang.
 5. handleKirimBarang() nanti keknya diintegrasi sama SystemPengirim
 6. Property "keranjang" diubah namanya menjadi "keranjangList" dan tipenya diubah menjadi List[CartProduct]
+7. Ditambah getUserByNameAndRole() supaya bisa dapet nama sekaligus rolenya lebih spesifik. Dan class castingnya lebih gampangg
 
 Barang yang dibeli akan berkurang dan update di datanya yaa!
 
