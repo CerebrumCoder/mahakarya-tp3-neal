@@ -1,5 +1,6 @@
 package System;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -210,7 +211,7 @@ public class SystemPembeli implements SystemMenu {
             subtotal += totalHarga;
 
             // Tampilkan informasi produk
-            System.out.printf("%-8s %10.2f %5d (%10.2f)%n", product.getProductName(), (double) product.getProductPrice(), cartProduct.getProductAmount(), (double) totalHarga);
+            System.out.printf("%-8s %10.2f %5d (%.2f)%n", product.getProductName(), (double) product.getProductPrice(), cartProduct.getProductAmount(), (double) totalHarga);
         }
 
         // Output subtotal
@@ -240,7 +241,7 @@ public class SystemPembeli implements SystemMenu {
                 hargaDiskon = subtotal * persenDiskon / 100.0;
                 subtotalSetelahDiskon = subtotal - hargaDiskon;
 
-                // Kurangi sisa pemakaian Voucher
+                // Kurangi sisa pemakaian Voucher (nanti ditambah)
 
 
                 System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
@@ -279,7 +280,25 @@ public class SystemPembeli implements SystemMenu {
         activePembeli.setBalance(activePembeli.getBalance() - (long) totalAkhir);
         System.out.printf("Pembelian sukses! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
 
+        // Menambahkan transaksi ke TransaksiRepository.java
+        String idTransaksi = "TRX" + new java.text.SimpleDateFormat("yyyyMMdd").format(new Date()) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1);
+        List<TransactionProduct> produkDibeli = new ArrayList<>();
 
+        for (CartProduct cartProduct : keranjangList) {
+            produkDibeli.add(new TransactionProduct(cartProduct.getProductId(), cartProduct.getProductAmount()));
+        }
+        Transaksi transaksiBaru = new Transaksi(
+                idTransaksi,
+                activePembeli.getUsername(),
+                null, //nama penjual,
+                null,
+                kodeVoucher.equalsIgnoreCase("skip") ? null : kodeVoucher,
+                produkDibeli,
+                pilihanPengiriman == 1 ? "Instant" : pilihanPengiriman == 2 ? "Next Day" : "Regular"
+        );
+
+        // Tambah Transaksi ke dalam list transaksi
+        mainRepository.getTransaksiRepo().addTransaksi(transaksiBaru);
     }
 
     public void handleLacakBarang() {
@@ -294,7 +313,8 @@ public class SystemPembeli implements SystemMenu {
 
         // Filter transaksi berdasarkan nama pembeli
         boolean adaTransaksi = false;
-        double totalPendapatan = 0;
+        double totalPengeluaran = 0;
+
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
                 adaTransaksi = true;
@@ -306,6 +326,7 @@ public class SystemPembeli implements SystemMenu {
                 System.out.println("---------------------------------");
 
                 // Tampilkan produk yang dibeli
+                double subtotal = 0;
                 for (TransactionProduct produkTransaksi : transaksi.getProdukDibeli()) {
                     Product product = null;
 
@@ -321,15 +342,47 @@ public class SystemPembeli implements SystemMenu {
                     }
 
                     if (product != null) {
-                        long totalHarga = product.getProductPrice() *
+                        long totalHarga = product.getProductPrice() * produkTransaksi.getProductAmount();
+                        subtotal += totalHarga;
+                        System.out.printf("%-10s %10.2f %5d (%10.2f)%n", product.getProductName(),
+                                (double) product.getProductPrice(), produkTransaksi.getProductAmount(), (double) totalHarga);
                     }
                 }
+
+                // Hitung diskon, pajak, dan total
+                double diskon = 0;
+                if (transaksi.getIdDiskon() != null) {
+                    Voucher voucher = mainRepository.getVoucherRepo().getById(transaksi.getIdDiskon());
+                    if (voucher != null) {
+                        int persenDiskon = voucher.calculateDisc();
+                        diskon = subtotal * persenDiskon / 100.0;
+                    }
+                }
+
+                double pajak = subtotal * 0.03; // Pajak 3%
+                double total = subtotal - diskon + pajak + transaksi.getBiayaOngkir();
+
+                // Tambahkan ke total pengeluaran
+                totalPengeluaran += total;
+
+                // Tampilkan ringkasan transaksi
+                System.out.println("---------------------------------");
+                System.out.printf("Subtotal        %10.2f%n", subtotal);
+                System.out.printf("Diskon          %10.2f%n", diskon);
+                System.out.printf("Pajak (3%%)      %10.2f%n", pajak);
+                System.out.printf("Pengiriman      %10.2f%n", (double) transaksi.getBiayaOngkir());
+                System.out.println("---------------------------------");
+                System.out.printf("Total           %10.2f%n", total);
+                System.out.println("=================================\n");
             }
         }
 
         if (!adaTransaksi) {
             System.out.println("=================================");
             System.out.println("Laporan pengeluaran masih kosong!");
+            System.out.println("=================================\n");
+        } else {
+            System.out.printf("Total Pengeluaran   : %.2f%n", totalPengeluaran);
             System.out.println("=================================\n");
         }
     }
