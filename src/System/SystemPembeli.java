@@ -64,11 +64,13 @@ public class SystemPembeli implements SystemMenu {
      * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau add User Pembeli.
      * Lalu datanya di pass lewat parameter terus di definisikan di this.activePembeli */
     public void setActivePembeli(String username) {
-        // Ambil penjual dari repository berdasarkan username
-        Pembeli getPembeli = (Pembeli) mainRepository.getUserRepo().getUserByName(username);
+        // Ambil pembeli dari repository berdasarkan username
+        // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak terjadi error
+        User user = mainRepository.getUserRepo().getUserByName(username);
 
-        if (getPembeli != null && getPembeli.getRole().equals("Pembeli")) {
-            this.activePembeli = getPembeli;
+        // Periksa apakah User adalah instance dari Pembeli
+        if (user instanceof Pembeli pembeli) {
+            this.activePembeli = pembeli;
         } else {
             System.out.println("Pembeli dengan username " + username + " tidak ditemukan atau bukan pembeli.");
         }

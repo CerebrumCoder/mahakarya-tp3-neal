@@ -3,11 +3,8 @@ package System;
 import java.util.List;
 import java.util.Scanner;
 
-import Models.Pembeli;
-import Models.Penjual;
+import Models.*;
 import Main.Burhanpedia;
-import Models.Product;
-import Models.Transaksi;
 
 public class SystemPenjual implements SystemMenu {
     private Penjual activePenjual; // Penjual yang sedang login
@@ -63,11 +60,13 @@ public class SystemPenjual implements SystemMenu {
      * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau add User Penjual.
      * Lalu datanya di pass lewat parameter terus di definisikan di this.activePenjual */
     public void setActivePenjual(String username) {
-        // Ambil penjual dari repository berdasarkan username
-        Penjual getPenjual = (Penjual) mainRepository.getUserRepo().getUserByName(username);
+        // Ambil penjual dari repository berdasarkan username.
+        // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak terjadi error
+        User user = mainRepository.getUserRepo().getUserByName(username);
 
-        if (getPenjual != null && getPenjual.getRole().equals("Penjual")) {
-            this.activePenjual = getPenjual;
+        // Periksa apakah User adalah instance dari Penjual
+        if (user instanceof Penjual penjual) {
+            this.activePenjual = penjual;
         } else {
             System.out.println("Penjual dengan username " + username + " tidak ditemukan atau bukan penjual.");
         }
