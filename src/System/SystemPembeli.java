@@ -338,7 +338,10 @@ public class SystemPembeli implements SystemMenu {
                 // Tampilkan laporan pengeluaran
                 System.out.println("\n===== LAPORAN PENGELUARAN =====");
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", formatter.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy"))));
+
+                // Format tanggal transaksi menggunakan formatter dengan locale Indonesia
+                String formattedDate = LocalDateTime.now().format(formatter);
+                System.out.printf("Tanggal         %s%n", formattedDate);
                 System.out.println("---------------------------------");
 
                 // Tampilkan produk yang dibeli
