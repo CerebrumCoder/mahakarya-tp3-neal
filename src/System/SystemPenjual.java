@@ -162,7 +162,8 @@ public class SystemPenjual implements SystemMenu {
 
         if (getProduct != null) {
             getProduct.setProductPrice(price);
-            System.out.printf("Harga %s diperbarui: %.2f%n", getProduct.getProductName().toLowerCase(), (double) getProduct.getProductPrice());
+            System.out.printf("Harga %s diperbarui: %.2f", getProduct.getProductName().toLowerCase(), (double) getProduct.getProductPrice());
+            System.out.println("\n");
         } else {
             System.out.println("Harga " + namaBarang + " tidak ditemukan!");
         }

@@ -65,10 +65,10 @@ public class SystemPembeli implements SystemMenu {
         // Ambil penjual dari repository berdasarkan username
         Pembeli getPembeli = (Pembeli) mainRepository.getUserRepo().getUserByName(username);
 
-        if (getPembeli != null && getPembeli.getRole().equals("Penjual")) {
+        if (getPembeli != null && getPembeli.getRole().equals("Pembeli")) {
             this.activePembeli = getPembeli;
         } else {
-            System.out.println("Pembeli dengan username " + username + " tidak ditemukan atau bukan penjual.");
+            System.out.println("Pembeli dengan username " + username + " tidak ditemukan atau bukan pembeli.");
         }
     }
 
