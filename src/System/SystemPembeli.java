@@ -231,13 +231,49 @@ public class SystemPembeli implements SystemMenu {
         System.out.println("=================================");
         System.out.print("Kode: ");
         String kodeVoucher = input.next();
-        double diskon = 0;
+        double hargaDiskon = 0;
+        double subtotalSetelahDiskon = 0;
         if (!kodeVoucher.equalsIgnoreCase("skip")) {
             Voucher voucher = mainRepository.getVoucherRepo().getById(kodeVoucher);
             if (voucher != null && voucher.isValid(new Date())) {
-                diskon = voucher.calculateDisc(subtotal);
+                int persenDiskon = voucher.calculateDisc();
+                hargaDiskon = subtotal * persenDiskon / 100.0;
+                subtotalSetelahDiskon = subtotal - hargaDiskon;
+                System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
+            } else {
+                System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
             }
         }
+
+        // Pilih opsi pengiriman
+        System.out.println("Pilih opsi pengiriman:");
+        System.out.println("1. Instant (20000)");
+        System.out.println("2. Next Day (15000)");
+        System.out.println("3. Regular (10000)");
+        System.out.print("Pilihan pengiriman : ");
+        int pilihanPengiriman = input.nextInt();
+        long biayaPengiriman = switch (pilihanPengiriman) {
+            case 1 -> 20000;
+            case 2 -> 15000;
+            case 3 -> 10000;
+
+            // Implementasi try catch
+            default -> throw new IllegalStateException("Unexpected value: " + pilihanPengiriman);
+        };
+
+        // Hitung total akhir + pajak
+        double pajak = subtotalSetelahDiskon * 0.03;
+        double totalAkhirTanpaPengiriman = subtotalSetelahDiskon - pajak;
+        double totalAkhir = subtotalSetelahDiskon - pajak + biayaPengiriman;
+
+        // Cek saldo pembeli
+        if (activePembeli.getBalance() < totalAkhir) {
+            System.out.println("Pembelian gagal. Saldo tidak cukup!");
+            return;
+        }
+
+        activePembeli.setBalance(activePembeli.getBalance() - (long) totalAkhir);
+        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
 
 
     }
