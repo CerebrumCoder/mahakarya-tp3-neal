@@ -277,8 +277,9 @@ public class SystemPembeli implements SystemMenu {
             return;
         }
 
-        activePembeli.setBalance(activePembeli.getBalance() - (long) totalAkhir);
-        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
+        activePembeli.setBalance((long) totalAkhir);
+        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
+        System.out.println("\n");
 
         // Menambahkan transaksi ke TransaksiRepository.java
         String idTransaksi = "TRX" + new java.text.SimpleDateFormat("yyyyMMdd").format(new Date()) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1);
@@ -322,7 +323,7 @@ public class SystemPembeli implements SystemMenu {
                 // Tampilkan laporan pengeluaran
                 System.out.println("\n===== LAPORAN PENGELUARAN =====");
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy"));
+                System.out.printf("Tanggal         %s%n", new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy").format(new Date()));
                 System.out.println("---------------------------------");
 
                 // Tampilkan produk yang dibeli
@@ -367,12 +368,12 @@ public class SystemPembeli implements SystemMenu {
 
                 // Tampilkan ringkasan transaksi
                 System.out.println("---------------------------------");
-                System.out.printf("Subtotal        %10.2f%n", subtotal);
-                System.out.printf("Diskon          %10.2f%n", diskon);
-                System.out.printf("Pajak (3%%)      %10.2f%n", pajak);
-                System.out.printf("Pengiriman      %10.2f%n", (double) transaksi.getBiayaOngkir());
+                System.out.printf("Subtotal    %10.2f%n", subtotal);
+                System.out.printf("Diskon      %10.2f%n", diskon);
+                System.out.printf("Pajak (3%%) %10.2f%n", pajak);
+                System.out.printf("Pengiriman  %10.2f%n", (double) transaksi.getBiayaOngkir());
                 System.out.println("---------------------------------");
-                System.out.printf("Total           %10.2f%n", total);
+                System.out.printf("Total       %10.2f%n", total);
                 System.out.println("=================================\n");
             }
         }
@@ -382,7 +383,7 @@ public class SystemPembeli implements SystemMenu {
             System.out.println("Laporan pengeluaran masih kosong!");
             System.out.println("=================================\n");
         } else {
-            System.out.printf("Total Pengeluaran   : %.2f%n", totalPengeluaran);
+            System.out.printf("Total Keseluruhan: %.2f%n", totalPengeluaran);
             System.out.println("=================================\n");
         }
     }
