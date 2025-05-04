@@ -1,5 +1,6 @@
 package System;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -96,27 +97,45 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleTambahProduk() {
-        // Implementasi try catch
-        try {
-            // User memasukkan nama produk, jumlah stok, harga produk.
-            System.out.print("Masukkan nama produk: ");
-            String namaProduk = input.next();
-            System.out.print("Masukkan stok produk: ");
-            int stokProduk = input.nextInt();
-            System.out.print("Masukkan harga produk: ");
-            long price = input.nextLong();
+        // Implementasi try catch dan while loop untuk antisipasi kesalahan input
+        while (true) {
+            try {
+                // User memasukkan nama produk, jumlah stok, harga produk.
+                System.out.print("Masukkan nama produk: ");
+                String namaProduk = input.next(); //
 
-            // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
-            Product produkBaru = new Product(namaProduk, stokProduk, price);
-            activePenjual.getProductRepo().addProduct(produkBaru);
-            System.out.println("Berhasil menambahkan produk baru!\n");
+                input.nextLine(); // Bersihkan input buffer setelah next()
 
-            // Debugging
-            System.out.println(activePenjual.getProductRepo().getProductList());
-        } catch (java.util.InputMismatchException e) {
-            System.out.println("Input tidak valid. Pastikan memasukkan angka untuk stok dan harga produk.");
-            input.nextLine(); // Membersihkan input buffer
+                // User memasukkan stok produk
+                System.out.print("Masukkan stok produk: ");
+                if (!input.hasNextInt()) {
+                    throw new InputMismatchException("Stok produk harus berupa angka");
+                }
+                int stokProduk = input.nextInt();
+
+                // User memasukkan harga produk
+                System.out.print("Masukkan harga produk: ");
+                if (!input.hasNextLong()) {
+                    throw new InputMismatchException("Harga produk harus berupa angka");
+                }
+                long price = input.nextLong();
+
+                // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
+                Product produkBaru = new Product(namaProduk, stokProduk, price);
+                activePenjual.getProductRepo().addProduct(produkBaru);
+                System.out.println("Berhasil menambahkan produk baru!\n");
+
+                // Debugging
+                System.out.println(activePenjual.getProductRepo().getProductList());
+
+                // Keluar dari loop
+                break;
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Input tidak valid. Pastikan memasukkan angka untuk stok dan harga produk.");
+                input.nextLine(); // Membersihkan input buffer
+            }
         }
+
 
     }
 
