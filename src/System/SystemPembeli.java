@@ -1,9 +1,8 @@
 package System;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import Models.*;
 import Main.Burhanpedia;
@@ -236,19 +235,24 @@ public class SystemPembeli implements SystemMenu {
         String kodeVoucher = input.next();
         double hargaDiskon = 0;
         double subtotalSetelahDiskon = 0;
-        if (!kodeVoucher.equalsIgnoreCase("skip")) {
-            Voucher voucher = mainRepository.getVoucherRepo().getById(kodeVoucher);
-            if (voucher != null && voucher.isValid(new Date())) {
-                int persenDiskon = voucher.calculateDisc();
-                hargaDiskon = subtotal * persenDiskon / 100.0;
-                subtotalSetelahDiskon = subtotal - hargaDiskon;
 
-                // Kurangi sisa pemakaian Voucher (nanti ditambah)
+        // Antisipasi kalo salah masukin voucher, jadinya dijadiin while loop
+        while (true) {
+            if (!kodeVoucher.equalsIgnoreCase("skip")) {
+                Voucher voucher = mainRepository.getVoucherRepo().getById(kodeVoucher);
+                if (voucher != null && voucher.isValid(new Date())) {
+                    int persenDiskon = voucher.calculateDisc();
+                    hargaDiskon = subtotal * persenDiskon / 100.0;
+                    subtotalSetelahDiskon = subtotal - hargaDiskon;
+
+                    // Kurangi sisa pemakaian Voucher (nanti ditambah)
 
 
-                System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
-            } else {
-                System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
+                    System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
+                    break;
+                } else {
+                    System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
+                }
             }
         }
 
@@ -270,6 +274,8 @@ public class SystemPembeli implements SystemMenu {
 
         // Hitung total akhir + pajak
         double pajak = subtotalSetelahDiskon * 0.03;
+
+        // Ini untuk output nanti di "Saldo saat in: "
         double totalAkhirTanpaPengiriman = subtotalSetelahDiskon - pajak;
         double totalAkhir = subtotalSetelahDiskon - pajak + biayaPengiriman;
 
@@ -280,13 +286,16 @@ public class SystemPembeli implements SystemMenu {
         }
 
         activePembeli.setBalance((long) totalAkhir);
-        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
+        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", totalAkhirTanpaPengiriman);
         System.out.println("\n");
 
         // Menambahkan transaksi ke TransaksiRepository.java
-        String idTransaksi = "TRX" + new java.text.SimpleDateFormat("yyyyMMdd").format(new Date()) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1);
-        List<TransactionProduct> produkDibeli = new ArrayList<>();
+        // Ini Date Formatter untuk di TRX tanggal nanti dalam waktu Indonesia
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+        String idTransaksi = "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1);
 
+        // List produkDibeli
+        List<TransactionProduct> produkDibeli = new ArrayList<>();
         for (CartProduct cartProduct : keranjangList) {
             produkDibeli.add(new TransactionProduct(cartProduct.getProductId(), cartProduct.getProductAmount()));
         }
@@ -353,29 +362,31 @@ public class SystemPembeli implements SystemMenu {
                 }
 
                 // Hitung diskon, pajak, dan total
-                double diskon = 0;
+                double hargaDiskon = 0;
+                double subtotalSetelahDiskon = 0;
                 if (transaksi.getIdDiskon() != null) {
                     Voucher voucher = mainRepository.getVoucherRepo().getById(transaksi.getIdDiskon());
                     if (voucher != null) {
                         int persenDiskon = voucher.calculateDisc();
-                        diskon = subtotal * persenDiskon / 100.0;
+                        hargaDiskon = subtotal * persenDiskon / 100.0;
+                        subtotalSetelahDiskon = subtotal - hargaDiskon;
                     }
                 }
 
                 double pajak = subtotal * 0.03; // Pajak 3%
-                double total = subtotal - diskon + pajak + transaksi.getBiayaOngkir();
+                double total = subtotalSetelahDiskon + pajak + transaksi.getBiayaOngkir();
 
                 // Tambahkan ke total pengeluaran
                 totalPengeluaran += total;
 
                 // Tampilkan ringkasan transaksi
                 System.out.println("---------------------------------");
-                System.out.printf("Subtotal    %10.2f%n", subtotal);
-                System.out.printf("Diskon      %10.2f%n", diskon);
-                System.out.printf("Pajak (3%%) %10.2f%n", pajak);
-                System.out.printf("Pengiriman  %10.2f%n", (double) transaksi.getBiayaOngkir());
+                System.out.printf("Subtotal    %-10.2f%n", subtotal);
+                System.out.printf("Diskon      %-10.2f%n", hargaDiskon);
+                System.out.printf("Pajak (3%%) %-10.2f%n", pajak);
+                System.out.printf("Pengiriman  %-10.2f%n", (double) transaksi.getBiayaOngkir());
                 System.out.println("---------------------------------");
-                System.out.printf("Total       %10.2f%n", total);
+                System.out.printf("Total       %-10.2f%n", total);
                 System.out.println("=================================\n");
             }
         }

@@ -93,21 +93,28 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleTambahProduk() {
-        // User memasukkan nama produk, jumlah stok, harga produk.
-        System.out.print("Masukkan nama produk: ");
-        String namaProduk = input.next();
-        System.out.print("Masukkan stok produk: ");
-        int stokProduk = input.nextInt();
-        System.out.print("Masukkan harga produk: ");
-        long price = input.nextLong();
+        // Implementasi try catch
+        try {
+            // User memasukkan nama produk, jumlah stok, harga produk.
+            System.out.print("Masukkan nama produk: ");
+            String namaProduk = input.next();
+            System.out.print("Masukkan stok produk: ");
+            int stokProduk = input.nextInt();
+            System.out.print("Masukkan harga produk: ");
+            long price = input.nextLong();
 
-        // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
-        Product produkBaru = new Product(namaProduk, stokProduk, price);
-        activePenjual.getProductRepo().addProduct(produkBaru);
-        System.out.println("Berhasil menambahkan produk baru!\n");
+            // Setelah mendapat datanya ditambah sebagai list baru di dalam produkRepo
+            Product produkBaru = new Product(namaProduk, stokProduk, price);
+            activePenjual.getProductRepo().addProduct(produkBaru);
+            System.out.println("Berhasil menambahkan produk baru!\n");
 
-        // Debugging
-        System.out.println(activePenjual.getProductRepo().getProductList());
+            // Debugging
+            System.out.println(activePenjual.getProductRepo().getProductList());
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Input tidak valid. Pastikan memasukkan angka untuk stok dan harga produk.");
+            input.nextLine(); // Membersihkan input buffer
+        }
+
     }
 
     public void handleTambahStok() {
