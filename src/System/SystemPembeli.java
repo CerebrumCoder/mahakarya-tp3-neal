@@ -1,10 +1,10 @@
 package System;
 
+import java.util.List;
 import java.util.Scanner;
 
-import Models.Pembeli;
+import Models.*;
 import Main.Burhanpedia;
-import Models.Penjual;
 
 public class SystemPembeli implements SystemMenu {
     private Pembeli activePembeli;
@@ -86,23 +86,137 @@ public class SystemPembeli implements SystemMenu {
 
         // Setelah dapat pricenya lalu disimpan ke dalam kelas User Pembeli
         activePembeli.setBalance(price);
-        System.out.printf("Saldo berhasil ditambah! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
-
+        System.out.printf("Saldo berhasil ditambah! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
+        System.out.println("\n");
     }
 
     public void handleCekDaftarBarang() {
-        System.out.println("Cek Daftar Barang dipilih. Implementasi di sini.");
         // Implementasi untuk cek daftar barang
+        // Ambil semua user dari UserRepository
+        List<User> userList = mainRepository.getUserRepo().getAll();
+
+        System.out.println("=================================");
+        boolean adaBarang = false;
+
+        // Iterasi semua user untuk mencari penjual
+        for (User user : userList) {
+            if (user instanceof Penjual penjual) {
+                // Ambil daftar produk dari ProductRepository.java milik Penjual
+                List<Product> productList = penjual.getProductRepo().getProductList();
+
+                // Jika penjual memiliki produk, tampilkan nama toko dan produk
+                if (!productList.isEmpty()) {
+                    adaBarang = true;
+                    System.out.println(penjual.getProductRepo().getNamaToko());
+                    for (Product product : productList) {
+                        System.out.printf("%-10s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+                    }
+                }
+
+            }
+        }
+        if (!adaBarang) {
+            System.out.println("Tidak ada barang yang tersedia");
+        }
+        System.out.println("=================================\n");
+
     }
 
     public void handleTambahKeKeranjang() {
-        System.out.println("Tambah Barang ke Keranjang dipilih. Implementasi di sini.");
         // Implementasi untuk menambah barang ke keranjang
+        // Nambah barang ke keranjang
+
+        // Input toko penjual
+        System.out.print("Masukkan toko penjual barang yang ingin dibeli: ");
+        String namaToko = input.next();
+
+        // Input nama barang
+        System.out.print("Masukkan nama barang yang ingin dibeli: ");
+        String namaBarang = input.next();
+
+        // Input jumlah barang
+        System.out.print("Masukkan jumlah barang yang ingin dibeli: ");
+        int jumlahBarang = input.nextInt();
+
+        // Cari penjual berdasarkan nama toko
+        List<User> userList = mainRepository.getUserRepo().getAll();
+        Penjual penjualDitemukan = null;
+        for (User user : userList) {
+            if (user instanceof Penjual penjual && penjual.getProductRepo().getNamaToko().equalsIgnoreCase(namaToko)) {
+                penjualDitemukan = penjual;
+                break;
+            }
+        }
+
+        if (penjualDitemukan == null) {
+            System.out.println("Toko dengan nama " + namaToko + " tidak ditemukan.");
+            return;
+        }
+
+        // Cari produk berdasarkan nama barang
+        Product produkDitemukan = null;
+        for (Product product : penjualDitemukan.getProductRepo().getProductList()) {
+            if (product.getProductName().equalsIgnoreCase(namaBarang)) {
+                produkDitemukan = product;
+                break;
+            }
+        }
+
+        if (produkDitemukan == null) {
+            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan di toko " + namaToko + "!");
+            return;
+        }
+
+        // Tambahkan barang ke keranjang pembeli
+        activePembeli.getCart().addToCart(produkDitemukan.getProductId(), jumlahBarang);
     }
 
     public void handleCheckout() {
-        System.out.println("Checkout Keranjang dipilih. Implementasi di sini.");
         // Implementasi untuk checkout keranjang
+        // Ambil isi keranjang
+        List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
+
+        if (keranjangList.isEmpty()) {
+            System.out.println("=================================");
+            System.out.println("Keranjang masih kosong!");
+            System.out.println("=================================\n");
+            return;
+        }
+
+        // Tampilkan isi keranjang
+        System.out.println("=================================");
+        long subtotal = 0;
+        for (CartProduct cartProduct : keranjangList) {
+            Product product = null;
+
+            // Cari produk di semua penjual
+            List<User> userList = mainRepository.getUserRepo().getAll();
+            for (User user : userList) {
+                if (user instanceof Penjual penjual) {
+                    product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
+                    if (product != null) {
+                        break;
+                    }
+                }
+            }
+            if (product == null) {
+                System.out.println("Product dengan ID " + cartProduct.getProductId() + " tidak ditemukan!");
+                return; // Jika ada produk yang tidak ditemukan, batalkan checkout
+            }
+
+            // Ini mengkalikan harga produk dengan banyak produk yang dibeli sama User
+            long totalHarga = product.getProductPrice() * cartProduct.getProductAmount();
+            subtotal += totalHarga;
+            System.out.printf("%-10s %10.2f %d (%10.2f)%n", product.getProductName(), (double) product.getProductPrice(), cartProduct.getProductAmount(), (double) totalHarga);
+        }
+
+        // Output subtotal
+        System.out.println("---------------------------------");
+        System.out.printf("Subtotal %25.2f%n", (double) subtotal);
+        System.out.println("=================================");
+
+
+
     }
 
     public void handleLacakBarang() {
@@ -111,14 +225,18 @@ public class SystemPembeli implements SystemMenu {
     }
 
     public void handleLaporanPengeluaran() {
-        System.out.println("Lihat Laporan Pengeluaran dipilih. Implementasi di sini.");
         // Implementasi untuk melihat laporan pengeluaran
+        System.out.println("=================================");
+        System.out.println("Laporan pengeluaran masih kosong!");
+        System.out.println("=================================\n");
     }
 
     /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
      * keterangan seluruh transaksi-transaksi yang dibuat oleh Pembeli yang logged in saat ini.*/
     public void handleRiwayatTransaksi() {
-        System.out.println("Lihat Riwayat Transaksi dipilih. Implementasi di sini.");
         // Implementasi untuk melihat riwayat transaksi
+        System.out.println("======= RIWAYAT TRANSAKSI =======");
+        System.out.println("Riwayat transaksi masih kosong!");
+        System.out.println("=================================\n");
     }
 }

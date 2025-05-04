@@ -261,7 +261,7 @@ public class MainMenuSystem implements SystemMenu {
                     }
 
                     // Untuk debugging
-                    System.out.println(Arrays.toString(mainRepository.getUserRepo().getAll()));
+                    System.out.println(mainRepository.getUserRepo().getAll());
                 } catch (Exception e) {
                     System.out.println("Input bukan integer. Silahkan coba lagi.");
                     input.nextLine(); // Untuk membersihkan input buffer

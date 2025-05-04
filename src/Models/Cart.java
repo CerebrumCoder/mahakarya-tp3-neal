@@ -4,30 +4,31 @@ import java.util.List;
 import java.util.UUID;
 
 public class Cart {
-    private List<CartProduct> keranjang; // Menyimpan seluruh CartProduct yang sedang dimiliki User
+    private List<CartProduct> keranjangList; // Menyimpan seluruh CartProduct yang sedang dimiliki User
 
     public Cart() {
-        this.keranjang = new ArrayList<>();
+        this.keranjangList = new ArrayList<>();
     }
 
     // Method untuk menambahkan isi cart
-    public String addToCart(UUID productId, int quantity) {
-        for (CartProduct product : keranjang) {
+    public void addToCart(UUID productId, int quantity) {
+        for (CartProduct product : keranjangList) {
             if (product.getProductId().equals(productId)) {
                 product.setAmount(product.getProductAmount() + quantity);
-                return "Produk berhasil ditambahkan ke keranjang.";
+                System.out.println("Produk berhasil ditambahkan ke keranjang.");
+                return;
             }
         }
-        keranjang.add(new CartProduct(productId, quantity));
-        return "Produk baru berhasil ditambahkan ke keranjang.";
+        keranjangList.add(new CartProduct(productId, quantity));
+        System.out.println("Produk baru berhasil ditambahkan ke keranjang.");
     }
 
     // Method untuk menghapus suatu Product di dalam Cart
     // dan mengembalikan String yang berupa pesan sukses atau error
     public String deleteFromCart(UUID productId) {
-        for (CartProduct product : keranjang) {
+        for (CartProduct product : keranjangList) {
             if (product.getProductId().equals(productId)) {
-                keranjang.remove(product);
+                keranjangList.remove(product);
                 return "Produk berhasil dihapus dari keranjang.";
             }
         }
@@ -35,7 +36,10 @@ public class Cart {
     }
 
     // Method untuk mendapatkan isi konten suatu Cart
-    public CartProduct[] getCartContent() {
-        return keranjang.toArray(new CartProduct[0]);
+    public List<CartProduct> getCartContent() {
+        // Mengembalikan salinan daftar keranjang
+        return new ArrayList<>(keranjangList);
+        // Awal ini:
+        // return keranjangList.toArray(new CartProduct[0]);
     }
 }

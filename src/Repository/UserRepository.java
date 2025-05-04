@@ -44,8 +44,10 @@ public class UserRepository {
     }
 
     // Method untuk mendapatkan semua user
-    public User[] getAll() {
-        return userList.toArray(new User[0]);
+    public List<User> getAll() {
+        return new ArrayList<>(userList);
+        // Awalnya ini:
+        // userList.toArray(new User[0])
     }
 
     // Method untuk menambahkan user ke repository
