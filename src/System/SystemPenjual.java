@@ -62,14 +62,16 @@ public class SystemPenjual implements SystemMenu {
     public void setActivePenjual(String username) {
         // Ambil penjual dari repository berdasarkan username.
         // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak terjadi error
-        User user = mainRepository.getUserRepo().getUserByName(username);
+        User user = mainRepository.getUserRepo().getUserByNameAndRole(username, "Penjual");
 
         // Debugging untuk memastikan tipe objek
-        System.out.println(user.getClass().getSimpleName());
+        System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
 
         // Periksa apakah User adalah instance dari Penjual
         if (user instanceof Penjual penjual) {
             this.activePenjual = penjual;
+        } else {
+            System.out.println("Penjual dengan username " + username + " tidak ditemukan atau bukan penjual");
         }
     }
 

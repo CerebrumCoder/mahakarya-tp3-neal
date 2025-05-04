@@ -40,7 +40,18 @@ public class UserRepository {
                 return user;
             }
         }
-        return null; // Return null jika user tidak ditemukan
+        return null; // Return null jika user dengan username dan role tidak ditemukan
+    }
+
+    // Method untuk mendapatkan user berdasarkan username dan role.
+    // Biar class casting lebih gampang ketika perpindahan dari User Pembeli ke Penjual atau sebaliknya atau ke Pengirim
+    public User getUserByNameAndRole(String username, String role) {
+        for (User user : userList) {
+            if (user.getUsername().equals(username) && user.getRole().equals(role)) {
+                return user;
+            }
+        }
+        return null; // Return null jika user dengan username dan role tidak ditemukan
     }
 
     // Method untuk mendapatkan semua user

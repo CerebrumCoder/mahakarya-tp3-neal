@@ -111,29 +111,40 @@ public class MainMenuSystem implements SystemMenu {
                 switch (roleChoice) {
                     case 1 -> {
                         if (Arrays.asList(roles).contains("Penjual")) {
-                            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-                            systemPenjual.setActivePenjual(username); // Pass data username ke systemPenjual untuk bisa akses produkRepo
-                            systemPenjual.handleMenu(); //Menu Penjual
-                            return; // Ketika systemPenjual input angka 9, maka dia akan membawa balik ke menu utama
+                            User penjualUser = mainRepository.getUserRepo().getUserByNameAndRole(username, "Penjual");
+                            if (penjualUser instanceof Penjual penjual) {
+                                System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                                systemPenjual.setActivePenjual(username); // Pass data username ke systemPenjual untuk bisa akses produkRepo
+                                systemPenjual.handleMenu(); //Menu Penjual
+                                return; // Ketika systemPenjual input angka 9, maka dia akan membawa balik ke menu utama
+                            }
+
                         } else {
                             System.out.println("Username " + username + " tidak memiliki role penjual!");
                         }
                     }
                     case 2 -> {
                         if (Arrays.asList(roles).contains("Pembeli")) {
-                            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-                            systemPembeli.setActivePembeli(username); // Pass data username ke systemPenjual untuk bisa akses produkRepo
-                            systemPembeli.handleMenu(); //Menu Pembeli
-                            return; // Ketika systemPembeli input angka 9, maka dia akan membawa balik ke menu utama
+                            User pembeliUser = mainRepository.getUserRepo().getUserByNameAndRole(username, "Pembeli");
+                            if (pembeliUser instanceof Pembeli pembeli) {
+                                System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                                systemPembeli.setActivePembeli(username); // Pass data username ke systemPenjual untuk bisa akses produkRepo
+                                systemPembeli.handleMenu(); //Menu Pembeli
+                                return; // Ketika systemPembeli input angka 9, maka dia akan membawa balik ke menu utama
+                            }
                         } else {
                             System.out.println("Username " + username + " tidak memiliki role pembeli!");
                         }
                     }
                     case 3 -> {
                         if (Arrays.asList(roles).contains("Pengirim")) {
-                            System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
-                            systemPengirim.handleMenu(); //Menu Pengirim
-                            return; // Ketika systemPengirim input angka 9, maka dia akan membawa balik ke menu utama
+                            User pengirimUser = mainRepository.getUserRepo().getUserByNameAndRole(username, "Pengirim");
+                            if (pengirimUser instanceof Pengirim pengirim) {
+                                System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                                systemPengirim.handleMenu(); //Menu Pengirim
+                                return; // Ketika systemPengirim input angka 9, maka dia akan membawa balik ke menu utama
+                            }
+
                         } else {
                             System.out.println("Username " + username + " tidak memiliki role pengirim!");
                         }
