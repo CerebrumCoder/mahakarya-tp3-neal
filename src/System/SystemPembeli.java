@@ -381,12 +381,12 @@ public class SystemPembeli implements SystemMenu {
 
                 // Tampilkan ringkasan transaksi
                 System.out.println("---------------------------------");
-                System.out.printf("Subtotal    %-10.2f%n", subtotal);
-                System.out.printf("Diskon      %-10.2f%n", hargaDiskon);
-                System.out.printf("Pajak (3%%) %-10.2f%n", pajak);
-                System.out.printf("Pengiriman  %-10.2f%n", (double) transaksi.getBiayaOngkir());
+                System.out.printf("Subtotal    %10.2f%n", subtotal);
+                System.out.printf("Diskon      %10.2f%n", hargaDiskon);
+                System.out.printf("Pajak (3%%)  %10.2f%n", pajak);
+                System.out.printf("Pengiriman  %10.2f%n", (double) transaksi.getBiayaOngkir());
                 System.out.println("---------------------------------");
-                System.out.printf("Total       %-10.2f%n", total);
+                System.out.printf("Total       %10.2f%n", total);
                 System.out.println("=================================\n");
             }
         }

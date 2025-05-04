@@ -8,6 +8,7 @@ supaya lebih gampang.
 5. handleKirimBarang() nanti keknya diintegrasi sama SystemPengirim
 6. Property "keranjang" diubah namanya menjadi "keranjangList" dan tipenya diubah menjadi List[CartProduct]
 
+Barang yang dibeli akan berkurang dan update di datanya yaa!
 
 Tanggal harus lebih dari hari ini!!!
 2025-05-12

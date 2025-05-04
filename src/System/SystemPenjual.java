@@ -64,6 +64,9 @@ public class SystemPenjual implements SystemMenu {
         // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak terjadi error
         User user = mainRepository.getUserRepo().getUserByName(username);
 
+        // Debugging untuk memastikan tipe objek
+        System.out.println("Debug: User ditemukan dengan tipe: " + user != null ? user.getClass().getSimpleName() : "null");
+
         // Periksa apakah User adalah instance dari Penjual
         if (user instanceof Penjual penjual) {
             this.activePenjual = penjual;
