@@ -122,6 +122,7 @@ public class MainMenuSystem implements SystemMenu {
                     case 2 -> {
                         if (Arrays.asList(roles).contains("Pembeli")) {
                             System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                            systemPembeli.setActivePembeli(username); // Pass data username ke systemPenjual untuk bisa akses produkRepo
                             systemPembeli.handleMenu(); //Menu Pembeli
                             return; // Ketika systemPembeli input angka 9, maka dia akan membawa balik ke menu utama
                         } else {

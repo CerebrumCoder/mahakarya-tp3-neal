@@ -4,6 +4,8 @@ Disini dikasih tahu mana method yang diganti tipe datanya
 2. Bagian cek promo dan voucher perlu ditambah Exception supaya enak ngerjainnya.
 3. Ada perubahan di dalam ProductRepository.java yang awalnya getProductList() tipe datanya Product[], diubah menjadi List[Product]. Tujuannya
 supaya lebih gampang.
+4. handleKirimBarang() nanti keknya diintegrasi sama SystemPengirim
   
 86HGCWI2MTc0Mjgy
 40MQ0TA5MTc0NjI1
+FF5BUSJIMTc0NjI1

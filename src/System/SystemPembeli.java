@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import Models.Pembeli;
 import Main.Burhanpedia;
+import Models.Penjual;
 
 public class SystemPembeli implements SystemMenu {
     private Pembeli activePembeli;
@@ -56,14 +57,37 @@ public class SystemPembeli implements SystemMenu {
         }
     }
 
+    /**
+     * Ini berfungsi untuk set activePembeli di file SystemPembeli.java terdefinisi.
+     * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau add User Pembeli.
+     * Lalu datanya di pass lewat parameter terus di definisikan di this.activePembeli */
+    public void setActivePembeli(String username) {
+        // Ambil penjual dari repository berdasarkan username
+        Pembeli getPembeli = (Pembeli) mainRepository.getUserRepo().getUserByName(username);
+
+        if (getPembeli != null && getPembeli.getRole().equals("Penjual")) {
+            this.activePembeli = getPembeli;
+        } else {
+            System.out.println("Pembeli dengan username " + username + " tidak ditemukan atau bukan penjual.");
+        }
+    }
+
     public void handleCekSaldo() {
-        System.out.println("Cek Saldo dipilih. Implementasi di sini.");
         // Implementasi untuk cek saldo pembeli
+        System.out.println("=================================");
+        System.out.printf("Stok saat ini: %.2f%n", (double) activePembeli.getBalance());
+        System.out.println("=================================\n");
     }
 
     public void handleTopupSaldo() {
-        System.out.println("Topup Saldo dipilih. Implementasi di sini.");
         // Implementasi untuk topup saldo pembeli
+        System.out.print("Masukkan jumlah saldo yang ingin ditambah: ");
+        long price = input.nextLong();
+
+        // Setelah dapat pricenya lalu disimpan ke dalam kelas User Pembeli
+        activePembeli.setBalance(price);
+        System.out.printf("Saldo berhasil ditambah! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
+
     }
 
     public void handleCekDaftarBarang() {
