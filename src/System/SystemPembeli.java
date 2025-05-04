@@ -239,6 +239,10 @@ public class SystemPembeli implements SystemMenu {
                 int persenDiskon = voucher.calculateDisc();
                 hargaDiskon = subtotal * persenDiskon / 100.0;
                 subtotalSetelahDiskon = subtotal - hargaDiskon;
+
+                // Kurangi sisa pemakaian Voucher
+
+
                 System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
             } else {
                 System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
@@ -285,9 +289,49 @@ public class SystemPembeli implements SystemMenu {
 
     public void handleLaporanPengeluaran() {
         // Implementasi untuk melihat laporan pengeluaran
-        System.out.println("=================================");
-        System.out.println("Laporan pengeluaran masih kosong!");
-        System.out.println("=================================\n");
+        // Ambil daftar transaksi dari TransaksiRepository
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+
+        // Filter transaksi berdasarkan nama pembeli
+        boolean adaTransaksi = false;
+        double totalPendapatan = 0;
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
+                adaTransaksi = true;
+
+                // Tampilkan laporan pengeluaran
+                System.out.println("\n===== LAPORAN PENGELUARAN =====");
+                System.out.printf("ID Transaksi    %s%n", transaksi.getId());
+                System.out.printf("Tanggal         %s%n", new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy"));
+                System.out.println("---------------------------------");
+
+                // Tampilkan produk yang dibeli
+                for (TransactionProduct produkTransaksi : transaksi.getProdukDibeli()) {
+                    Product product = null;
+
+                    // Cari produk di semua penjual
+                    List<User> userList = mainRepository.getUserRepo().getAll();
+                    for (User user : userList) {
+                        if (user instanceof Penjual penjual) {
+                            product = penjual.getProductRepo().getProductById(produkTransaksi.getProductId());
+                            if (product != null) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (product != null) {
+                        long totalHarga = product.getProductPrice() *
+                    }
+                }
+            }
+        }
+
+        if (!adaTransaksi) {
+            System.out.println("=================================");
+            System.out.println("Laporan pengeluaran masih kosong!");
+            System.out.println("=================================\n");
+        }
     }
 
     /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
