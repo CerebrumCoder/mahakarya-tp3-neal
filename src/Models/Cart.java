@@ -20,7 +20,7 @@ public class Cart {
             }
         }
         keranjangList.add(new CartProduct(productId, quantity));
-        System.out.println("Produk baru berhasil ditambahkan ke keranjang.");
+        System.out.println("Produk baru berhasil ditambahkan ke keranjang.\n");
     }
 
     // Method untuk menghapus suatu Product di dalam Cart

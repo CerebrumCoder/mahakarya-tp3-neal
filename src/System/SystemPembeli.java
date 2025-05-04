@@ -1,5 +1,6 @@
 package System;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -109,7 +110,7 @@ public class SystemPembeli implements SystemMenu {
                     adaBarang = true;
                     System.out.println(penjual.getProductRepo().getNamaToko());
                     for (Product product : productList) {
-                        System.out.printf("%-10s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+                        System.out.printf("%-8s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
                     }
                 }
 
@@ -204,17 +205,39 @@ public class SystemPembeli implements SystemMenu {
                 return; // Jika ada produk yang tidak ditemukan, batalkan checkout
             }
 
-            // Ini mengkalikan harga produk dengan banyak produk yang dibeli sama User
+            // Ini mengkalikan harga produk dengan banyak produk yang dibeli sama User. Gunakan jumlah dari CartProduct, bukan stok produk
             long totalHarga = product.getProductPrice() * cartProduct.getProductAmount();
             subtotal += totalHarga;
-            System.out.printf("%-10s %10.2f %d (%10.2f)%n", product.getProductName(), (double) product.getProductPrice(), cartProduct.getProductAmount(), (double) totalHarga);
+
+            // Tampilkan informasi produk
+            System.out.printf("%-8s %10.2f %5d (%10.2f)%n", product.getProductName(), (double) product.getProductPrice(), cartProduct.getProductAmount(), (double) totalHarga);
         }
 
         // Output subtotal
         System.out.println("---------------------------------");
-        System.out.printf("Subtotal %25.2f%n", (double) subtotal);
+        System.out.printf("Subtotal %10.2f%n", (double) subtotal);
         System.out.println("=================================");
 
+        // Konfirmasi pembelian. Kalo tidak sama dengan Y maka Checkout dibatalkan
+        System.out.print("Apakah Anda yakin dengan produknya? (Y/N): ");
+        String konfirmasi = input.next();
+        if (!konfirmasi.equalsIgnoreCase("Y")) {
+            System.out.println("Checkout dibatalkan.");
+            return;
+        }
+
+        // Masukkan kode voucher
+        System.out.println("Masukkan kode voucher.\nJika tidak ada, ketik 'skip'");
+        System.out.println("=================================");
+        System.out.print("Kode: ");
+        String kodeVoucher = input.next();
+        double diskon = 0;
+        if (!kodeVoucher.equalsIgnoreCase("skip")) {
+            Voucher voucher = mainRepository.getVoucherRepo().getById(kodeVoucher);
+            if (voucher != null && voucher.isValid(new Date())) {
+                diskon = voucher.calculateDisc(subtotal);
+            }
+        }
 
 
     }
