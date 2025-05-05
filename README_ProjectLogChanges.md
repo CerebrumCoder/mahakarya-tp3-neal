@@ -12,6 +12,12 @@ supaya lebih gampang.
 9. Detail seperti pilih menu dan perintah diubah
 
 
+- Saldo antar role dan kurangin voucher sama promo
+- Salah masukin input jadi problem juga
+
+admin
+admin
+
 Barang yang dibeli akan berkurang dan update di datanya yaa!
 
 Tanggal harus lebih dari hari ini!!!

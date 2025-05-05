@@ -213,7 +213,7 @@ public class SystemPembeli implements SystemMenu {
                 String konfirmasi = input.next();
 
                 if (!konfirmasi.equalsIgnoreCase("Y")) {
-                    System.out.println("\nPenambahan barang dibatalkan!");
+                    System.out.println("\nPenambahan barang dibatalkan!\n");
                     return;
                 }
 
@@ -230,7 +230,7 @@ public class SystemPembeli implements SystemMenu {
                         }
                     }
                 }
-                System.out.println("\nBarang berhasil ditambahkan");
+                System.out.println("\nBarang berhasil ditambahkan!");
             }
         }
         // Tambahkan barang ke keranjang pembeli
@@ -294,17 +294,21 @@ public class SystemPembeli implements SystemMenu {
         }
 
         // Masukkan kode voucher
-        System.out.println("Masukkan kode voucher.\nJika tidak ada, ketik 'skip'");
+        System.out.println("Masukkan kode diskon.\nJika tidak ada, ketik 'skip'");
         System.out.println("=================================");
         System.out.print("Kode: ");
-        String kodeVoucher = input.next();
+        String kodeDiskon = input.next();
         double hargaDiskon = 0;
         double subtotalSetelahDiskon = 0;
 
         // Antisipasi kalo salah masukin voucher, jadinya dijadiin while loop
         while (true) {
-            if (!kodeVoucher.equalsIgnoreCase("skip")) {
-                Voucher voucher = mainRepository.getVoucherRepo().getById(kodeVoucher);
+            if (!kodeDiskon.equalsIgnoreCase("skip")) {
+
+                // Kalo user masukin kode voucher atau promo
+                Voucher voucher = mainRepository.getVoucherRepo().getById(kodeDiskon);
+                Promo promo = mainRepository.getPromoRepo().getById(kodeDiskon);
+
                 if (voucher != null && voucher.isValid(new Date())) {
                     int persenDiskon = voucher.calculateDisc();
                     hargaDiskon = subtotal * persenDiskon / 100.0;
@@ -314,6 +318,14 @@ public class SystemPembeli implements SystemMenu {
 
 
                     System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
+                    break;
+                } else if (promo != null && promo.isValid(new Date())) {
+                    // Hitung diskon berdasarkan promo
+                    int persenDiskon = promo.calculateDisc();
+                    hargaDiskon = subtotal * persenDiskon / 100.0;
+                    subtotalSetelahDiskon = subtotal - hargaDiskon;
+
+                    System.out.println("Promo diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
                     break;
                 } else {
                     System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
@@ -389,7 +401,7 @@ public class SystemPembeli implements SystemMenu {
                 activePembeli.getUsername(),
                 null, //nama penjual,
                 null,
-                kodeVoucher.equalsIgnoreCase("skip") ? null : kodeVoucher,
+                kodeDiskon.equalsIgnoreCase("skip") ? null : kodeDiskon,
                 produkDibeli,
                 pilihanPengiriman == 1 ? "Instant" : pilihanPengiriman == 2 ? "Next Day" : "Regular"
         );

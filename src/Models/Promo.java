@@ -37,15 +37,15 @@ public class Promo {
         return !currentDate.after(berlakuHingga);
     }
 
-    public double calculateDisc(String promoCode) {
+    public int calculateDisc() {
         // Menghitung diskon berdasarkan kode promo
         int total = 0;
-        for (char c : promoCode.toCharArray()) {
+        for (char c : this.id.toCharArray()) {
             if (Character.isDigit(c)) {
                 total += Character.getNumericValue(c);
             }
         }
-        double discount = total >= 100 ? 5 : total; // Maksimal diskon 5% jika total >= 100
+        int discount = total >= 100 ? 5 : total; // Maksimal diskon 5% jika total >= 100
         return discount;
     }
 }
