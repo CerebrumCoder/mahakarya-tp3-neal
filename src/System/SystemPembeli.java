@@ -185,6 +185,43 @@ public class SystemPembeli implements SystemMenu {
             return;
         }
 
+        // Cek apakah keranjang sudah memiliki barang dari toko lain
+        List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
+        if (!keranjangList.isEmpty()) {
+            // Ambil toko dari produk pertama di keranjang
+            UUID productIdPertama = keranjangList.get(0).getProductId();
+            String namaTokoKeranjang = null;
+
+            for (User user : userList) {
+                if (user instanceof Penjual penjual) {
+                    Product product = penjual.getProductRepo().getProductById(productIdPertama);
+                    if (product != null) {
+                        namaTokoKeranjang = penjual.getProductRepo().getNamaToko();
+                        break;
+                    }
+                }
+            }
+
+            // Jika toko berbeda, tanyakan kepada pengguna
+            if (namaTokoKeranjang != null && !namaTokoKeranjang.equalsIgnoreCase(namaToko)) {
+                System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari toko berbeda.");
+                System.out.print("Kosongkan keranjang dan masukkan barang yang baru? (Y/N): ");
+                input.nextLine(); // Membersihkan buffer dulu
+                String konfirmasi = input.nextLine();
+
+                if (!konfirmasi.equalsIgnoreCase("Y")) {
+                    System.out.println("Barang berhasil ditambahkan!\n");
+                    return;
+                }
+
+                // Kosongkan keranjang
+                keranjangList.clear();
+                System.out.println("Keranjang berhasil dikosongkan!");
+
+            }
+
+        }
+
         // Tambahkan barang ke keranjang pembeli
         activePembeli.getCart().addToCart(produkDitemukan.getProductId(), jumlahBarang);
     }
