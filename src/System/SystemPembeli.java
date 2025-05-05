@@ -188,36 +188,40 @@ public class SystemPembeli implements SystemMenu {
         // Cek apakah keranjang sudah memiliki barang dari toko lain
         List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
         if (!keranjangList.isEmpty()) {
-            // Ambil toko dari produk pertama di keranjang
-            UUID productIdPertama = keranjangList.get(0).getProductId();
-            String namaTokoKeranjang = null;
+            // Ambil semua toko dari produk di keranjang
+            // Awalnya ini pakai HashSet untuk menghindari duplikasi, cuman pakai ArrayList juga bisa tapi perlu
+            // dibuat if elsenya dulu untuk menghindari duplikat.
+            List<String> tokoKeranjang = new ArrayList<>();
 
-            for (User user : userList) {
-                if (user instanceof Penjual penjual) {
-                    Product product = penjual.getProductRepo().getProductById(productIdPertama);
-                    if (product != null) {
-                        namaTokoKeranjang = penjual.getProductRepo().getNamaToko();
-                        break;
+            for (CartProduct cartProduct : keranjangList) {
+                for (User user : userList) {
+                    if (user instanceof Penjual penjual) {
+                        Product product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
+                        if (product != null) {
+                            if (!tokoKeranjang.contains(penjual.getProductRepo().getNamaToko())) {
+                                tokoKeranjang.add(penjual.getProductRepo().getNamaToko());
+                            }
+                            break;
+                        }
                     }
                 }
             }
 
+
             // Jika toko berbeda, tanyakan kepada pengguna
-            if (namaTokoKeranjang != null && !namaTokoKeranjang.equalsIgnoreCase(namaToko)) {
+            if (!tokoKeranjang.isEmpty() && !tokoKeranjang.contains(namaToko)) {
                 System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari toko berbeda.");
                 System.out.print("Kosongkan keranjang dan masukkan barang yang baru? (Y/N): ");
                 input.nextLine(); // Membersihkan buffer dulu
                 String konfirmasi = input.nextLine();
 
                 if (!konfirmasi.equalsIgnoreCase("Y")) {
-                    System.out.println("Barang berhasil ditambahkan!\n");
+                    System.out.println("Penambahan barang dibatalkan!");
                     return;
                 }
 
                 // Kosongkan keranjang
                 keranjangList.clear();
-                System.out.println("Keranjang berhasil dikosongkan!");
-
             }
 
         }

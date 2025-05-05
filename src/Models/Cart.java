@@ -15,12 +15,10 @@ public class Cart {
         for (CartProduct product : keranjangList) {
             if (product.getProductId().equals(productId)) {
                 product.setAmount(product.getProductAmount() + quantity);
-                System.out.println("Produk berhasil ditambahkan ke keranjang.");
                 return;
             }
         }
         keranjangList.add(new CartProduct(productId, quantity));
-        System.out.println("Produk baru berhasil ditambahkan ke keranjang.\n");
     }
 
     // Method untuk menghapus suatu Product di dalam Cart
