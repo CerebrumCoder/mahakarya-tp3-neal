@@ -31,7 +31,7 @@ public class Product {
     }
 
     public void setProductStock(int stok) {
-        this.stok += stok;
+        this.stok = stok;
     }
 
     public void setProductPrice(long price) {

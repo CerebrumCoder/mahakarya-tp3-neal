@@ -90,8 +90,9 @@ public class SystemPembeli implements SystemMenu {
         System.out.print("Masukkan jumlah saldo yang ingin ditambah: ");
         long price = input.nextLong();
 
-        // Setelah dapat pricenya lalu disimpan ke dalam kelas User Pembeli
-        activePembeli.setBalance(price);
+        // Setelah dapat pricenya lalu disimpan ke dalam kelas User Pembeli. Lalu ditambah terus di set
+        long saldoBaru = activePembeli.getBalance() + price;
+        activePembeli.setBalance(saldoBaru);
         System.out.printf("Saldo berhasil ditambah! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
         System.out.println("\n");
     }
@@ -190,8 +191,6 @@ public class SystemPembeli implements SystemMenu {
         List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
         if (!keranjangList.isEmpty()) {
             // Ambil semua toko dari produk di keranjang
-            // Awalnya ini pakai HashSet untuk menghindari duplikasi, cuman pakai ArrayList juga bisa tapi perlu
-            // dibuat if elsenya dulu untuk menghindari duplikat.
             String tokoKeranjang = null;
 
             for (CartProduct cartProduct : keranjangList) {
@@ -214,20 +213,30 @@ public class SystemPembeli implements SystemMenu {
                 String konfirmasi = input.next();
 
                 if (!konfirmasi.equalsIgnoreCase("Y")) {
-                    System.out.println("Penambahan barang dibatalkan!");
+                    System.out.println("\nPenambahan barang dibatalkan!");
                     return;
                 }
 
-                // Kosongkan keranjang
-                activePembeli.getCart().clearCart();
-                System.out.println("Keranjang berhasil dikosongkan!\n");
+                // Hapus hanya barang dari toko berbeda pakai ['deleteFromCart']
+                for (CartProduct cp : new ArrayList<>(keranjangList)) {
+                    for (User userX : userList) {
+                        if (userX instanceof Penjual penjualX) {
+                            Product p = penjualX.getProductRepo().getProductById(cp.getProductId());
+                            if (p != null && penjualX.getProductRepo().getNamaToko().equalsIgnoreCase(tokoKeranjang)) {
+                                // Delete cart sesuai UUID
+                                activePembeli.getCart().deleteFromCart(cp.getProductId());
+                                break;
+                            }
+                        }
+                    }
+                }
+                System.out.println("\nBarang berhasil ditambahkan");
             }
-
         }
-
         // Tambahkan barang ke keranjang pembeli
+        // Kasih spasi
+        System.out.println();
         activePembeli.getCart().addToCart(produkDitemukan.getProductId(), jumlahBarang);
-        System.out.println("Barang berhasil ditambahkan\n");
     }
 
     public void handleCheckout() {
@@ -244,12 +253,12 @@ public class SystemPembeli implements SystemMenu {
 
         // Tampilkan isi keranjang
         System.out.println("=================================");
+        List<User> userList = mainRepository.getUserRepo().getAll();
         long subtotal = 0;
         for (CartProduct cartProduct : keranjangList) {
             Product product = null;
 
             // Cari produk di semua penjual
-            List<User> userList = mainRepository.getUserRepo().getAll();
             for (User user : userList) {
                 if (user instanceof Penjual penjual) {
                     product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
@@ -310,6 +319,10 @@ public class SystemPembeli implements SystemMenu {
                     System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
                 }
             }
+            else {
+                System.out.println("Checkout batal!");
+                return;
+            }
         }
 
         // Pilih opsi pengiriman
@@ -337,13 +350,29 @@ public class SystemPembeli implements SystemMenu {
 
         // Cek saldo pembeli
         if (activePembeli.getBalance() < totalAkhir) {
-            System.out.println("Pembelian gagal. Saldo tidak cukup!");
+            System.out.println("Pembelian gagal. Saldo tidak cukup!\n");
             return;
         }
 
         activePembeli.setBalance((long) totalAkhir);
         System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", totalAkhirTanpaPengiriman);
         System.out.println("\n");
+
+        // Kurangi stok produk sesuai jumlah yang dibeli.
+        // Ini krusial pas nanti di MenuPembeli user klik "Cek Daftar Barang"
+        for (CartProduct cartProduct : keranjangList) {
+            for (User user : userList) {
+                if (user instanceof Penjual penjual) {
+                    Product product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
+                    if (product != null) {
+
+                        // Jadi ini ngurangin stokProduk yang ada dengan yang diinput pembeli. Terus diupdate
+                        int stokBaru = product.getProductStock() - cartProduct.getProductAmount();
+                        product.setProductStock(stokBaru);
+                    }
+                }
+            }
+        }
 
         // Menambahkan transaksi ke TransaksiRepository.java
         // Ini Date Formatter untuk di TRX tanggal nanti dalam waktu Indonesia
@@ -389,7 +418,7 @@ public class SystemPembeli implements SystemMenu {
                 adaTransaksi = true;
 
                 // Tampilkan laporan pengeluaran
-                System.out.println("\n===== LAPORAN PENGELUARAN =====");
+                System.out.println("===== LAPORAN PENGELUARAN =====");
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
 
                 // Format tanggal transaksi menggunakan formatter dengan locale Indonesia
@@ -457,7 +486,7 @@ public class SystemPembeli implements SystemMenu {
         } else {
             System.out.println("=================================");
             System.out.printf("Total Keseluruhan: %.2f%n", totalPengeluaran);
-            System.out.println("\n");
+            System.out.println();
         }
     }
 

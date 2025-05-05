@@ -170,7 +170,8 @@ public class SystemPenjual implements SystemMenu {
         }
 
         if (getProduct != null) {
-            getProduct.setProductStock(tambahStok);
+            // setProductStock() hanya menset aja. Makanya di dalam parameter ada getProductStock() + tambahStok
+            getProduct.setProductStock(getProduct.getProductStock() + tambahStok);
             System.out.println("Stok " + getProduct.getProductName().toLowerCase() + " berhasil ditambah!" + " Stok saat ini: " + getProduct.getProductStock() + "\n");
         } else {
             System.out.println("Stok " + namaBarang + " tidak ditemukan!");
