@@ -39,7 +39,7 @@ public class SystemPenjual implements SystemMenu {
             // try dan catch untuk antisipasi input bukan merupakan integer
             try {
                 System.out.println(showMenu());
-                System.out.print("Pilih menu: ");
+                System.out.print("Perintah : ");
                 int choice = input.nextInt();
 
                 switch (choice) {
@@ -57,7 +57,7 @@ public class SystemPenjual implements SystemMenu {
                     default -> System.out.println("Pilihan tidak valid.");
                 }
             } catch (Exception e) {
-                System.out.println("Input bukan integer. Input angka dari 1 hingga 4 saja.");
+                System.out.println("Input bukan integer. Input angka dari 1 hingga 9 saja.");
                 input.nextLine(); // Untuk membersihkan input buffer
             }
 
@@ -73,7 +73,7 @@ public class SystemPenjual implements SystemMenu {
         User user = mainRepository.getUserRepo().getUserByNameAndRole(username, "Penjual");
 
         // Debugging untuk memastikan tipe objek
-        System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
+        // System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
 
         // Periksa apakah User adalah instance dari Penjual
         if (user instanceof Penjual penjual) {
@@ -137,7 +137,7 @@ public class SystemPenjual implements SystemMenu {
                 System.out.println("Berhasil menambahkan produk baru!\n");
 
                 // Debugging
-                System.out.println(activePenjual.getProductRepo().getProductList());
+                // System.out.println(activePenjual.getProductRepo().getProductList());
 
                 // Keluar dari loop
                 break;
@@ -259,7 +259,7 @@ public class SystemPenjual implements SystemMenu {
     public void handleCekSaldo() {
         // Implementasi untuk cek saldo penjual
         System.out.println("=================================");
-        System.out.printf("Stok saat ini: %.2f%n", (double) activePenjual.getBalance());
+        System.out.printf("Saldo saat ini: %.2f%n", (double) activePenjual.getBalance());
         System.out.println("=================================\n");
     }
 

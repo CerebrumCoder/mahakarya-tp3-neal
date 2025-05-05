@@ -45,8 +45,8 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
         voucherList.add(newVoucher);
 
         // Debugging
-        System.out.println("Voucher berhasil ditambahkan");
-        System.out.println("Voucher: " + newVoucher);
+        // System.out.println("Voucher berhasil ditambahkan");
+        // System.out.println("Voucher: " + newVoucher);
     }
 
     // Method generate dengan parameter String untuk batas tanggal waktu pemakaian. Ini kurang tahu dipakai ato engga

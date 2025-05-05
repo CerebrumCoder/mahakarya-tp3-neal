@@ -47,7 +47,7 @@ public class MainMenuSystem implements SystemMenu {
             try {
                 System.out.print("\n");
                 System.out.println(showMenu());
-                System.out.print("Pilih menu: ");
+                System.out.print("Perintah : ");
                 input = new java.util.Scanner(System.in);
                 int choice = input.nextInt();
                 switch (choice) {
@@ -109,7 +109,7 @@ public class MainMenuSystem implements SystemMenu {
             while (true) {
                 System.out.println("\nPilih opsi login:\n1. Penjual\n2. Pembeli\n3. Pengirim\n4. Cek Saldo Antar Role\n5. Batal Login\n");
 
-                System.out.print("Perintah: ");
+                System.out.print("Perintah : ");
                 int roleChoice = input.nextInt();
 
                 // Handle pilihan login
@@ -203,7 +203,7 @@ public class MainMenuSystem implements SystemMenu {
                 password = input.next();
                 // Kalo input passwordnya salah
                 if (!existingUser.getPassword().equals(password)) {
-                    System.out.println("Password salah! Registrasi dibatalkan.");
+                    System.out.println("Password salah!");
                     return;
                 }
             } else {
@@ -277,7 +277,7 @@ public class MainMenuSystem implements SystemMenu {
                     }
 
                     // Untuk debugging
-                    System.out.println(mainRepository.getUserRepo().getAll());
+                    // System.out.println(mainRepository.getUserRepo().getAll());
                 } catch (Exception e) {
                     System.out.println("Input bukan integer. Silahkan coba lagi.");
                     input.nextLine(); // Untuk membersihkan input buffer

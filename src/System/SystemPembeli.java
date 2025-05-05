@@ -37,7 +37,7 @@ public class SystemPembeli implements SystemMenu {
     public void handleMenu() {
         while (true) {
             System.out.println(showMenu());
-            System.out.print("Pilih menu: ");
+            System.out.print("Perintah : ");
             int choice = input.nextInt();
 
             switch (choice) {
@@ -68,7 +68,7 @@ public class SystemPembeli implements SystemMenu {
         User user = mainRepository.getUserRepo().getUserByNameAndRole(username, "Pembeli");
 
         // Debugging untuk memastikan tipe objek
-        System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
+        // System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
 
         // Periksa apakah User adalah instance dari Pembeli
         if (user instanceof Pembeli pembeli) {
@@ -81,7 +81,7 @@ public class SystemPembeli implements SystemMenu {
     public void handleCekSaldo() {
         // Implementasi untuk cek saldo pembeli
         System.out.println("=================================");
-        System.out.printf("Stok saat ini: %.2f%n", (double) activePembeli.getBalance());
+        System.out.printf("Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
         System.out.println("=================================\n");
     }
 
@@ -191,29 +191,26 @@ public class SystemPembeli implements SystemMenu {
             // Ambil semua toko dari produk di keranjang
             // Awalnya ini pakai HashSet untuk menghindari duplikasi, cuman pakai ArrayList juga bisa tapi perlu
             // dibuat if elsenya dulu untuk menghindari duplikat.
-            List<String> tokoKeranjang = new ArrayList<>();
+            String tokoKeranjang = null;
 
             for (CartProduct cartProduct : keranjangList) {
                 for (User user : userList) {
                     if (user instanceof Penjual penjual) {
                         Product product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
                         if (product != null) {
-                            if (!tokoKeranjang.contains(penjual.getProductRepo().getNamaToko())) {
-                                tokoKeranjang.add(penjual.getProductRepo().getNamaToko());
-                            }
+                            tokoKeranjang = penjual.getProductRepo().getNamaToko();
                             break;
                         }
                     }
                 }
+                if (tokoKeranjang != null) break;
             }
 
-
             // Jika toko berbeda, tanyakan kepada pengguna
-            if (!tokoKeranjang.isEmpty() && !tokoKeranjang.contains(namaToko)) {
+            if (tokoKeranjang != null && !tokoKeranjang.equalsIgnoreCase(namaToko)) {
                 System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari toko berbeda.");
-                System.out.print("Kosongkan keranjang dan masukkan barang yang baru? (Y/N): ");
-                input.nextLine(); // Membersihkan buffer dulu
-                String konfirmasi = input.nextLine();
+                System.out.print("Kosongkan keranjang dan masukkan barang yang baru? (Y/N) ");
+                String konfirmasi = input.next();
 
                 if (!konfirmasi.equalsIgnoreCase("Y")) {
                     System.out.println("Penambahan barang dibatalkan!");
@@ -222,12 +219,14 @@ public class SystemPembeli implements SystemMenu {
 
                 // Kosongkan keranjang
                 keranjangList.clear();
+                System.out.println("Keranjang berhasil dikosongkan!\n");
             }
 
         }
 
         // Tambahkan barang ke keranjang pembeli
         activePembeli.getCart().addToCart(produkDitemukan.getProductId(), jumlahBarang);
+        System.out.println("Barang berhasil ditambahkan\n");
     }
 
     public void handleCheckout() {
