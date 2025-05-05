@@ -156,9 +156,10 @@ public class SystemPembeli implements SystemMenu {
         System.out.print("Masukkan jumlah barang yang ingin dibeli: ");
         int jumlahBarang = input.nextInt();
 
-        // Cari penjual berdasarkan nama toko
         List<User> userList = mainRepository.getUserRepo().getAll();
         Penjual penjualDitemukan = null;
+
+        // Cari penjual berdasarkan nama toko
         for (User user : userList) {
             if (user instanceof Penjual penjual && penjual.getProductRepo().getNamaToko().equalsIgnoreCase(namaToko)) {
                 penjualDitemukan = penjual;
@@ -218,7 +219,7 @@ public class SystemPembeli implements SystemMenu {
                 }
 
                 // Kosongkan keranjang
-                keranjangList.clear();
+                activePembeli.getCart().clearCart();
                 System.out.println("Keranjang berhasil dikosongkan!\n");
             }
 

@@ -33,6 +33,11 @@ public class Cart {
         return "Produk tidak ditemukan di keranjang.";
     }
 
+    // Menghapus semua keranjang
+    public void clearCart() {
+        keranjangList.clear();
+    }
+
     // Method untuk mendapatkan isi konten suatu Cart
     public List<CartProduct> getCartContent() {
         // Mengembalikan salinan daftar keranjang
