@@ -34,6 +34,9 @@ public class Transaksi {
             case "Regular" -> this.biayaOngkir = 10000;
             default -> throw new IllegalArgumentException("Jenis transaksi tidak valid.");
         }
+
+        // Tambahkan status awal
+        this.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
     }
 
     public void setNamePengirim(String namePengirim) {

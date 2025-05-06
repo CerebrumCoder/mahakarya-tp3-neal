@@ -217,7 +217,14 @@ public class SystemPenjual implements SystemMenu {
                 transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
                 adaPesanan = true;
                 System.out.printf("ID Transaksi: %s%n", transaksi.getId());
-                System.out.printf("Tanggal: %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+
+                // Periksa apakah historyStatus tidak kosong sebelum mengakses elemen pertama
+                if (!transaksi.getHistoryStatus().isEmpty()) {
+                    System.out.printf("Tanggal: %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                } else {
+                    System.out.println("Tanggal: Tidak tersedia (status belum ditambahkan)");
+                }
+
                 System.out.printf("Status: %s%n", transaksi.getCurrentStatus());
                 System.out.println("---------------------------------");
             }

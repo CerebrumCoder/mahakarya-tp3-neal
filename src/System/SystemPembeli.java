@@ -412,8 +412,14 @@ public class SystemPembeli implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
                 adaTransaksi = true;
+
+                // Format tanggal menggunakan formatter dengan locale Indonesia
+                String tanggal = transaksi.getHistoryStatus().isEmpty() ? "Tanggal tidak tersedia"
+                        : transaksi.getHistoryStatus().get(0).getTimestamp()
+                        .format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID")));
+
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                System.out.printf("Tanggal         %s%n", tanggal);
                 System.out.printf("Toko            %s%n", transaksi.getNamePenjual());
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
                 System.out.println("---------------------------------");
