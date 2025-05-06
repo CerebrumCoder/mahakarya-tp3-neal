@@ -1,7 +1,9 @@
 package Models;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import Main.Burhanpedia;
 import System.TransactionProduct;
 import System.TransactionStatus;
 
@@ -18,7 +20,7 @@ public class Transaksi {
     private List<TransactionStatus> historyStatus; // History status pengiriman dari transaksi
 
     public Transaksi(String id, String namePembeli, String namePenjual, String namePengirim, String idDiskon,
-                     List<TransactionProduct> produkDibeli, String jenisTransaksi, String namaToko) {
+            List<TransactionProduct> produkDibeli, String jenisTransaksi, String namaToko) {
         this.id = id;
         this.namePembeli = namePembeli;
         this.namePenjual = namePenjual;
@@ -103,8 +105,18 @@ public class Transaksi {
         return Math.max(total, 0); // Total tidak boleh negatif
     }
 
-    public void refund() {
-        System.out.println("Refund diproses untuk transaksi ID: " + id);
-        // Implementasi refund, misalnya mengembalikan saldo pembeli
+    public void refund(Burhanpedia mainRepository) {
+        // Ambil pembeli dari repository
+        User pembeli = mainRepository.getUserRepo().getUserByName(this.namePembeli);
+        if (pembeli != null) {
+            // Hitung total refund menggunakan calculateTotalTransaksi
+            long totalRefund = mainRepository.calculateTotalTransaksi(this.id);
+            pembeli.setBalance(pembeli.getBalance() + totalRefund);
+
+            System.out.printf("Refund sebesar %.2f telah dikembalikan ke saldo pembeli %s.%n", (double) totalRefund,
+                    this.namePembeli);
+        } else {
+            System.out.println("Pembeli tidak ditemukan, refund gagal.");
+        }
     }
 }

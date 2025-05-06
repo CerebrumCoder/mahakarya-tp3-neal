@@ -312,7 +312,9 @@ public class MainMenuSystem implements SystemMenu {
                     Date lastStatusDate = historyStatus.get(historyStatus.size() - 1).getTimestamp();
                     if (currentDate.after(lastStatusDate)) {
                         // Tambahkan status bahwa pesanan melewati tanggal pengiriman
-                        transaksi.addStatus(new TransactionStatus("Melewati Tanggal Pengiriman"));
+                        transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
+                        // Proses refund
+                        transaksi.refund(mainRepository);
                     }
                 }
             }
