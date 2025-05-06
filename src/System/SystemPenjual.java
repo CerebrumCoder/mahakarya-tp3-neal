@@ -1,7 +1,9 @@
 package System;
 
+import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import Models.*;
@@ -217,21 +219,26 @@ public class SystemPenjual implements SystemMenu {
             if (transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
                 transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
                 adaPesanan = true;
-                System.out.printf("ID Transaksi: %s%n", transaksi.getId());
-
-                // Periksa apakah historyStatus tidak kosong sebelum mengakses elemen pertama
-                if (!transaksi.getHistoryStatus().isEmpty()) {
-                    System.out.printf("Tanggal: %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
-                } else {
-                    System.out.println("Tanggal: Tidak tersedia (status belum ditambahkan)");
-                }
-
-                System.out.printf("Status: %s%n", transaksi.getCurrentStatus());
 
                 // Tambahkan garus pemisah jika ini bukan transaksi pertama
                 if (transaksiCount > 0) {
                     System.out.println("---------------------------------");
                 }
+
+                System.out.printf("ID Transaksi    %s%n", transaksi.getId());
+                // Format tanggal menggunakan SimpleDateFormat
+                String tanggal;
+                if (!transaksi.getHistoryStatus().isEmpty()) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
+                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0));
+                    System.out.printf("Tanggal         %s%n", tanggal);
+                } else {
+                    System.out.println("Tanggal: Tidak tersedia (status belum ditambahkan)");
+                }
+
+                System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
+
+                // Increment banyaknya transaksi
                 transaksiCount++;
             }
         }

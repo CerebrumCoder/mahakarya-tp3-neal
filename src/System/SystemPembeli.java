@@ -181,7 +181,7 @@ public class SystemPembeli implements SystemMenu {
         }
 
         if (produkDitemukan == null) {
-            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan pada toko " + namaToko + "!");
+            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan pada toko " + namaToko + "!\n");
             return;
         }
 
@@ -408,6 +408,7 @@ public class SystemPembeli implements SystemMenu {
         // Menampilkan status barang berdasarkan transaksi pembeli
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaTransaksi = false;
+        int transaksiCount = 0;
 
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
@@ -422,12 +423,17 @@ public class SystemPembeli implements SystemMenu {
                     SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
                     tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());
                 }
-
+                // Tambahkan garus pemisah jika ini bukan transaksi pertama
+                if (transaksiCount > 0) {
+                    System.out.println("---------------------------------");
+                }
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
                 System.out.printf("Tanggal         %s%n", tanggal);
                 System.out.printf("Toko            %s%n", transaksi.getNamePenjual());
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
-                System.out.println("---------------------------------");
+
+                // Increment banyaknya transaksi
+                transaksiCount++;
             }
         }
 

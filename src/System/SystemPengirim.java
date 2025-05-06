@@ -82,15 +82,16 @@ public class SystemPengirim implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePengirim() == null) { // Pesanan belum diambil
                 adaPesanan = true;
+                // Tambahkan garus pemisah jika ini bukan transaksi pertama
+                if (transaksiCount > 0) {
+                    System.out.println("---------------------------------");
+                }
                 System.out.println("Pesanan tersedia:");
                 System.out.printf("ID: %s%n", transaksi.getId());
                 System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
                 System.out.printf("Penjual: %s%n", transaksi.getNamePenjual());
 
-                // Tambahkan garus pemisah jika ini bukan transaksi pertama
-                if (transaksiCount > 0) {
-                    System.out.println("---------------------------------");
-                }
+                // Tambah banyak transaksiCount untuk tampilkan garis "-----"
                 transaksiCount++;
             }
         }
@@ -119,7 +120,6 @@ public class SystemPengirim implements SystemMenu {
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
                 System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
-                System.out.println("\n");
                 return;
             }
         }
