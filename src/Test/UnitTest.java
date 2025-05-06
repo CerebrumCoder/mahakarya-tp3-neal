@@ -127,6 +127,30 @@ class UnitTest {
         assertEquals(5, cart.getCartContent().get(0).getProductAmount());
     }
 
+    @Test
+    void testCartDeleteNonExistentProduct() {
+        Cart cart = new Cart();
+        UUID productId = UUID.randomUUID();
+        String result = cart.deleteFromCart(productId);
+        assertEquals("Produk tidak ditemukan di keranjang.", result);
+    }
+
+    @Test
+    void testProductSetters() {
+        Product product = new Product("Produk1", 10, 10000);
+        product.setProductStock(20);
+        product.setProductPrice(15000);
+        assertEquals(20, product.getProductStock());
+        assertEquals(15000, product.getProductPrice());
+    }
+
+    @Test
+    void testVoucherSetters() {
+        Voucher voucher = new Voucher("VCR123", new Date());
+        voucher.setSisaPemakaian(5);
+        assertEquals(5, voucher.getSisaPemakaian());
+    }
+
     // ============================
     // Repository Tests
     // ============================
@@ -175,6 +199,34 @@ class UnitTest {
         Admin admin = adminRepo.getUserByName("admin");
         assertNotNull(admin);
         assertEquals("admin", admin.getUsername());
+    }
+
+    @Test
+    void testUserRepositoryGetUserById() {
+        UserRepository userRepo = new UserRepository();
+        User user = new Pembeli("pembeli1", "password");
+        userRepo.addUser(user);
+
+        assertEquals(user, userRepo.getUserById(user.getId()));
+    }
+
+    @Test
+    void testProductRepositoryGetProductById() {
+        ProductRepository productRepo = new ProductRepository("Toko1");
+        Product product = new Product("Produk1", 10, 10000);
+        productRepo.addProduct(product);
+
+        assertEquals(product, productRepo.getProductById(product.getProductId()));
+    }
+
+    @Test
+    void testPromoRepositoryRemovePromo() {
+        PromoRepository promoRepo = new PromoRepository();
+        promoRepo.generate("2025-12-31");
+        Promo promo = promoRepo.getAll().get(0);
+
+        promoRepo.removePromo(promo);
+        assertTrue(promoRepo.getAll().isEmpty());
     }
 
     // ============================
@@ -264,6 +316,38 @@ class UnitTest {
         systemPembeli.handleCheckout();
 
         assertEquals(8, product.getProductStock()); // Stok berkurang
+    }
+
+    @Test
+    void testSystemPenjualHandleTambahStok() {
+        Penjual penjual = new Penjual("penjual1", "password", "Toko1");
+        mainRepository.getUserRepo().addUser(penjual);
+        systemPenjual.setActivePenjual("penjual1");
+
+        Product product = new Product("Produk1", 10, 10000);
+        penjual.getProductRepo().addProduct(product);
+
+        product.setProductStock(product.getProductStock() + 5);
+        assertEquals(15, product.getProductStock());
+    }
+
+    @Test
+    void testSystemPengirimHandleFindJob() {
+        Pengirim pengirim = new Pengirim("pengirim1", "password");
+        mainRepository.getUserRepo().addUser(pengirim);
+        systemPengirim.setActivePengirim("pengirim1");
+
+        transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
+        mainRepository.getTransaksiRepo().addTransaksi(transaksi);
+
+        assertEquals(TransactionStatus.MENUNGGU_PENGIRIM, transaksi.getCurrentStatus());
+    }
+
+    @Test
+    void testSystemAdminHandleLihatVoucher() {
+        SystemAdmin systemAdmin = new SystemAdmin(mainRepository);
+        systemAdmin.handleGenerateVoucher();
+        assertEquals(1, mainRepository.getVoucherRepo().getAll().size());
     }
 }
 
