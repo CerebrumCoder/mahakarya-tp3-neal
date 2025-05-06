@@ -210,6 +210,7 @@ public class SystemPenjual implements SystemMenu {
         // Menampilkan semua transaksi yang menunggu pengiriman
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaPesanan = false;
+        int transaksiCount = 0; // Counter untuk jumlah transaksi
 
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
@@ -226,7 +227,12 @@ public class SystemPenjual implements SystemMenu {
                 }
 
                 System.out.printf("Status: %s%n", transaksi.getCurrentStatus());
-                System.out.println("---------------------------------");
+
+                // Tambahkan garus pemisah jika ini bukan transaksi pertama
+                if (transaksiCount > 0) {
+                    System.out.println("---------------------------------");
+                }
+                transaksiCount++;
             }
         }
 

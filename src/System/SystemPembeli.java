@@ -361,7 +361,7 @@ public class SystemPembeli implements SystemMenu {
         // Kurangi saldo pembeli
         activePembeli.setBalance((long) (activePembeli.getBalance() - totalAkhir));
         System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
-        System.out.print('\n');
+        System.out.println("\n");
 
         // Kurangi stok produk sesuai jumlah yang dibeli
         for (CartProduct cartProduct : keranjangList) {
@@ -414,12 +414,11 @@ public class SystemPembeli implements SystemMenu {
                 adaTransaksi = true;
 
                 // Format tanggal menggunakan formatter dengan locale Indonesia
-                String tanggal = transaksi.getHistoryStatus().isEmpty() ? "Tanggal tidak tersedia"
-                        : transaksi.getHistoryStatus().get(0).getTimestamp()
-                        .format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID")));
+//                String tanggal = transaksi.getHistoryStatus().isEmpty() ? "Tanggal tidak tersedia"
+//                        : ;
 
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", tanggal);
+                System.out.printf("Tanggal         %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
                 System.out.printf("Toko            %s%n", transaksi.getNamePenjual());
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
                 System.out.println("---------------------------------");

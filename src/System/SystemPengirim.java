@@ -77,6 +77,7 @@ public class SystemPengirim implements SystemMenu {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaPesanan = false;
 
+        int transaksiCount = 0; // Counter untuk jumlah transaksi
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePengirim() == null) { // Pesanan belum diambil
@@ -85,7 +86,12 @@ public class SystemPengirim implements SystemMenu {
                 System.out.printf("ID: %s%n", transaksi.getId());
                 System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
                 System.out.printf("Penjual: %s%n", transaksi.getNamePenjual());
-                System.out.println("---------------------------------");
+
+                // Tambahkan garus pemisah jika ini bukan transaksi pertama
+                if (transaksiCount > 0) {
+                    System.out.println("---------------------------------");
+                }
+                transaksiCount++;
             }
         }
 
@@ -98,6 +104,7 @@ public class SystemPengirim implements SystemMenu {
     public void handleTakeJob() {
         System.out.print("Masukkan ID transaksi yang ingin diambil: ");
         input.nextLine(); // Bersihkan buffer input
+        // Input IDTransaksi yang dimasukkan
         String idTransaksi = input.nextLine();
 
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
@@ -111,12 +118,13 @@ public class SystemPengirim implements SystemMenu {
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan dengan ID %s berhasil diambil oleh %s.%n", transaksi.getId(), activePengirim.getUsername());
+                System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
+                System.out.println("\n");
                 return;
             }
         }
 
-        System.out.println("Transaksi dengan ID tersebut tidak ditemukan.");
+        System.out.println("Tidak dapat mengambil pesanan ini.");
     }
 
     public void handleConfirmJob() {
