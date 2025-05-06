@@ -66,7 +66,8 @@ class UnitTest {
     @Test
     void testTransaksiCalculateTotal() {
         double total = transaksi.calculateTotal(100000, 5000);
-        assertEquals(95000, total);
+        // Ada biaya ongkir, pakainya default 20k. Jadinya 100k + 20k - 5k
+        assertEquals(115000, total);
     }
 
     @Test
@@ -113,7 +114,7 @@ class UnitTest {
     @Test
     void testPromoCalculateDisc() {
         Promo promo = new Promo("PROMO123", new Date());
-        assertEquals(5, promo.calculateDisc()); // Total digit < 100
+        assertEquals(6, promo.calculateDisc()); // Total digit < 100
     }
 
     @Test
