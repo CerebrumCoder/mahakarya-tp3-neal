@@ -216,8 +216,7 @@ public class SystemPenjual implements SystemMenu {
 
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
-            if (transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
-                transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKEMAS)) { // Hanya transaksi dengan status "Sedang Dikemas"
+            if (transaksi.getNamePenjual().equals(activePenjual.getUsername()) && transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKEMAS)) { // Hanya transaksi dengan status "Sedang Dikemas"
                 adaPesanan = true;
 
                 // Tambahkan garis pemisah jika ini bukan transaksi pertama
@@ -235,11 +234,11 @@ public class SystemPenjual implements SystemMenu {
                 } else {
                     System.out.println("Tanggal: Tidak tersedia (status belum ditambahkan)");
                 }
-                System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
-
                 // Ubah status menjadi "Menunggu Pengirim"
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
                 System.out.println("Status transaksi berhasil diubah menjadi 'Menunggu Pengirim'.");
+
+                System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
 
                 // Increment banyaknya transaksi
                 transaksiCount++;

@@ -40,7 +40,7 @@ public class Transaksi {
         }
 
         // Tambahkan status awal
-        this.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
+        this.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKEMAS));
     }
 
     public void setNamePengirim(String namePengirim) {
