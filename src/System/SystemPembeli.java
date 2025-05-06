@@ -412,8 +412,26 @@ public class SystemPembeli implements SystemMenu {
     }
 
     public void handleLacakBarang() {
-        System.out.println("Lacak Barang dipilih. Implementasi di sini.");
-        // Implementasi untuk melacak barang
+        // Menampilkan status barang berdasarkan transaksi pembeli
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        boolean adaTransaksi = false;
+
+        System.out.println("=================================");
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
+                adaTransaksi = true;
+                System.out.printf("ID Transaksi    %s%n", transaksi.getId());
+                System.out.printf("Tanggal         %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                System.out.printf("Toko            %s%n", transaksi.getNamePenjual());
+                System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
+                System.out.println("---------------------------------");
+            }
+        }
+
+        if (!adaTransaksi) {
+            System.out.println("Tidak ada transaksi yang ditemukan.");
+        }
+        System.out.println("=================================\n");
     }
 
     public void handleLaporanPengeluaran() {

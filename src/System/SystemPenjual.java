@@ -217,7 +217,8 @@ public class SystemPenjual implements SystemMenu {
                 transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
                 adaPesanan = true;
                 System.out.printf("ID Transaksi: %s%n", transaksi.getId());
-                System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
+                System.out.printf("Tanggal: %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                System.out.printf("Status: %s%n", transaksi.getCurrentStatus());
                 System.out.println("---------------------------------");
             }
         }
@@ -236,7 +237,7 @@ public class SystemPenjual implements SystemMenu {
             if (transaksi.getId().equals(idTransaksi) &&
                 transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
                 transaksi.getNamePengirim() == null) {
-                System.out.println("Pesanan berhasil diambil oleh " + transaksi.getNamePembeli());
+                System.out.printf("Pesanan berhasil diambil oleh %s.%n", transaksi.getNamePembeli());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKEMAS));
                 return;
             }
