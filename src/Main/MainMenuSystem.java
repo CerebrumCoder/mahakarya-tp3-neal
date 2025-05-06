@@ -44,25 +44,21 @@ public class MainMenuSystem implements SystemMenu {
     public void handleMenu() {
         while (true) {
             // try dan catch untuk antisipasi input bukan merupakan integer
-            try {
-                System.out.print("\n");
-                System.out.println(showMenu());
-                System.out.print("Perintah : ");
-                input = new java.util.Scanner(System.in);
-                int choice = input.nextInt();
-                switch (choice) {
-                    case 1 -> handleLogin();
-                    case 2 -> handleRegister();
-                    case 3 -> handleNextDay();
-                    case 4 -> {
-                        return;
-                    }
-                    default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
+            System.out.print("\n");
+            System.out.println(showMenu());
+            System.out.print("Perintah : ");
+            input = new java.util.Scanner(System.in);
+            int choice = input.nextInt();
+            switch (choice) {
+                case 1 -> handleLogin();
+                case 2 -> handleRegister();
+                case 3 -> handleNextDay();
+                case 4 -> {
+                    return;
                 }
-            } catch (Exception e) {
-                System.out.println("Input bukan integer. Input angka dari 1 hingga 4 saja.");
-                input.nextLine(); // Untuk membersihkan input buffer
+                default -> System.out.println("Pilihan tidak valid. Input angka dari 1 hingga 4 saja.");
             }
+
 
         }
     }
@@ -146,6 +142,7 @@ public class MainMenuSystem implements SystemMenu {
                             User pengirimUser = mainRepository.getUserRepo().getUserByNameAndRole(username, "Pengirim");
                             if (pengirimUser instanceof Pengirim pengirim) {
                                 System.out.println("Login berhasil! Selamat datang, " + username + "!\n");
+                                systemPengirim.setActivePengirim(username); // Pass data username ke systemPenjual untuk bisa akses produkRepo
                                 systemPengirim.handleMenu(); //Menu Pengirim
                                 return; // Ketika systemPengirim input angka 9, maka dia akan membawa balik ke menu utama
                             }

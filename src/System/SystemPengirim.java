@@ -4,7 +4,9 @@ import java.util.Scanner;
 import java.util.List;
 
 import Models.Pengirim;
+import Models.Penjual;
 import Models.Transaksi;
+import Models.User;
 import System.TransactionStatus;
 import Main.Burhanpedia;
 
@@ -47,6 +49,26 @@ public class SystemPengirim implements SystemMenu {
                 }
                 default -> System.out.println("Pilihan tidak valid.");
             }
+        }
+    }
+
+    /**
+     * Ini berfungsi untuk set activePenjual di file SystemPengirim.java terdefinisi.
+     * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau add User Pengirim.
+     * Lalu datanya di pass lewat parameter terus di definisikan di this.activePengirim */
+    public void setActivePengirim(String username) {
+        // Ambil penjual dari repository berdasarkan username.
+        // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak terjadi error
+        User user = mainRepository.getUserRepo().getUserByNameAndRole(username, "Pengirim");
+
+        // Debugging untuk memastikan tipe objek
+        // System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
+
+        // Periksa apakah User adalah instance dari Penjual
+        if (user instanceof Pengirim pengirim) {
+            this.activePengirim = pengirim;
+        } else {
+            System.out.println("Pengirim dengan username " + username + " tidak ditemukan atau bukan pengirim");
         }
     }
 
