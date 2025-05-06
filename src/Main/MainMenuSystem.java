@@ -298,17 +298,22 @@ public class MainMenuSystem implements SystemMenu {
         currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
+            Date lastStatusDate = transaksi.getHistoryStatus().get(transaksi.getHistoryStatus().size() - 1).getTimestamp();
+
             if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
-                Date lastStatusDate = transaksi.getHistoryStatus()
-                                               .get(transaksi.getHistoryStatus().size() - 1)
-                                               .getTimestamp();
+                // Kalo status sekarang SEDANG_DIKIRIM dan hari sudah berubah, maka ubah statusnya menjadi PESANAN_SELESAI
                 if (currentDate.after(lastStatusDate)) {
-                    transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
-                    transaksi.refund(mainRepository);
-                    System.out.printf("Transaksi %s dikembalikan. Refund telah diproses.%n", transaksi.getId());
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
                 }
+
+            // Kalo sekarang status SEDANG_DIKEMAS dan hari sudah berubah, maka ubah statusnya menjadi DIKEMBALIKAN
+            // Cek logika nantinya untuk TRX...02 kan dia dari awal masih dikemas
+            } else if (currentDate.after(lastStatusDate) && transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKEMAS)) {
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
+                transaksi.refund(mainRepository);
             }
         }
+        System.out.println("Pok pok pok!\n");
     }
 
     public void handleCekSaldoAntarAkun(String username) {

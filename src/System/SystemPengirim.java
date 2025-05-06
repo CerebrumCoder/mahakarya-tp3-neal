@@ -112,20 +112,23 @@ public class SystemPengirim implements SystemMenu {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi)) {
-                if (!transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
-                    System.out.println("Pesanan tidak dapat diambil. Status saat ini: " + transaksi.getCurrentStatus() + "\n");
-                    return;
-                }
+
                 // Validasi apakah pesanan sudah melewati tanggal pengiriman
                 if (transaksi.getCurrentStatus().equals(TransactionStatus.DIKEMBALIKAN)) {
-                    System.out.println("Pesanan sudah melewati tanggal pengiriman!");
+                    System.out.println("Pesanan sudah melewati tanggal pengiriman!\n");
+                    return;
+                }
+
+                if (!transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
+                    System.out.println("Tidak dapat mengambil pesanan ini." + "\n");
                     return;
                 }
                 
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s. Status diubah menjadi 'Sedang Dikirim'.%n", activePengirim.getUsername() + "\n");
+                System.out.printf("Pesanan berhasil diambil oleh %s. ", activePengirim.getUsername());
+                System.out.println("\n");
                 return;
             }
         }
@@ -179,6 +182,7 @@ public class SystemPengirim implements SystemMenu {
                 
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
                 System.out.printf("Tanggal         %s%n", tanggal);
+                System.out.printf("Toko         %s%n", transaksi.getNamaToko());
                 System.out.printf("Pendapatan      %d%n", transaksi.getBiayaOngkir());
 
                 // Transaksi bertambah, maka tanda "---" juga ngikutin banyaknya transaksi
