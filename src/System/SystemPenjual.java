@@ -285,32 +285,83 @@ public class SystemPenjual implements SystemMenu {
     public void handleRiwayatTransaksi() {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaTransaksi = false;
-        
+        int transaksiCount = 0;
 
-        System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePenjual().equals(activePenjual.getUsername())) {
                 adaTransaksi = true;
-                
+
+                if (transaksiCount == 0) {
+                    // Tampilkan header jika ada transaksi
+                    System.out.println("===================== RIWAYAT TRANSAKSI =====================");
+                    System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
+                    System.out.println("------------------------------------------------------------");
+                }
+
                 // Supaya tanggalnya sesuai format Indonesia
                 String tanggal;
                 if (!transaksi.getHistoryStatus().isEmpty()) {
-                    SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
-                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());                    
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", new Locale("id", "ID"));
+                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());
                 } else {
-                    tanggal = "Tanggal tidak tersedia";                    
+                    tanggal = "Tanggal tidak tersedia";
                 }
 
-                System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", tanggal);
-                System.out.printf("Pendapatan      %d%n", transaksi.getBiayaOngkir());
-                System.out.println("---------------------------------");
+                // Hitung total nominal transaksi
+                double subtotal = 0;
+                for (TransactionProduct produkTransaksi : transaksi.getProdukDibeli()) {
+                    Product product = null;
+
+                    // Cari produk di semua penjual
+                    List<User> userList = mainRepository.getUserRepo().getAll();
+                    for (User user : userList) {
+                        if (user instanceof Penjual penjual) {
+                            product = penjual.getProductRepo().getProductById(produkTransaksi.getProductId());
+                            if (product != null) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (product != null) {
+                        subtotal += product.getProductPrice() * produkTransaksi.getProductAmount();
+                    }
+                }
+
+                double hargaDiskon = 0;
+                if (transaksi.getIdDiskon() != null) {
+                    Voucher voucher = mainRepository.getVoucherRepo().getById(transaksi.getIdDiskon());
+                    if (voucher != null) {
+                        int persenDiskon = voucher.calculateDisc();
+                        hargaDiskon = subtotal * persenDiskon / 100.0;
+                    } else {
+                        Promo promo = mainRepository.getPromoRepo().getById(transaksi.getIdDiskon());
+                        if (promo != null) {
+                            int persenDiskon = promo.calculateDisc();
+                            hargaDiskon = subtotal * persenDiskon / 100.0;
+                        }
+                    }
+                }
+
+                double pajak = subtotal * 0.03;
+                double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
+
+                // Tampilkan informasi transaksi
+                System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
+                        "Penjualan produk");
+
+                transaksiCount++;
             }
         }
 
         if (!adaTransaksi) {
-            System.out.println("Tidak ada riwayat transaksi.");
+            // Jika tidak ada transaksi
+            System.out.println("======= RIWAYAT TRANSAKSI =======");
+            System.out.println("Riwayat transaksi masih kosong!");
+            System.out.println("=================================\n");
+        } else {
+            // Jika ada transaksi
+            System.out.println("============================================================\n");
         }
-        System.out.println("=================================\n");
     }
 }
