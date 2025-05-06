@@ -400,7 +400,6 @@ public class SystemPembeli implements SystemMenu {
 
         // Tambahkan transaksi ke dalam repository
         mainRepository.getTransaksiRepo().addTransaksi(transaksiBaru);
-        System.out.println("Transaksi berhasil dibuat!");
     }
 
     public void handleLacakBarang() {
