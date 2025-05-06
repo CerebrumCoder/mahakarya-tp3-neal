@@ -296,13 +296,13 @@ public class MainMenuSystem implements SystemMenu {
 
     public void handleNextDay() {
         currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
+        String tanggal = formatter.format(currentDate);
+
+        // List transaksi
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
-        String tanggal = "";
         for (Transaksi transaksi : transaksiList) {
             Date lastStatusDate = transaksi.getHistoryStatus().get(transaksi.getHistoryStatus().size() - 1).getTimestamp();
-
-            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
-            tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());
 
             if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
                 // Kalo status sekarang SEDANG_DIKIRIM dan hari sudah berubah, maka ubah statusnya menjadi PESANAN_SELESAI
@@ -317,7 +317,7 @@ public class MainMenuSystem implements SystemMenu {
                 transaksi.refund(mainRepository);
             }
         }
-        System.out.println(tanggal);
+        System.out.println("Tanggal : " + tanggal);
         System.out.println("Pok pok pok!");
     }
 

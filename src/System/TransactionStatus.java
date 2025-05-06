@@ -8,7 +8,7 @@ public class TransactionStatus {
     public static final String SEDANG_DIKEMAS = "Sedang Dikemas";
     public static final String MENUNGGU_PENGIRIM = "Menunggu Pengirim";
     public static final String SEDANG_DIKIRIM = "Dikirim";
-    public static final String PESANAN_SELESAI = "Pesanan Selesai";
+    public static final String PESANAN_SELESAI = "Selesai";
     public static final String DIKEMBALIKAN = "Dikembalikan";
 
     public TransactionStatus(String status) {
