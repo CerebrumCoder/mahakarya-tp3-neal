@@ -333,6 +333,7 @@ public class SystemPembeli implements SystemMenu {
                     break;
                 } else {
                     System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
+                    return;
                 }
             }
             else {
@@ -514,8 +515,73 @@ public class SystemPembeli implements SystemMenu {
      * keterangan seluruh transaksi-transaksi yang dibuat oleh Pembeli yang logged in saat ini.*/
     public void handleRiwayatTransaksi() {
         // Implementasi untuk melihat riwayat transaksi
-        System.out.println("======= RIWAYAT TRANSAKSI =======");
-        System.out.println("Riwayat transaksi masih kosong!");
-        System.out.println("=================================\n");
+        // Ambil daftar transaksi dari TransaksiRepository.java
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+
+        // Filter transaksi berdasarkan nama pembeli
+        boolean adaTransaksi = false;
+
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
+                adaTransaksi = true;
+
+                // Format tanggal transaksi
+                String tanggal = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID")));
+
+                // Hitung total nominal transaksi
+                double subtotal = 0;
+                for (TransactionProduct produkTransaksi : transaksi.getProdukDibeli()) {
+                    Product product = null;
+
+                    // Cari produk di semua penjual
+                    List<User> userList = mainRepository.getUserRepo().getAll();
+                    for (User user : userList) {
+                        if (user instanceof Penjual penjual) {
+                            product = penjual.getProductRepo().getProductById(produkTransaksi.getProductId());
+                            if (product != null) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (product != null) {
+                        subtotal += product.getProductPrice() * produkTransaksi.getProductAmount();
+                    }
+                }
+
+                double hargaDiskon = 0;
+                if (transaksi.getIdDiskon() != null) {
+                    Voucher voucher = mainRepository.getVoucherRepo().getById(transaksi.getIdDiskon());
+                    if (voucher != null) {
+                        int persenDiskon = voucher.calculateDisc();
+                        hargaDiskon = subtotal * persenDiskon / 100.0;
+                    } else {
+                        Promo promo = mainRepository.getPromoRepo().getById(transaksi.getIdDiskon());
+                        if (promo != null) {
+                            int persenDiskon = promo.calculateDisc();
+                            hargaDiskon = subtotal * persenDiskon / 100.0;
+                        }
+                    }
+                }
+
+                double pajak = subtotal * 0.03;
+                double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
+
+                // Tampilkan informasi transaksi
+                System.out.printf("%-15s %-15s %-10.2f %-20s%n", transaksi.getId(), tanggal, total, "Pembelian produk");
+            }
+        }
+
+        if (!adaTransaksi) {
+            System.out.println("======= RIWAYAT TRANSAKSI =======");
+            System.out.println("Riwayat transaksi masih kosong!");
+            System.out.println("=================================\n");
+        } else {
+            System.out.println("===================== RIWAYAT TRANSAKSI =====================");
+            System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
+            System.out.println("------------------------------------------------------------");
+        }
+        System.out.println("=============================================================");
+
     }
 }
