@@ -1,7 +1,9 @@
 package System;
 
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import Models.Pengirim;
 import Models.Penjual;
@@ -161,8 +163,18 @@ public class SystemPengirim implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePengirim() != null && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
                 adaTransaksi = true;
+
+                // Supaya tanggalnya sesuai format Indonesia
+                String tanggal;
+                if (!transaksi.getHistoryStatus().isEmpty()) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
+                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());                    
+                } else {
+                    tanggal = "Tanggal tidak tersedia";                    
+                }
+                
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                System.out.printf("Tanggal         %s%n", tanggal);
                 System.out.printf("Pendapatan      %d%n", transaksi.getBiayaOngkir());
                 System.out.println("---------------------------------");
             }

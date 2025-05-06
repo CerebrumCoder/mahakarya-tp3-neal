@@ -292,6 +292,7 @@ public class SystemPenjual implements SystemMenu {
             if (transaksi.getNamePenjual().equals(activePenjual.getUsername())) {
                 adaTransaksi = true;
                 
+                // Supaya tanggalnya sesuai format Indonesia
                 String tanggal;
                 if (!transaksi.getHistoryStatus().isEmpty()) {
                     SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));

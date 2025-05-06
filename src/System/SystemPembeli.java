@@ -398,6 +398,7 @@ public class SystemPembeli implements SystemMenu {
             return;
         }
 
+        // Ini untuk mencari namaToko dulu, makanya pake for each loop
         String namaToko = null;
         for (User user : userList) {
             if (user instanceof Penjual penjual && penjual.getUsername().equals(namePenjual)) {
@@ -588,7 +589,7 @@ public class SystemPembeli implements SystemMenu {
                     System.out.println("------------------------------------------------------------");
                 }
 
-                // Format tanggal transaksi
+                // Supaya tanggalnya sesuai format Indonesia
                 String tanggal = LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID")));
 
