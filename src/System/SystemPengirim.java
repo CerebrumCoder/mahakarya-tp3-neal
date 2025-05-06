@@ -38,7 +38,7 @@ public class SystemPengirim implements SystemMenu {
     public void handleMenu() {
         while (true) {
             System.out.println(showMenu());
-            System.out.print("Pilih menu: ");
+            System.out.print("Perintah : ");
             int choice = input.nextInt();
 
             switch (choice) {
