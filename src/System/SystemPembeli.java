@@ -546,15 +546,18 @@ public class SystemPembeli implements SystemMenu {
 
         // Filter transaksi berdasarkan nama pembeli
         boolean adaTransaksi = false;
+        int transaksiCount = 0;
 
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
                 adaTransaksi = true;
 
-                // Tampilkan header jika ada transaksi
-                System.out.println("===================== RIWAYAT TRANSAKSI =====================");
-                System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
-                System.out.println("------------------------------------------------------------");
+                if (transaksiCount == 0) {
+                    // Tampilkan header jika ada transaksi
+                    System.out.println("===================== RIWAYAT TRANSAKSI =====================");
+                    System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
+                    System.out.println("------------------------------------------------------------");
+                }
 
                 // Format tanggal transaksi
                 String tanggal = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID")));
@@ -600,6 +603,8 @@ public class SystemPembeli implements SystemMenu {
 
                 // Tampilkan informasi transaksi
                 System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total, "Pembelian produk");
+
+                transaksiCount++;
             }
         }
 

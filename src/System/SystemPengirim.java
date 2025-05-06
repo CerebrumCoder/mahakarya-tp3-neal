@@ -116,6 +116,12 @@ public class SystemPengirim implements SystemMenu {
                     return;
                 }
 
+                // Validasi tambahan: pastikan pengirim tidak mengambil pesanan yang bukan miliknya
+                if (!transaksi.getNamePembeli().equals(activePengirim.getUsername())) {
+                    System.out.println("Anda tidak dapat mengambil pesanan ini karena bukan pembeli terkait");
+                    return;
+                }
+
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
@@ -124,7 +130,7 @@ public class SystemPengirim implements SystemMenu {
             }
         }
 
-        System.out.println("Tidak dapat mengambil pesanan ini.");
+        System.out.println("Tidak ada pesanan untuk ID tersebut.");
     }
 
     public void handleConfirmJob() {

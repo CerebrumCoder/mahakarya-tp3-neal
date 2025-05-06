@@ -230,7 +230,7 @@ public class SystemPenjual implements SystemMenu {
                 String tanggal;
                 if (!transaksi.getHistoryStatus().isEmpty()) {
                     SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
-                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0));
+                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());
                     System.out.printf("Tanggal         %s%n", tanggal);
                 } else {
                     System.out.println("Tanggal: Tidak tersedia (status belum ditambahkan)");
