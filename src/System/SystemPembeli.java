@@ -464,11 +464,21 @@ public class SystemPembeli implements SystemMenu {
                 double hargaDiskon = 0;
                 // double subtotalSetelahDiskon = 0;
                 if (transaksi.getIdDiskon() != null) {
+
+                    // Cek apakah diskon berasal dari voucher
                     Voucher voucher = mainRepository.getVoucherRepo().getById(transaksi.getIdDiskon());
                     if (voucher != null) {
                         int persenDiskon = voucher.calculateDisc();
                         hargaDiskon = subtotal * persenDiskon / 100.0;
                         // subtotalSetelahDiskon = subtotal - hargaDiskon;
+                    } else {
+                        // Jika bukan voucher, cek apakah diskon berasal dari promo
+                        Promo promo = mainRepository.getPromoRepo().getById(transaksi.getIdDiskon());
+                        if (promo != null) {
+                            int persenDiskon = promo.calculateDisc();
+                            hargaDiskon = subtotal * persenDiskon / 100.0;
+                        }
+
                     }
                 }
 
