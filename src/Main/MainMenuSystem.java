@@ -1,17 +1,23 @@
 package Main;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import Models.Admin;
 import Models.Pembeli;
 import Models.Pengirim;
 import Models.Penjual;
+import Models.Transaksi;
 import Models.User;
 import System.SystemAdmin;
 import System.SystemMenu;
 import System.SystemPembeli;
 import System.SystemPengirim;
 import System.SystemPenjual;
+import System.TransactionStatus;
 
 public class MainMenuSystem implements SystemMenu {
     private Scanner input;
@@ -20,6 +26,7 @@ public class MainMenuSystem implements SystemMenu {
     private SystemPengirim systemPengirim; // Menu untuk role Pengirim
     private SystemAdmin systemAdmin; // Menu untuk role Admin
     private static Burhanpedia mainRepository; // Akses ke database program
+    private Date currentDate; // Tanggal sistem saat ini
 
     public MainMenuSystem(Burhanpedia mainRepository) {
         this.mainRepository = mainRepository;
@@ -27,6 +34,7 @@ public class MainMenuSystem implements SystemMenu {
         this.systemPenjual = new SystemPenjual(mainRepository);
         this.systemPengirim = new SystemPengirim(mainRepository);
         this.systemAdmin = new SystemAdmin(mainRepository);
+        this.currentDate = new Date(); // Inisialisasi tanggal sistem ke hari ini
     }
 
     @Override
@@ -287,8 +295,30 @@ public class MainMenuSystem implements SystemMenu {
     }
 
     public void handleNextDay() {
-        // Implementasi mekanisme untuk hari berikutnya
-        System.out.println("Hari berikutnya dipilih. Implementasi di sini.");
+        // Tambahkan satu hari ke tanggal sistem
+        currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
+
+        // Format tanggal untuk output
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+        System.out.println("Tanggal : " + formatter.format(currentDate));
+
+        // Periksa transaksi yang melewati tanggal pengiriman
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
+                // Ambil tanggal status terakhir
+                List<TransactionStatus> historyStatus = transaksi.getHistoryStatus();
+                if (!historyStatus.isEmpty()) {
+                    Date lastStatusDate = historyStatus.get(historyStatus.size() - 1).getTimestamp();
+                    if (currentDate.after(lastStatusDate)) {
+                        // Tambahkan status bahwa pesanan melewati tanggal pengiriman
+                        transaksi.addStatus(new TransactionStatus("Melewati Tanggal Pengiriman"));
+                    }
+                }
+            }
+        }
+
+        System.out.println("Pok pok pok! Hari telah berganti.");
     }
 
     public void handleCekSaldoAntarAkun(String username) {
