@@ -236,8 +236,6 @@ public class SystemPenjual implements SystemMenu {
                 }
                 // Ubah status menjadi "Menunggu Pengirim"
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
-                System.out.println("Status transaksi berhasil diubah menjadi 'Menunggu Pengirim'.");
-
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
 
                 // Increment banyaknya transaksi
