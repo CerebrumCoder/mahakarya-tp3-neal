@@ -643,8 +643,14 @@ public class SystemPembeli implements SystemMenu {
                 double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
 
                 // Tampilkan informasi transaksi
-                System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
-                        "Pembelian produk");
+                if (transaksi.getCurrentStatus().equals(TransactionStatus.DIKEMBALIKAN)) {
+                    System.out.printf("%-15s %-15s + %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
+                            transaksi.getCurrentStatus());
+                } else {
+                    System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
+                            "Pembelian produk");
+                }
+
 
                 transaksiCount++;
             }

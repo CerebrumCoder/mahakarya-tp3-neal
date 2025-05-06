@@ -146,7 +146,7 @@ public class SystemPengirim implements SystemMenu {
             if (transaksi.getId().equals(idTransaksi) && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
                 if (transaksi.getCurrentStatus().equals(TransactionStatus.PESANAN_SELESAI)) {
                     // Ubah status menjadi "Pesanan Selesai"
-                    System.out.println("Pesanan berhasil diselesaikan oleh " + activePengirim.getUsername() + "\n");
+                    System.out.println("Pesanan berhasil diselesaikan oleh " + activePengirim.getUsername() + ".\n");
                     return;
                 } else {
                     System.out.printf("Pesanan ID %s tidak dapat dikonfirmasi. Status saat ini: %s%n", transaksi.getId(), transaksi.getCurrentStatus());
