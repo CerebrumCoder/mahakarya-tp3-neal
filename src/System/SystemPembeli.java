@@ -451,8 +451,11 @@ public class SystemPembeli implements SystemMenu {
                     System.out.println("---------------------------------");
                 }
 
-                // Perbarui status transaksi jika status sebelumnya adalah "Sedang Dikirim"
-                if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
+                // Perbarui status transaksi secara bertahap
+                String currentStatus = transaksi.getCurrentStatus();
+                if (currentStatus.equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
+                } else if (currentStatus.equals(TransactionStatus.SEDANG_DIKIRIM)) {
                     transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
                 }
 
