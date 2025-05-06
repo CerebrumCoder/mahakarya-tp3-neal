@@ -113,8 +113,8 @@ public class Transaksi {
             long totalRefund = mainRepository.calculateTotalTransaksi(this.id);
             pembeli.setBalance(pembeli.getBalance() + totalRefund);
 
-            System.out.printf("Refund sebesar %.2f telah dikembalikan ke saldo pembeli %s.%n", (double) totalRefund,
-                    this.namePembeli);
+            // System.out.printf("Refund sebesar %.2f telah dikembalikan ke saldo pembeli %s.%n", (double) totalRefund,
+            //         this.namePembeli);
         } else {
             System.out.println("Pembeli tidak ditemukan, refund gagal.");
         }

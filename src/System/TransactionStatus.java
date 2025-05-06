@@ -4,7 +4,6 @@ import java.util.Date;
 public class TransactionStatus {
     private Date timestamp; // Tanggal status transaksi
     private String status; // Status transaksi
-    private int amount;
 
     public static final String SEDANG_DIKEMAS = "Sedang Dikemas";
     public static final String MENUNGGU_PENGIRIM = "Menunggu Pengirim";
@@ -13,6 +12,9 @@ public class TransactionStatus {
     public static final String DIKEMBALIKAN = "Dikembalikan";
 
     public TransactionStatus(String status) {
+        if (!isValidStatus(status)) {
+            throw new IllegalArgumentException("Status tidak valid.");
+        }
         this.timestamp = new Date(); // Set timestamp ke waktu saat ini
         this.status = status;
     }

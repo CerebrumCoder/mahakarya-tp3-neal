@@ -112,22 +112,20 @@ public class SystemPengirim implements SystemMenu {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi)) {
-                if (transaksi.getNamePengirim() != null) {
-                    System.out.println("Tidak dapat mengambil pesanan ini.");
+                if (!transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
+                    System.out.println("Pesanan tidak dapat diambil. Status saat ini: " + transaksi.getCurrentStatus());
                     return;
                 }
-
                 // Validasi apakah pesanan sudah melewati tanggal pengiriman
                 if (transaksi.getCurrentStatus().equals(TransactionStatus.DIKEMBALIKAN)) {
                     System.out.println("Pesanan sudah melewati tanggal pengiriman!");
                     return;
                 }
-
+                
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s.", activePengirim.getUsername());
-                System.out.println("\n");
+                System.out.printf("Pesanan berhasil diambil oleh %s. Status diubah menjadi 'Sedang Dikirim'.%n", activePengirim.getUsername());
                 return;
             }
         }
@@ -142,12 +140,14 @@ public class SystemPengirim implements SystemMenu {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi) && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
-                if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
-                    transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
+                if (!transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
                     System.out.println("Pesanan berhasil diselesaikan oleh " + activePengirim.getUsername() + ".");
-                } else {
-                    System.out.println("Pesanan tidak dapat dikonfirmasi. Status saat ini: " + transaksi.getCurrentStatus());
+                    return;
                 }
+
+                // Ubah status menjadi "Pesanan Selesai"
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
+                System.out.println("Pesanan berhasil diselesaikan oleh " + activePengirim.getUsername() + ". Status diubah menjadi 'Pesanan Selesai'.");
                 return;
             }
         }

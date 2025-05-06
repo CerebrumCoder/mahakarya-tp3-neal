@@ -212,15 +212,15 @@ public class SystemPenjual implements SystemMenu {
         // Menampilkan semua transaksi yang menunggu pengiriman
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaPesanan = false;
-        int transaksiCount = 0; // Counter untuk jumlah transaksi
+        int transaksiCount = 0;
 
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
-                transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
+                transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKEMAS)) { // Hanya transaksi dengan status "Sedang Dikemas"
                 adaPesanan = true;
 
-                // Tambahkan garus pemisah jika ini bukan transaksi pertama
+                // Tambahkan garis pemisah jika ini bukan transaksi pertama
                 if (transaksiCount > 0) {
                     System.out.println("---------------------------------");
                 }
@@ -235,8 +235,11 @@ public class SystemPenjual implements SystemMenu {
                 } else {
                     System.out.println("Tanggal: Tidak tersedia (status belum ditambahkan)");
                 }
-
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
+
+                // Ubah status menjadi "Menunggu Pengirim"
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
+                System.out.println("Status transaksi berhasil diubah menjadi 'Menunggu Pengirim'.");
 
                 // Increment banyaknya transaksi
                 transaksiCount++;

@@ -455,8 +455,6 @@ public class SystemPembeli implements SystemMenu {
                 String currentStatus = transaksi.getCurrentStatus();
                 if (currentStatus.equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
                     transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                } else if (currentStatus.equals(TransactionStatus.SEDANG_DIKIRIM)) {
-                    transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
                 }
 
                 // Tampilkan informasi transaksi

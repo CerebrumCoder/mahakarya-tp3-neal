@@ -305,17 +305,13 @@ public class MainMenuSystem implements SystemMenu {
         // Periksa transaksi yang melewati tanggal pengiriman
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
-            if (transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
-                // Ambil tanggal status terakhir
-                List<TransactionStatus> historyStatus = transaksi.getHistoryStatus();
-                if (!historyStatus.isEmpty()) {
-                    Date lastStatusDate = historyStatus.get(historyStatus.size() - 1).getTimestamp();
-                    if (currentDate.after(lastStatusDate)) {
-                        // Tambahkan status bahwa pesanan melewati tanggal pengiriman
-                        transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
-                        // Proses refund
-                        transaksi.refund(mainRepository);
-                    }
+            if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
+                Date lastStatusDate = transaksi.getHistoryStatus().get(transaksi.getHistoryStatus().size() - 1).getTimestamp();
+                if (currentDate.after(lastStatusDate)) {
+                    // Tambahkan status "Dikembalikan"
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
+                    // Proses refund
+                    transaksi.refund(mainRepository);
                 }
             }
         }
