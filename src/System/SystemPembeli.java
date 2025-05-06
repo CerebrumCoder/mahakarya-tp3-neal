@@ -360,7 +360,8 @@ public class SystemPembeli implements SystemMenu {
 
         // Kurangi saldo pembeli
         activePembeli.setBalance((long) (activePembeli.getBalance() - totalAkhir));
-        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
+        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
+        System.out.print('\n');
 
         // Kurangi stok produk sesuai jumlah yang dibeli
         for (CartProduct cartProduct : keranjangList) {
