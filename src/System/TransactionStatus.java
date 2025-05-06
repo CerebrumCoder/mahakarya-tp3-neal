@@ -26,8 +26,12 @@ public class TransactionStatus {
     }
 
     public void setStatus(String status) {
-        this.status = status;
-        this.timestamp = new Date(); // Update timestamp saat status berubah
+        if (isValidStatus(status)) {
+            this.status = status;
+            this.timestamp = new Date(); // Update timestamp saat status berubah
+        } else {
+            throw new IllegalArgumentException("Status tidak valid.");
+        }
     }
 
     public boolean isValidStatus(String status) {

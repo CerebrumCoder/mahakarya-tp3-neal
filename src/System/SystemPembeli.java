@@ -445,11 +445,18 @@ public class SystemPembeli implements SystemMenu {
                     SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
                     tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());
                 }
-                // Tambahkan garus pemisah jika ini bukan transaksi pertama
+
+                // Tambahkan garis pemisah jika ini bukan transaksi pertama
                 if (transaksiCount > 0) {
                     System.out.println("---------------------------------");
                 }
 
+                // Perbarui status transaksi jika status sebelumnya adalah "Sedang Dikirim"
+                if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
+                }
+
+                // Tampilkan informasi transaksi
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
                 System.out.printf("Tanggal         %s%n", tanggal);
                 System.out.printf("Toko            %s%n", transaksi.getNamaToko());
@@ -458,7 +465,7 @@ public class SystemPembeli implements SystemMenu {
                     System.out.printf("Pengirim        %s%n", transaksi.getNamePengirim());
                 }
 
-                // Garis "---" akan bertambah seiring bertambahnya jumlah transaksi
+                // Increment jumlah transaksi
                 transaksiCount++;
             }
         }
