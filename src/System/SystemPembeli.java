@@ -457,7 +457,9 @@ public class SystemPembeli implements SystemMenu {
                 if (transaksi.getNamePengirim() != null) {
                     System.out.printf("Pengirim        %s%n", transaksi.getNamePengirim());
                 }
-                System.out.println("---------------------------------");
+
+                // Garis "---" akan bertambah seiring bertambahnya jumlah transaksi
+                transaksiCount++;
             }
         }
 

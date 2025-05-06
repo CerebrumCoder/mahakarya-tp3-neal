@@ -92,7 +92,9 @@ public class SystemPengirim implements SystemMenu {
                 System.out.printf("ID: %s%n", transaksi.getId());
                 System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
                 System.out.printf("Penjual: %s%n", transaksi.getNamaToko());
-                System.out.println("---------------------------------");
+
+                // Garis "---" akan nambah seiringnya bertambah transaksi
+                transaksiCount++;
             }
         }
 
@@ -111,7 +113,7 @@ public class SystemPengirim implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi)) {
                 if (transaksi.getNamePengirim() != null) {
-                    System.out.println("Pesanan ini sudah diambil oleh pengirim lain.\n");
+                    System.out.println("Pesanan berhasil diselesaikan oleh " + transaksi.getNamePengirim() + "\n");
                     return;
                 }
                 
@@ -130,12 +132,13 @@ public class SystemPengirim implements SystemMenu {
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
+                System.out.printf("Pesanan berhasil diambil oleh %s.", activePengirim.getUsername());
+                System.out.print("\n");
                 return;
             }
         }
 
-        System.out.println("Tidak ada pesanan untuk ID tersebut.");
+        System.out.println("Tidak ada pesanan untuk ID tersebut.\n");
     }
 
     public void handleConfirmJob() {
@@ -152,18 +155,22 @@ public class SystemPengirim implements SystemMenu {
             }
         }
 
-        System.out.println("Transaksi dengan ID tersebut tidak ditemukan atau bukan milik Anda.");
+        System.out.println("Tidak ada pesanan untuk ID tersebut.\n");
     }
 
     public void handleRiwayatTransaksi() {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaTransaksi = false;
+        int transaksiCount = 0;
 
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePengirim() != null && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
                 adaTransaksi = true;
 
+                if (transaksiCount > 0) {
+                    System.out.println("---------------------------------");
+                }
                 // Supaya tanggalnya sesuai format Indonesia
                 String tanggal;
                 if (!transaksi.getHistoryStatus().isEmpty()) {
@@ -176,7 +183,9 @@ public class SystemPengirim implements SystemMenu {
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
                 System.out.printf("Tanggal         %s%n", tanggal);
                 System.out.printf("Pendapatan      %d%n", transaksi.getBiayaOngkir());
-                System.out.println("---------------------------------");
+
+                // Transaksi bertambah, maka tanda "---" juga ngikutin banyaknya transaksi
+                transaksiCount++;
             }
         }
 

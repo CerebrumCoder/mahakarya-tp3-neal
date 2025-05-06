@@ -347,7 +347,7 @@ public class SystemPenjual implements SystemMenu {
                 double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
 
                 // Tampilkan informasi transaksi
-                System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
+                System.out.printf("%-15s %-15s + %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
                         "Penjualan produk");
 
                 transaksiCount++;
