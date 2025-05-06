@@ -141,10 +141,10 @@ public class SystemPembeli implements SystemMenu {
     }
 
     public void handleTambahKeKeranjang() {
-        // Input nama penjual
-        System.out.print("Masukkan nama penjual barang yang ingin dibeli: ");
+        // Input nama toko
+        System.out.print("Masukkan nama toko barang yang ingin dibeli: ");
         input.nextLine(); // Membersihkan buffer sebelum membaca input
-        String namaPenjual = input.nextLine(); // Gunakan nextLine() untuk membaca namaPenjual
+        String namaToko = input.nextLine(); // Gunakan nextLine() untuk membaca namaToko
 
         // Input nama barang
         System.out.print("Masukkan nama barang yang ingin dibeli: ");
@@ -157,16 +157,16 @@ public class SystemPembeli implements SystemMenu {
         List<User> userList = mainRepository.getUserRepo().getAll();
         Penjual penjualDitemukan = null;
 
-        // Cari penjual berdasarkan nama penjual
+        // Cari penjual berdasarkan nama toko
         for (User user : userList) {
-            if (user instanceof Penjual penjual && penjual.getUsername().equalsIgnoreCase(namaPenjual)) {
+            if (user instanceof Penjual penjual && penjual.getProductRepo().getNamaToko().equalsIgnoreCase(namaToko)) {
                 penjualDitemukan = penjual;
                 break;
             }
         }
 
         if (penjualDitemukan == null) {
-            System.out.println("Penjual dengan nama " + namaPenjual + " tidak ditemukan.");
+            System.out.println("Toko dengan nama " + namaToko + " tidak ditemukan.");
             return;
         }
 
@@ -180,32 +180,32 @@ public class SystemPembeli implements SystemMenu {
         }
 
         if (produkDitemukan == null) {
-            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan pada penjual " + namaPenjual + "!");
+            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan pada toko " + namaToko + "!");
             return;
         }
 
-        // Cek apakah keranjang sudah memiliki barang dari penjual lain
+        // Cek apakah keranjang sudah memiliki barang dari toko lain
         List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
         if (!keranjangList.isEmpty()) {
-            // Ambil semua penjual dari produk di keranjang
-            String penjualKeranjang = null;
+            // Ambil semua toko dari produk di keranjang
+            String tokoKeranjang = null;
 
             for (CartProduct cartProduct : keranjangList) {
                 for (User user : userList) {
                     if (user instanceof Penjual penjual) {
                         Product product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
                         if (product != null) {
-                            penjualKeranjang = penjual.getUsername();
+                            tokoKeranjang = penjual.getProductRepo().getNamaToko();
                             break;
                         }
                     }
                 }
-                if (penjualKeranjang != null) break;
+                if (tokoKeranjang != null) break;
             }
 
-            // Jika penjual berbeda, tanyakan kepada pengguna
-            if (penjualKeranjang != null && !penjualKeranjang.equalsIgnoreCase(namaPenjual)) {
-                System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari penjual berbeda.");
+            // Jika toko berbeda, tanyakan kepada pengguna
+            if (tokoKeranjang != null && !tokoKeranjang.equalsIgnoreCase(namaToko)) {
+                System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari toko berbeda.");
                 System.out.print("Kosongkan keranjang dan masukkan barang yang baru? (Y/N) ");
                 String konfirmasi = input.next();
 
@@ -214,12 +214,12 @@ public class SystemPembeli implements SystemMenu {
                     return;
                 }
 
-                // Hapus hanya barang dari penjual berbeda
+                // Hapus hanya barang dari toko berbeda
                 for (CartProduct cp : new ArrayList<>(keranjangList)) {
                     for (User userX : userList) {
                         if (userX instanceof Penjual penjualX) {
                             Product p = penjualX.getProductRepo().getProductById(cp.getProductId());
-                            if (p != null && penjualX.getUsername().equalsIgnoreCase(penjualKeranjang)) {
+                            if (p != null && penjualX.getProductRepo().getNamaToko().equalsIgnoreCase(tokoKeranjang)) {
                                 activePembeli.getCart().deleteFromCart(cp.getProductId());
                                 break;
                             }
