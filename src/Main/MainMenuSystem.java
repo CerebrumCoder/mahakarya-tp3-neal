@@ -295,28 +295,20 @@ public class MainMenuSystem implements SystemMenu {
     }
 
     public void handleNextDay() {
-        // Tambahkan satu hari ke tanggal sistem
         currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
-
-        // Format tanggal untuk output
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
-        System.out.println("Tanggal : " + formatter.format(currentDate));
-
-        // Periksa transaksi yang melewati tanggal pengiriman
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
-                Date lastStatusDate = transaksi.getHistoryStatus().get(transaksi.getHistoryStatus().size() - 1).getTimestamp();
+                Date lastStatusDate = transaksi.getHistoryStatus()
+                                               .get(transaksi.getHistoryStatus().size() - 1)
+                                               .getTimestamp();
                 if (currentDate.after(lastStatusDate)) {
-                    // Tambahkan status "Dikembalikan"
                     transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
-                    // Proses refund
                     transaksi.refund(mainRepository);
+                    System.out.printf("Transaksi %s dikembalikan. Refund telah diproses.%n", transaksi.getId());
                 }
             }
         }
-
-        System.out.println("Pok pok pok! Hari telah berganti.");
     }
 
     public void handleCekSaldoAntarAkun(String username) {
