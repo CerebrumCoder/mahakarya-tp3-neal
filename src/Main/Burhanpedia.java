@@ -61,7 +61,7 @@ public class Burhanpedia {
                 .orElse(null);
 
         if (transaksi == null) {
-            System.out.println("Transaksi dengan ID " + idTransaksi + " tidak ditemukan.");
+            System.out.println("Transaksi dengan ID " + idTransaksi + " tidak ditemukan. Ini Neal Guarddin");
             return 0;
         }
 
