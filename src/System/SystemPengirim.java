@@ -1,8 +1,11 @@
 package System;
 
 import java.util.Scanner;
+import java.util.List;
 
 import Models.Pengirim;
+import Models.Transaksi;
+import System.TransactionStatus;
 import Main.Burhanpedia;
 
 public class SystemPengirim implements SystemMenu {
@@ -48,18 +51,67 @@ public class SystemPengirim implements SystemMenu {
     }
 
     public void handleFindJob() {
-        System.out.println("Find Job dipilih. Implementasi di sini.");
-        // Implementasi untuk menampilkan semua transaksi yang tersedia untuk pengiriman
+        // Menampilkan semua transaksi yang belum diambil oleh pengirim
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        boolean adaPesanan = false;
+
+        System.out.println("=================================");
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePengirim() == null) { // Pesanan belum diambil
+                adaPesanan = true;
+                System.out.println("Pesanan tersedia:");
+                System.out.printf("ID: %s%n", transaksi.getId());
+                System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
+                System.out.printf("Penjual: %s%n", transaksi.getNamePenjual());
+                System.out.println("---------------------------------");
+            }
+        }
+
+        if (!adaPesanan) {
+            System.out.println("Tidak ada pesanan yang tersedia.");
+        }
+        System.out.println("=================================\n");
     }
 
     public void handleTakeJob() {
-        System.out.println("Take Job dipilih. Implementasi di sini.");
-        // Implementasi untuk mengambil transaksi pengiriman berdasarkan ID
+        // Mengambil pesanan berdasarkan ID
+        System.out.print("Masukkan ID transaksi yang ingin diambil: ");
+        String idTransaksi = input.next();
+
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getId().equals(idTransaksi)) {
+                if (transaksi.getNamePengirim() != null) {
+                    System.out.println("Tidak dapat mengambil pesanan ini.");
+                    return;
+                }
+
+                // Set pengirim untuk transaksi
+                transaksi.setNamePengirim(activePengirim.getUsername());
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
+                System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
+                return;
+            }
+        }
+
+        System.out.println("Transaksi dengan ID tersebut tidak ditemukan.");
     }
 
     public void handleConfirmJob() {
-        System.out.println("Confirm Job dipilih. Implementasi di sini.");
-        // Implementasi untuk mengonfirmasi bahwa barang sedang dikirim
+        // Mengonfirmasi bahwa barang sedang dikirim
+        System.out.print("Masukkan ID transaksi yang ingin dikonfirmasi: ");
+        String idTransaksi = input.next();
+
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getId().equals(idTransaksi) && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
+                System.out.println("Pesanan berhasil dikonfirmasi sedang dikirim.");
+                return;
+            }
+        }
+
+        System.out.println("Transaksi dengan ID tersebut tidak ditemukan atau bukan milik Anda.");
     }
 
     public void handleRiwayatTransaksi() {
