@@ -283,27 +283,33 @@ public class SystemPenjual implements SystemMenu {
     /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
      * keterangan seluruh transaksi-transaksi yang dibuat oleh Penjual yang logged in saat ini.*/
     public void handleRiwayatTransaksi() {
-        // Implementasi untuk melihat riwayat transaksi
-        // Ambil daftar transaksi dari repository
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
-
-        // Filter transaksi berdasarkan nama penjual
         boolean adaTransaksi = false;
-        for (Transaksi transaksi: transaksiList) {
+        
+
+        System.out.println("=================================");
+        for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePenjual().equals(activePenjual.getUsername())) {
                 adaTransaksi = true;
-                break;
+                
+                String tanggal;
+                if (!transaksi.getHistoryStatus().isEmpty()) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id","ID"));
+                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());                    
+                } else {
+                    tanggal = "Tanggal tidak tersedia";                    
+                }
+
+                System.out.printf("ID Transaksi    %s%n", transaksi.getId());
+                System.out.printf("Tanggal         %s%n", tanggal);
+                System.out.printf("Pendapatan      %d%n", transaksi.getBiayaOngkir());
+                System.out.println("---------------------------------");
             }
         }
 
-        // Cek apakah ada transaksi atau tidak dengan bantuan boolean
         if (!adaTransaksi) {
-            System.out.println("=================================");
-            System.out.println("Riwayat transaksi masih kosong!");
-            System.out.println("=================================\n");
-        } else {
-            System.out.println("Riwayat transaksi tersedia. Implementasi detail riwayat di sini.");
+            System.out.println("Tidak ada riwayat transaksi.");
         }
-
+        System.out.println("=================================\n");
     }
 }

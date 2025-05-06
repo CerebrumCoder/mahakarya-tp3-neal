@@ -61,15 +61,20 @@ public class SystemPembeli implements SystemMenu {
 
     /**
      * Ini berfungsi untuk set activePembeli di file SystemPembeli.java terdefinisi.
-     * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau add User Pembeli.
-     * Lalu datanya di pass lewat parameter terus di definisikan di this.activePembeli */
+     * Caranya kita panggil method di bawah ini di MainMenuSystem.java ketika mau
+     * add User Pembeli.
+     * Lalu datanya di pass lewat parameter terus di definisikan di
+     * this.activePembeli
+     */
     public void setActivePembeli(String username) {
         // Ambil pembeli dari repository berdasarkan username
-        // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak terjadi error
+        // Menggunakan instance of supaya melakukan casting class dengan mudah dan tidak
+        // terjadi error
         User user = mainRepository.getUserRepo().getUserByNameAndRole(username, "Pembeli");
 
         // Debugging untuk memastikan tipe objek
-        // System.out.println(user != null ? user.getClass().getSimpleName() : "User tidak ditemukan");
+        // System.out.println(user != null ? user.getClass().getSimpleName() : "User
+        // tidak ditemukan");
 
         // Periksa apakah User adalah instance dari Pembeli
         if (user instanceof Pembeli pembeli) {
@@ -91,7 +96,8 @@ public class SystemPembeli implements SystemMenu {
         System.out.print("Masukkan jumlah saldo yang ingin ditambah: ");
         long price = input.nextLong();
 
-        // Setelah dapat pricenya lalu disimpan ke dalam kelas User Pembeli. Lalu ditambah terus di set
+        // Setelah dapat pricenya lalu disimpan ke dalam kelas User Pembeli. Lalu
+        // ditambah terus di set
         long saldoBaru = activePembeli.getBalance() + price;
         activePembeli.setBalance(saldoBaru);
         System.out.printf("Saldo berhasil ditambah! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
@@ -128,7 +134,8 @@ public class SystemPembeli implements SystemMenu {
 
                     // Tampilkan daftar produk
                     for (Product product : productList) {
-                        System.out.printf("%-10s %10.2f %5d%n", product.getProductName(), (double) product.getProductPrice(), product.getProductStock());
+                        System.out.printf("%-10s %10.2f %5d%n", product.getProductName(),
+                                (double) product.getProductPrice(), product.getProductStock());
                     }
                 }
 
@@ -201,7 +208,8 @@ public class SystemPembeli implements SystemMenu {
                         }
                     }
                 }
-                if (tokoKeranjang != null) break;
+                if (tokoKeranjang != null)
+                    break;
             }
 
             // Jika toko berbeda, tanyakan kepada pengguna
@@ -276,7 +284,8 @@ public class SystemPembeli implements SystemMenu {
             subtotal += totalHarga;
 
             // Tampilkan informasi produk
-            System.out.printf("%-8s %10.2f %5d (%.2f)%n", product.getProductName(), (double) product.getProductPrice(), cartProduct.getProductAmount(), (double) totalHarga);
+            System.out.printf("%-8s %10.2f %5d (%.2f)%n", product.getProductName(), (double) product.getProductPrice(),
+                    cartProduct.getProductAmount(), (double) totalHarga);
         }
 
         // Output subtotal
@@ -389,23 +398,35 @@ public class SystemPembeli implements SystemMenu {
             return;
         }
 
+        String namaToko = null;
+        for (User user : userList) {
+            if (user instanceof Penjual penjual && penjual.getUsername().equals(namePenjual)) {
+                namaToko = penjual.getProductRepo().getNamaToko();
+                break;
+            }
+        }
+        if (namaToko == null) {
+            System.out.println("Nama toko tidak ditemukan. Transaksi dibatalkan.");
+            return;
+        }
+
         // Buat transaksi baru
         Transaksi transaksiBaru = new Transaksi(
-                "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1),
+                "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                        + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1),
                 activePembeli.getUsername(),
                 namePenjual, // Isi namePenjual langsung
                 null, // namePengirim tetap null sampai pengirim mengambil job
                 kodeDiskon.equalsIgnoreCase("skip") ? null : kodeDiskon,
                 produkDibeli,
-                pilihanPengiriman == 1 ? "Instant" : pilihanPengiriman == 2 ? "Next Day" : "Regular"
-        );
+                pilihanPengiriman == 1 ? "Instant" : pilihanPengiriman == 2 ? "Next Day" : "Regular",
+                namaToko);
 
         // Tambahkan transaksi ke dalam repository
         mainRepository.getTransaksiRepo().addTransaksi(transaksiBaru);
     }
 
     public void handleLacakBarang() {
-        // Menampilkan status barang berdasarkan transaksi pembeli
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaTransaksi = false;
         int transaksiCount = 0;
@@ -427,13 +448,15 @@ public class SystemPembeli implements SystemMenu {
                 if (transaksiCount > 0) {
                     System.out.println("---------------------------------");
                 }
+
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
                 System.out.printf("Tanggal         %s%n", tanggal);
-                System.out.printf("Toko            %s%n", transaksi.getNamePenjual());
+                System.out.printf("Toko            %s%n", transaksi.getNamaToko());
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
-
-                // Increment banyaknya transaksi
-                transaksiCount++;
+                if (transaksi.getNamePengirim() != null) {
+                    System.out.printf("Pengirim        %s%n", transaksi.getNamePengirim());
+                }
+                System.out.println("---------------------------------");
             }
         }
 
@@ -461,7 +484,8 @@ public class SystemPembeli implements SystemMenu {
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
 
                 // Format tanggal transaksi menggunakan formatter dengan locale Indonesia
-                System.out.printf("Tanggal         %s%n", LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"))));
+                System.out.printf("Tanggal         %s%n", LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"))));
                 System.out.println("---------------------------------");
 
                 // Tampilkan produk yang dibeli
@@ -484,7 +508,8 @@ public class SystemPembeli implements SystemMenu {
                         long totalHarga = product.getProductPrice() * produkTransaksi.getProductAmount();
                         subtotal += totalHarga;
                         System.out.printf("%-10s %10.2f %5d (%10.2f)%n", product.getProductName(),
-                                (double) product.getProductPrice(), produkTransaksi.getProductAmount(), (double) totalHarga);
+                                (double) product.getProductPrice(), produkTransaksi.getProductAmount(),
+                                (double) totalHarga);
                     }
                 }
 
@@ -538,8 +563,12 @@ public class SystemPembeli implements SystemMenu {
         }
     }
 
-    /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
-     * keterangan seluruh transaksi-transaksi yang dibuat oleh Pembeli yang logged in saat ini.*/
+    /**
+     * Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan,
+     * timestamp, dan
+     * keterangan seluruh transaksi-transaksi yang dibuat oleh Pembeli yang logged
+     * in saat ini.
+     */
     public void handleRiwayatTransaksi() {
         // Ambil daftar transaksi dari TransaksiRepository
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
@@ -560,7 +589,8 @@ public class SystemPembeli implements SystemMenu {
                 }
 
                 // Format tanggal transaksi
-                String tanggal = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID")));
+                String tanggal = LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID")));
 
                 // Hitung total nominal transaksi
                 double subtotal = 0;
@@ -602,7 +632,8 @@ public class SystemPembeli implements SystemMenu {
                 double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
 
                 // Tampilkan informasi transaksi
-                System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total, "Pembelian produk");
+                System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total,
+                        "Pembelian produk");
 
                 transaksiCount++;
             }

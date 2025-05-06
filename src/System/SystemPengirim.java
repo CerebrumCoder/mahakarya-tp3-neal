@@ -73,11 +73,10 @@ public class SystemPengirim implements SystemMenu {
     }
 
     public void handleFindJob() {
-        // Menampilkan semua transaksi yang belum diambil oleh pengirim
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         boolean adaPesanan = false;
+        int transaksiCount = 0;
 
-        int transaksiCount = 0; // Counter untuk jumlah transaksi
         System.out.println("=================================");
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePengirim() == null) { // Pesanan belum diambil
@@ -86,13 +85,12 @@ public class SystemPengirim implements SystemMenu {
                 if (transaksiCount > 0) {
                     System.out.println("---------------------------------");
                 }
+
                 System.out.println("Pesanan tersedia:");
                 System.out.printf("ID: %s%n", transaksi.getId());
                 System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
-                System.out.printf("Penjual: %s%n", transaksi.getNamePenjual());
-
-                // Tambah banyak transaksiCount untuk tampilkan garis "-----"
-                transaksiCount++;
+                System.out.printf("Penjual: %s%n", transaksi.getNamaToko());
+                System.out.println("---------------------------------");
             }
         }
 
@@ -105,7 +103,6 @@ public class SystemPengirim implements SystemMenu {
     public void handleTakeJob() {
         System.out.print("Masukkan ID transaksi yang ingin diambil: ");
         input.nextLine(); // Bersihkan buffer input
-        // Input IDTransaksi yang dimasukkan
         String idTransaksi = input.nextLine();
 
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
@@ -115,18 +112,23 @@ public class SystemPengirim implements SystemMenu {
                     System.out.println("Pesanan ini sudah diambil oleh pengirim lain.\n");
                     return;
                 }
-
+                
                 // Validasi tambahan: pastikan pengirim tidak mengambil pesanan yang bukan miliknya
                 if (transaksi.getNamePembeli().equals(activePengirim.getUsername())) {
                     System.out.println("Anda tidak dapat mengambil pesanan ini karena bukan pembeli terkait\n");
+                    return;
+                }
+                
+                // Validasi apakah pesanan sudah melewati tanggal pengiriman
+                if (transaksi.getCurrentStatus().equals("Melewati Tanggal Pengiriman")) {
+                    System.out.println("Pesanan sudah melewati tanggal pengiriman!\n");
                     return;
                 }
 
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s.", activePengirim.getUsername());
-                System.out.println("\n");
+                System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
                 return;
             }
         }
@@ -152,7 +154,23 @@ public class SystemPengirim implements SystemMenu {
     }
 
     public void handleRiwayatTransaksi() {
-        System.out.println("Lihat Riwayat Transaksi dipilih. Implementasi di sini.");
-        // Implementasi untuk melihat riwayat transaksi pengiriman
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        boolean adaTransaksi = false;
+
+        System.out.println("=================================");
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePengirim() != null && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
+                adaTransaksi = true;
+                System.out.printf("ID Transaksi    %s%n", transaksi.getId());
+                System.out.printf("Tanggal         %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                System.out.printf("Pendapatan      %d%n", transaksi.getBiayaOngkir());
+                System.out.println("---------------------------------");
+            }
+        }
+
+        if (!adaTransaksi) {
+            System.out.println("Tidak ada riwayat transaksi.");
+        }
+        System.out.println("=================================\n");
     }
 }

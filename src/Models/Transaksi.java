@@ -11,13 +11,14 @@ public class Transaksi {
     private String namePenjual; // Nama penjual dari objek transaksi
     private String namePengirim; // Nama pengirim dari objek transaksi
     private String idDiskon; // ID diskon yang digunakan pada transaksi
+    private String namaToko; // Tambah properti namaToko
     private List<TransactionProduct> produkDibeli; // List produk yang dibeli pada transaksi
     private String jenisTransaksi; // Jenis transaksi: "Instant", "Next Day", atau "Regular"
     private long biayaOngkir; // Biaya ongkir berdasarkan jenis transaksi
     private List<TransactionStatus> historyStatus; // History status pengiriman dari transaksi
 
     public Transaksi(String id, String namePembeli, String namePenjual, String namePengirim, String idDiskon,
-                     List<TransactionProduct> produkDibeli, String jenisTransaksi) {
+                     List<TransactionProduct> produkDibeli, String jenisTransaksi, String namaToko) {
         this.id = id;
         this.namePembeli = namePembeli;
         this.namePenjual = namePenjual;
@@ -25,6 +26,7 @@ public class Transaksi {
         this.idDiskon = idDiskon;
         this.produkDibeli = produkDibeli;
         this.jenisTransaksi = jenisTransaksi;
+        this.namaToko = namaToko;
         this.historyStatus = new ArrayList<>();
 
         // Menentukan biaya ongkir berdasarkan jenis transaksi
@@ -61,6 +63,10 @@ public class Transaksi {
 
     public String getIdDiskon() {
         return idDiskon;
+    }
+
+    public String getNamaToko() {
+        return namaToko;
     }
 
     public List<TransactionProduct> getProdukDibeli() {
