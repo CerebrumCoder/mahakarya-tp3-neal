@@ -141,13 +141,10 @@ public class SystemPembeli implements SystemMenu {
     }
 
     public void handleTambahKeKeranjang() {
-        // Implementasi untuk menambah barang ke keranjang
-        // Nambah barang ke keranjang
-
-        // Input toko penjual
-        System.out.print("Masukkan toko penjual barang yang ingin dibeli: ");
+        // Input nama penjual
+        System.out.print("Masukkan nama penjual barang yang ingin dibeli: ");
         input.nextLine(); // Membersihkan buffer sebelum membaca input
-        String namaToko = input.nextLine(); // Gunakan nextLine() untuk membaca namaToko
+        String namaPenjual = input.nextLine(); // Gunakan nextLine() untuk membaca namaPenjual
 
         // Input nama barang
         System.out.print("Masukkan nama barang yang ingin dibeli: ");
@@ -160,16 +157,16 @@ public class SystemPembeli implements SystemMenu {
         List<User> userList = mainRepository.getUserRepo().getAll();
         Penjual penjualDitemukan = null;
 
-        // Cari penjual berdasarkan nama toko
+        // Cari penjual berdasarkan nama penjual
         for (User user : userList) {
-            if (user instanceof Penjual penjual && penjual.getProductRepo().getNamaToko().equalsIgnoreCase(namaToko)) {
+            if (user instanceof Penjual penjual && penjual.getUsername().equalsIgnoreCase(namaPenjual)) {
                 penjualDitemukan = penjual;
                 break;
             }
         }
 
         if (penjualDitemukan == null) {
-            System.out.println("Toko dengan nama " + namaToko + " tidak ditemukan.");
+            System.out.println("Penjual dengan nama " + namaPenjual + " tidak ditemukan.");
             return;
         }
 
@@ -183,32 +180,32 @@ public class SystemPembeli implements SystemMenu {
         }
 
         if (produkDitemukan == null) {
-            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan di toko " + namaToko + "!");
+            System.out.println("Barang dengan nama " + namaBarang + " tidak ditemukan pada penjual " + namaPenjual + "!");
             return;
         }
 
-        // Cek apakah keranjang sudah memiliki barang dari toko lain
+        // Cek apakah keranjang sudah memiliki barang dari penjual lain
         List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
         if (!keranjangList.isEmpty()) {
-            // Ambil semua toko dari produk di keranjang
-            String tokoKeranjang = null;
+            // Ambil semua penjual dari produk di keranjang
+            String penjualKeranjang = null;
 
             for (CartProduct cartProduct : keranjangList) {
                 for (User user : userList) {
                     if (user instanceof Penjual penjual) {
                         Product product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
                         if (product != null) {
-                            tokoKeranjang = penjual.getProductRepo().getNamaToko();
+                            penjualKeranjang = penjual.getUsername();
                             break;
                         }
                     }
                 }
-                if (tokoKeranjang != null) break;
+                if (penjualKeranjang != null) break;
             }
 
-            // Jika toko berbeda, tanyakan kepada pengguna
-            if (tokoKeranjang != null && !tokoKeranjang.equalsIgnoreCase(namaToko)) {
-                System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari toko berbeda.");
+            // Jika penjual berbeda, tanyakan kepada pengguna
+            if (penjualKeranjang != null && !penjualKeranjang.equalsIgnoreCase(namaPenjual)) {
+                System.out.println("Anda sudah memiliki barang di keranjang yang berasal dari penjual berbeda.");
                 System.out.print("Kosongkan keranjang dan masukkan barang yang baru? (Y/N) ");
                 String konfirmasi = input.next();
 
@@ -217,13 +214,12 @@ public class SystemPembeli implements SystemMenu {
                     return;
                 }
 
-                // Hapus hanya barang dari toko berbeda pakai ['deleteFromCart']
+                // Hapus hanya barang dari penjual berbeda
                 for (CartProduct cp : new ArrayList<>(keranjangList)) {
                     for (User userX : userList) {
                         if (userX instanceof Penjual penjualX) {
                             Product p = penjualX.getProductRepo().getProductById(cp.getProductId());
-                            if (p != null && penjualX.getProductRepo().getNamaToko().equalsIgnoreCase(tokoKeranjang)) {
-                                // Delete cart sesuai UUID
+                            if (p != null && penjualX.getUsername().equalsIgnoreCase(penjualKeranjang)) {
                                 activePembeli.getCart().deleteFromCart(cp.getProductId());
                                 break;
                             }
@@ -233,8 +229,8 @@ public class SystemPembeli implements SystemMenu {
                 System.out.println("\nBarang berhasil ditambahkan!");
             }
         }
+
         // Tambahkan barang ke keranjang pembeli
-        // Kasih spasi
         System.out.println();
         activePembeli.getCart().addToCart(produkDitemukan.getProductId(), jumlahBarang);
     }
@@ -254,7 +250,7 @@ public class SystemPembeli implements SystemMenu {
         System.out.println("=================================");
         List<User> userList = mainRepository.getUserRepo().getAll();
         long subtotal = 0;
-        String namaToko = null; // Variabel untuk menyimpan nama toko terkait transaksi
+        String namePenjual = null; // Variabel untuk menyimpan nama penjual terkait transaksi
 
         for (CartProduct cartProduct : keranjangList) {
             Product product = null;
@@ -264,7 +260,7 @@ public class SystemPembeli implements SystemMenu {
                 if (user instanceof Penjual penjual) {
                     product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
                     if (product != null) {
-                        namaToko = penjual.getProductRepo().getNamaToko(); // Simpan nama toko terkait
+                        namePenjual = penjual.getUsername(); // Simpan nama penjual terkait
                         break;
                     }
                 }
@@ -385,9 +381,9 @@ public class SystemPembeli implements SystemMenu {
             produkDibeli.add(new TransactionProduct(cartProduct.getProductId(), cartProduct.getProductAmount()));
         }
 
-        // Pastikan nama toko ditemukan
-        if (namaToko == null) {
-            System.out.println("Nama toko tidak ditemukan. Transaksi dibatalkan.");
+        // Pastikan nama penjual ditemukan
+        if (namePenjual == null) {
+            System.out.println("Nama penjual tidak ditemukan. Transaksi dibatalkan.");
             return;
         }
 
@@ -395,7 +391,7 @@ public class SystemPembeli implements SystemMenu {
         Transaksi transaksiBaru = new Transaksi(
                 "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1),
                 activePembeli.getUsername(),
-                namaToko, // Isi namePenjual dengan nama toko
+                namePenjual, // Isi namePenjual langsung
                 null, // namePengirim tetap null sampai pengirim mengambil job
                 kodeDiskon.equalsIgnoreCase("skip") ? null : kodeDiskon,
                 produkDibeli,
