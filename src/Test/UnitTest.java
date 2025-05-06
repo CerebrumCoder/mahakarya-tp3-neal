@@ -349,5 +349,32 @@ class UnitTest {
         systemAdmin.handleGenerateVoucher();
         assertEquals(1, mainRepository.getVoucherRepo().getAll().size());
     }
+
+    @Test
+    void testProductValidationSuccess() {
+        Product validProduct = new Product("Valid Product", 10, 10000);
+        assertDoesNotThrow(() -> ProductValidator.validate(validProduct));
+    }
+
+    @Test
+    void testProductValidationEmptyName() {
+        Product invalidProduct = new Product("", 10, 10000);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ProductValidator.validate(invalidProduct));
+        assertEquals("Product name cannot be empty", exception.getMessage());
+    }
+
+    @Test
+    void testProductValidationNegativeStock() {
+        Product invalidProduct = new Product("Product", -5, 10000);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ProductValidator.validate(invalidProduct));
+        assertEquals("Stock cannot be negative", exception.getMessage());
+    }
+
+    @Test
+    void testProductValidationNegativePrice() {
+        Product invalidProduct = new Product("Product", 10, -10000);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ProductValidator.validate(invalidProduct));
+        assertEquals("Price must be positive", exception.getMessage());
+    }
 }
 

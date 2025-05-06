@@ -1,10 +1,28 @@
 package Models;
+
 import java.util.UUID;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface ProductValidation {
+    boolean allowNegative() default false;
+    String message() default "Invalid value for field";
+}
 
 public class Product {
     private UUID productId; // Identifier unik, di-generate otomatis saat inisiasi
+
+    @ProductValidation(message = "Product name cannot be empty")
     private String name; // Nama produk
+
+    @ProductValidation(allowNegative = false, message = "Stock cannot be negative")
     private int stok; // Stok produk
+
+    @ProductValidation(allowNegative = false, message = "Price must be positive")
     private long price; // Harga produk
 
     public Product(String name, int stok, long price) {
