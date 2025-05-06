@@ -225,25 +225,8 @@ public class SystemPenjual implements SystemMenu {
 
         if (!adaPesanan) {
             System.out.println("Tidak ada barang yang bisa dikirim!");
-            System.out.println("=================================\n");
-            return;
         }
-
-        // Memilih transaksi untuk dikirim
-        System.out.print("Masukkan ID transaksi yang ingin dikirim: ");
-        String idTransaksi = input.next();
-
-        for (Transaksi transaksi : transaksiList) {
-            if (transaksi.getId().equals(idTransaksi) &&
-                transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
-                transaksi.getNamePengirim() == null) {
-                System.out.printf("Pesanan berhasil diambil oleh %s.%n", transaksi.getNamePembeli());
-                transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKEMAS));
-                return;
-            }
-        }
-
-        System.out.println("Transaksi dengan ID tersebut tidak ditemukan atau sudah diambil oleh pengirim.");
+        System.out.println("=================================\n");
     }
 
     public void handleLaporanPendapatan() {

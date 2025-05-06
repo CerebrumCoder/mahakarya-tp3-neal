@@ -74,22 +74,22 @@ public class SystemPengirim implements SystemMenu {
     }
 
     public void handleTakeJob() {
-        // Mengambil pesanan berdasarkan ID
         System.out.print("Masukkan ID transaksi yang ingin diambil: ");
-        String idTransaksi = input.next();
+        input.nextLine(); // Bersihkan buffer input
+        String idTransaksi = input.nextLine();
 
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi)) {
                 if (transaksi.getNamePengirim() != null) {
-                    System.out.println("Tidak dapat mengambil pesanan ini.");
+                    System.out.println("Pesanan ini sudah diambil oleh pengirim lain.");
                     return;
                 }
 
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
-                transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
+                System.out.printf("Pesanan dengan ID %s berhasil diambil oleh %s.%n", transaksi.getId(), activePengirim.getUsername());
                 return;
             }
         }
