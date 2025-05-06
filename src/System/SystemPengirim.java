@@ -143,15 +143,15 @@ public class SystemPengirim implements SystemMenu {
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi) && transaksi.getNamePengirim().equals(activePengirim.getUsername())) {
-                if (!transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
+                if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKIRIM)) {
+                    // Ubah status menjadi "Pesanan Selesai"
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
+                    System.out.println("Pesanan berhasil diselesaikan oleh " + activePengirim.getUsername());
+                    return;
+                } else {
                     System.out.println("Pesanan tidak dapat dikonfirmasi. Status saat ini: " + transaksi.getCurrentStatus());
                     return;
                 }
-
-                // Ubah status menjadi "Pesanan Selesai"
-                transaksi.addStatus(new TransactionStatus(TransactionStatus.PESANAN_SELESAI));
-                System.out.println("Pesanan berhasil diselesaikan oleh " + activePengirim.getUsername() + ". Status diubah menjadi 'Pesanan Selesai'.");
-                return;
             }
         }
 
