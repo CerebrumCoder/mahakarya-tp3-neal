@@ -36,6 +36,10 @@ public class Transaksi {
         }
     }
 
+    public void setNamePengirim(String namePengirim) {
+        this.namePengirim = namePengirim;
+    }
+
     public String getId() {
         return id;
     }

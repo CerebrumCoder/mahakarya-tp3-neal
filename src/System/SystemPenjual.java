@@ -37,29 +37,25 @@ public class SystemPenjual implements SystemMenu {
     public void handleMenu() {
         while (true) {
             // try dan catch untuk antisipasi input bukan merupakan integer
-            try {
-                System.out.println(showMenu());
-                System.out.print("Perintah : ");
-                int choice = input.nextInt();
+            System.out.println(showMenu());
+            System.out.print("Perintah : ");
+            int choice = input.nextInt();
 
-                switch (choice) {
-                    case 1 -> handleCekProduk();
-                    case 2 -> handleTambahProduk();
-                    case 3 -> handleTambahStok();
-                    case 4 -> handleUbahHarga();
-                    case 5 -> handleKirimBarang();
-                    case 6 -> handleLaporanPendapatan();
-                    case 7 -> handleCekSaldo();
-                    case 8 -> handleRiwayatTransaksi();
-                    case 9 -> {
-                        return;
-                    }
-                    default -> System.out.println("Pilihan tidak valid.");
+            switch (choice) {
+                case 1 -> handleCekProduk();
+                case 2 -> handleTambahProduk();
+                case 3 -> handleTambahStok();
+                case 4 -> handleUbahHarga();
+                case 5 -> handleKirimBarang();
+                case 6 -> handleLaporanPendapatan();
+                case 7 -> handleCekSaldo();
+                case 8 -> handleRiwayatTransaksi();
+                case 9 -> {
+                    return;
                 }
-            } catch (Exception e) {
-                System.out.println("Input bukan integer. Input angka dari 1 hingga 9 saja.");
-                input.nextLine(); // Untuk membersihkan input buffer
+                default -> System.out.println("Pilihan tidak valid.");
             }
+
 
         }
     }
@@ -227,7 +223,7 @@ public class SystemPenjual implements SystemMenu {
         }
 
         if (!adaPesanan) {
-            System.out.println("Tidak ada pesanan yang menunggu pengiriman.");
+            System.out.println("Tidak ada barang yang bisa dikirim!");
             System.out.println("=================================\n");
             return;
         }
@@ -240,7 +236,7 @@ public class SystemPenjual implements SystemMenu {
             if (transaksi.getId().equals(idTransaksi) &&
                 transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
                 transaksi.getNamePengirim() == null) {
-                System.out.println("Pesanan berhasil disiapkan untuk pengiriman.");
+                System.out.println("Pesanan berhasil diambil oleh " + transaksi.getNamePembeli());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKEMAS));
                 return;
             }
