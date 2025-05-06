@@ -3,6 +3,7 @@ package System;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 import Models.*;
 import Main.Burhanpedia;
@@ -413,12 +414,17 @@ public class SystemPembeli implements SystemMenu {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
                 adaTransaksi = true;
 
-                // Format tanggal menggunakan formatter dengan locale Indonesia
-//                String tanggal = transaksi.getHistoryStatus().isEmpty() ? "Tanggal tidak tersedia"
-//                        : ;
+                // Format tanggal menggunakan SimpleDateFormat
+                String tanggal;
+                if (transaksi.getHistoryStatus().isEmpty()) {
+                    tanggal = "Tanggal tidak tersedia";
+                } else {
+                    SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+                    tanggal = formatter.format(transaksi.getHistoryStatus().get(0).getTimestamp());
+                }
 
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
-                System.out.printf("Tanggal         %s%n", transaksi.getHistoryStatus().get(0).getTimestamp());
+                System.out.printf("Tanggal         %s%n", tanggal);
                 System.out.printf("Toko            %s%n", transaksi.getNamePenjual());
                 System.out.printf("Status          %s%n", transaksi.getCurrentStatus());
                 System.out.println("---------------------------------");
