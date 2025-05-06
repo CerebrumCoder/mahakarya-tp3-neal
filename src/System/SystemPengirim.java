@@ -38,7 +38,7 @@ public class SystemPengirim implements SystemMenu {
     public void handleMenu() {
         while (true) {
             System.out.println(showMenu());
-            System.out.print("Pilih menu: ");
+            System.out.print("Perintah : ");
             int choice = input.nextInt();
 
             switch (choice) {
@@ -113,7 +113,8 @@ public class SystemPengirim implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi)) {
                 if (!transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
-                    System.out.println("Pesanan tidak dapat diambil. Status saat ini: " + transaksi.getCurrentStatus() + "\n");
+                    System.out.println("Tidak dapat mengambil pesanan ini." + "\n");
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.MENUNGGU_PENGIRIM));
                     return;
                 }
                 // Validasi apakah pesanan sudah melewati tanggal pengiriman
@@ -125,7 +126,7 @@ public class SystemPengirim implements SystemMenu {
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s. Status diubah menjadi 'Sedang Dikirim'.%n", activePengirim.getUsername() + "\n");
+                System.out.printf("Pesanan berhasil diambil oleh %s. Status diubah menjadi 'Sedang Dikirim'.%n", activePengirim.getUsername());
                 return;
             }
         }
