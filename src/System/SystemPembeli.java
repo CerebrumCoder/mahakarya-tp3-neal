@@ -514,8 +514,7 @@ public class SystemPembeli implements SystemMenu {
     /**Informasi yang akan ditampilkan meliputi Id transaksi, jumlah pendapatan, timestamp, dan
      * keterangan seluruh transaksi-transaksi yang dibuat oleh Pembeli yang logged in saat ini.*/
     public void handleRiwayatTransaksi() {
-        // Implementasi untuk melihat riwayat transaksi
-        // Ambil daftar transaksi dari TransaksiRepository.java
+        // Ambil daftar transaksi dari TransaksiRepository
         List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
 
         // Filter transaksi berdasarkan nama pembeli
@@ -524,6 +523,11 @@ public class SystemPembeli implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
                 adaTransaksi = true;
+
+                // Tampilkan header jika ada transaksi
+                System.out.println("======= RIWAYAT TRANSAKSI =======");
+                System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
+                System.out.println("------------------------------------------------------------");
 
                 // Format tanggal transaksi
                 String tanggal = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID")));
@@ -573,15 +577,13 @@ public class SystemPembeli implements SystemMenu {
         }
 
         if (!adaTransaksi) {
+            // Jika tidak ada transaksi
             System.out.println("======= RIWAYAT TRANSAKSI =======");
             System.out.println("Riwayat transaksi masih kosong!");
             System.out.println("=================================\n");
         } else {
-            System.out.println("===================== RIWAYAT TRANSAKSI =====================");
-            System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
-            System.out.println("------------------------------------------------------------");
+            // Jika ada transaksi
+            System.out.println("============================================================\n");
         }
-        System.out.println("=============================================================");
-
     }
 }
