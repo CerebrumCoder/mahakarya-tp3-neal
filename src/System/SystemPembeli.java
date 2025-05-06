@@ -299,7 +299,7 @@ public class SystemPembeli implements SystemMenu {
         System.out.print("Kode: ");
         String kodeDiskon = input.next();
         double hargaDiskon = 0;
-        double subtotalSetelahDiskon = 0;
+        double subtotalSetelahDiskon = subtotal;
 
         // Antisipasi kalo salah masukin voucher, jadinya dijadiin while loop
         while (true) {
@@ -312,10 +312,14 @@ public class SystemPembeli implements SystemMenu {
                 if (voucher != null && voucher.isValid(new Date())) {
                     int persenDiskon = voucher.calculateDisc();
                     hargaDiskon = subtotal * persenDiskon / 100.0;
-                    subtotalSetelahDiskon = subtotal - hargaDiskon;
+                    // Ini tadi ada perubahan
+                    subtotalSetelahDiskon -= hargaDiskon;
 
                     // Kurangi sisa pemakaian Voucher (nanti ditambah)
-
+                    voucher.setSisaPemakaian(voucher.getSisaPemakaian() - 1);
+                    if (voucher.getSisaPemakaian() <= 0) {
+                        mainRepository.getVoucherRepo().getAll().remove(voucher);
+                    }
 
                     System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
                     break;
@@ -323,7 +327,7 @@ public class SystemPembeli implements SystemMenu {
                     // Hitung diskon berdasarkan promo
                     int persenDiskon = promo.calculateDisc();
                     hargaDiskon = subtotal * persenDiskon / 100.0;
-                    subtotalSetelahDiskon = subtotal - hargaDiskon;
+                    subtotalSetelahDiskon -= hargaDiskon;
 
                     System.out.println("Promo diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
                     break;
@@ -357,8 +361,8 @@ public class SystemPembeli implements SystemMenu {
         double pajak = subtotalSetelahDiskon * 0.03;
 
         // Ini untuk output nanti di "Saldo saat in: "
-        double totalAkhirTanpaPengiriman = subtotalSetelahDiskon - pajak;
-        double totalAkhir = subtotalSetelahDiskon - pajak + biayaPengiriman;
+//        double totalAkhirTanpaPengiriman = subtotalSetelahDiskon - pajak;
+        double totalAkhir = subtotalSetelahDiskon + pajak + biayaPengiriman;
 
         // Cek saldo pembeli
         if (activePembeli.getBalance() < totalAkhir) {
@@ -366,8 +370,8 @@ public class SystemPembeli implements SystemMenu {
             return;
         }
 
-        activePembeli.setBalance((long) totalAkhir);
-        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", totalAkhirTanpaPengiriman);
+        activePembeli.setBalance((long) (activePembeli.getBalance() - totalAkhir));
+        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
         System.out.println("\n");
 
         // Kurangi stok produk sesuai jumlah yang dibeli.
@@ -387,17 +391,13 @@ public class SystemPembeli implements SystemMenu {
         }
 
         // Menambahkan transaksi ke TransaksiRepository.java
-        // Ini Date Formatter untuk di TRX tanggal nanti dalam waktu Indonesia
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
-        String idTransaksi = "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1);
-
         // List produkDibeli
         List<TransactionProduct> produkDibeli = new ArrayList<>();
         for (CartProduct cartProduct : keranjangList) {
             produkDibeli.add(new TransactionProduct(cartProduct.getProductId(), cartProduct.getProductAmount()));
         }
         Transaksi transaksiBaru = new Transaksi(
-                idTransaksi,
+                "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1),
                 activePembeli.getUsername(),
                 null, //nama penjual,
                 null,
@@ -423,7 +423,6 @@ public class SystemPembeli implements SystemMenu {
         // Filter transaksi berdasarkan nama pembeli
         boolean adaTransaksi = false;
         double totalPengeluaran = 0;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
 
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getNamePembeli().equals(activePembeli.getUsername())) {
@@ -434,8 +433,7 @@ public class SystemPembeli implements SystemMenu {
                 System.out.printf("ID Transaksi    %s%n", transaksi.getId());
 
                 // Format tanggal transaksi menggunakan formatter dengan locale Indonesia
-                String formattedDate = LocalDateTime.now().format(formatter);
-                System.out.printf("Tanggal         %s%n", formattedDate);
+                System.out.printf("Tanggal         %s%n", LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"))));
                 System.out.println("---------------------------------");
 
                 // Tampilkan produk yang dibeli
@@ -464,18 +462,18 @@ public class SystemPembeli implements SystemMenu {
 
                 // Hitung diskon, pajak, dan total
                 double hargaDiskon = 0;
-                double subtotalSetelahDiskon = 0;
+                // double subtotalSetelahDiskon = 0;
                 if (transaksi.getIdDiskon() != null) {
                     Voucher voucher = mainRepository.getVoucherRepo().getById(transaksi.getIdDiskon());
                     if (voucher != null) {
                         int persenDiskon = voucher.calculateDisc();
                         hargaDiskon = subtotal * persenDiskon / 100.0;
-                        subtotalSetelahDiskon = subtotal - hargaDiskon;
+                        // subtotalSetelahDiskon = subtotal - hargaDiskon;
                     }
                 }
 
                 double pajak = subtotal * 0.03; // Pajak 3%
-                double total = subtotalSetelahDiskon + pajak + transaksi.getBiayaOngkir();
+                double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
 
                 // Tambahkan ke total pengeluaran
                 totalPengeluaran += total;

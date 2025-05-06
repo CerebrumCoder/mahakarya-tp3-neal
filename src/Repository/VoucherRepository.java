@@ -49,6 +49,11 @@ public class VoucherRepository implements DiskonRepository<Voucher> {
         // System.out.println("Voucher: " + newVoucher);
     }
 
+    // Apus voucher kalo sisaPemakaiannya = 0
+    public void removeVoucher(Voucher voucher) {
+        voucherList.remove(voucher);
+    }
+
     // Method generate dengan parameter String untuk batas tanggal waktu pemakaian. Ini kurang tahu dipakai ato engga
     // ini ada sesuai diagram class di file TP3
 //    public void generate(String expiryDateInput) {

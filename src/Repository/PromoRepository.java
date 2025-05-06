@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import Models.Promo;
+import Models.Voucher;
 
 public class PromoRepository implements DiskonRepository<Promo> {
     private List<Promo> promoList; // Menyimpan seluruh objek Promo
@@ -76,5 +77,10 @@ public class PromoRepository implements DiskonRepository<Promo> {
 
         // Langkah 3: Format kode promo
         return randomString + shortenedTimestamp;
+    }
+
+    // Apus promo kalo udah pernah kepaki
+    public void removePromo(Promo promo) {
+        promoList.remove(promo);
     }
 }

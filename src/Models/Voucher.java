@@ -47,6 +47,11 @@ public class Voucher {
         return this.berlakuHingga;
     }
 
+    // setSisaPemakaian() kalo ada perubahan kurangnya pemakaian voucher
+    public void setSisaPemakaian(int sisaPemakaian) {
+        this.sisaPemakaian = sisaPemakaian;
+    }
+
     public void setBerlakuHingga(Date berlakuHingga) {
         this.berlakuHingga = berlakuHingga;
     }
