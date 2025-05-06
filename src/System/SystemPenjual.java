@@ -211,26 +211,42 @@ public class SystemPenjual implements SystemMenu {
     }
 
     public void handleKirimBarang() {
-        // Implementasi untuk kirim barang
-        // Ambil semua productList di dalam ProductRepository.java
-        List<Product> productList = activePenjual.getProductRepo().getProductList();
+        // Menampilkan semua transaksi yang menunggu pengiriman
+        List<Transaksi> transaksiList = mainRepository.getTransaksiRepo().getList();
+        boolean adaPesanan = false;
 
-        // Cek apakah ada produk dengan stok > 0
-        // Disini baru mulai perlu ada perubahan, karena kirimBarang harusnya bukan berdasarkan ini
-        boolean adaBarang = false;
-        for (Product product : productList) {
-            if (product.getProductStock() > 0) {
-                adaBarang = true;
-                break;
+        System.out.println("=================================");
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
+                transaksi.getNamePengirim() == null) { // Pesanan belum diambil oleh pengirim
+                adaPesanan = true;
+                System.out.printf("ID Transaksi: %s%n", transaksi.getId());
+                System.out.printf("Pembeli: %s%n", transaksi.getNamePembeli());
+                System.out.println("---------------------------------");
             }
         }
 
-        // Cek apakah ada barang atau tidak dengan bantuan boolean
+        if (!adaPesanan) {
+            System.out.println("Tidak ada pesanan yang menunggu pengiriman.");
+            System.out.println("=================================\n");
+            return;
+        }
 
-        System.out.println("=================================");
-        System.out.println("Tidak ada barang yang bisa dikirim!");
-        System.out.println("=================================\n");
+        // Memilih transaksi untuk dikirim
+        System.out.print("Masukkan ID transaksi yang ingin dikirim: ");
+        String idTransaksi = input.next();
 
+        for (Transaksi transaksi : transaksiList) {
+            if (transaksi.getId().equals(idTransaksi) &&
+                transaksi.getNamePenjual().equals(activePenjual.getUsername()) &&
+                transaksi.getNamePengirim() == null) {
+                System.out.println("Pesanan berhasil disiapkan untuk pengiriman.");
+                transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKEMAS));
+                return;
+            }
+        }
+
+        System.out.println("Transaksi dengan ID tersebut tidak ditemukan atau sudah diambil oleh pengirim.");
     }
 
     public void handleLaporanPendapatan() {
