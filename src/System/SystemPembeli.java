@@ -240,7 +240,6 @@ public class SystemPembeli implements SystemMenu {
     }
 
     public void handleCheckout() {
-        // Implementasi untuk checkout keranjang
         // Ambil isi keranjang
         List<CartProduct> keranjangList = activePembeli.getCart().getCartContent();
 
@@ -255,6 +254,8 @@ public class SystemPembeli implements SystemMenu {
         System.out.println("=================================");
         List<User> userList = mainRepository.getUserRepo().getAll();
         long subtotal = 0;
+        String namaToko = null; // Variabel untuk menyimpan nama toko terkait transaksi
+
         for (CartProduct cartProduct : keranjangList) {
             Product product = null;
 
@@ -263,6 +264,7 @@ public class SystemPembeli implements SystemMenu {
                 if (user instanceof Penjual penjual) {
                     product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
                     if (product != null) {
+                        namaToko = penjual.getProductRepo().getNamaToko(); // Simpan nama toko terkait
                         break;
                     }
                 }
@@ -272,7 +274,7 @@ public class SystemPembeli implements SystemMenu {
                 return; // Jika ada produk yang tidak ditemukan, batalkan checkout
             }
 
-            // Ini mengkalikan harga produk dengan banyak produk yang dibeli sama User. Gunakan jumlah dari CartProduct, bukan stok produk
+            // Hitung total harga produk
             long totalHarga = product.getProductPrice() * cartProduct.getProductAmount();
             subtotal += totalHarga;
 
@@ -285,7 +287,7 @@ public class SystemPembeli implements SystemMenu {
         System.out.printf("Subtotal %10.2f%n", (double) subtotal);
         System.out.println("=================================");
 
-        // Konfirmasi pembelian. Kalo tidak sama dengan Y maka Checkout dibatalkan
+        // Konfirmasi pembelian
         System.out.print("Apakah Anda yakin dengan produknya? (Y/N): ");
         String konfirmasi = input.next();
         if (!konfirmasi.equalsIgnoreCase("Y")) {
@@ -301,21 +303,18 @@ public class SystemPembeli implements SystemMenu {
         double hargaDiskon = 0;
         double subtotalSetelahDiskon = subtotal;
 
-        // Antisipasi kalo salah masukin voucher, jadinya dijadiin while loop
+        // Validasi kode diskon
         while (true) {
             if (!kodeDiskon.equalsIgnoreCase("skip")) {
-
-                // Kalo user masukin kode voucher atau promo
                 Voucher voucher = mainRepository.getVoucherRepo().getById(kodeDiskon);
                 Promo promo = mainRepository.getPromoRepo().getById(kodeDiskon);
 
                 if (voucher != null && voucher.isValid(new Date())) {
                     int persenDiskon = voucher.calculateDisc();
                     hargaDiskon = subtotal * persenDiskon / 100.0;
-                    // Ini tadi ada perubahan
                     subtotalSetelahDiskon -= hargaDiskon;
 
-                    // Kurangi sisa pemakaian Voucher (nanti ditambah)
+                    // Kurangi sisa pemakaian voucher
                     voucher.setSisaPemakaian(voucher.getSisaPemakaian() - 1);
                     if (voucher.getSisaPemakaian() <= 0) {
                         mainRepository.getVoucherRepo().getAll().remove(voucher);
@@ -324,7 +323,6 @@ public class SystemPembeli implements SystemMenu {
                     System.out.println("Voucher diterapkan! Total harga setelah diskon: " + subtotalSetelahDiskon);
                     break;
                 } else if (promo != null && promo.isValid(new Date())) {
-                    // Hitung diskon berdasarkan promo
                     int persenDiskon = promo.calculateDisc();
                     hargaDiskon = subtotal * persenDiskon / 100.0;
                     subtotalSetelahDiskon -= hargaDiskon;
@@ -335,10 +333,8 @@ public class SystemPembeli implements SystemMenu {
                     System.out.println("Voucher tidak valid atau sudah kadaluarsa!");
                     return;
                 }
-            }
-            else {
-                System.out.println("Checkout batal!");
-                return;
+            } else {
+                break;
             }
         }
 
@@ -353,16 +349,11 @@ public class SystemPembeli implements SystemMenu {
             case 1 -> 20000;
             case 2 -> 15000;
             case 3 -> 10000;
-
-            // Implementasi try catch
             default -> throw new IllegalStateException("Unexpected value: " + pilihanPengiriman);
         };
 
-        // Hitung total akhir + pajak
+        // Hitung total akhir
         double pajak = subtotalSetelahDiskon * 0.03;
-
-        // Ini untuk output nanti di "Saldo saat in: "
-//        double totalAkhirTanpaPengiriman = subtotalSetelahDiskon - pajak;
         double totalAkhir = subtotalSetelahDiskon + pajak + biayaPengiriman;
 
         // Cek saldo pembeli
@@ -371,19 +362,16 @@ public class SystemPembeli implements SystemMenu {
             return;
         }
 
+        // Kurangi saldo pembeli
         activePembeli.setBalance((long) (activePembeli.getBalance() - totalAkhir));
-        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f", (double) activePembeli.getBalance());
-        System.out.println("\n");
+        System.out.printf("Pembelian sukses! Saldo saat ini: %.2f%n", (double) activePembeli.getBalance());
 
-        // Kurangi stok produk sesuai jumlah yang dibeli.
-        // Ini krusial pas nanti di MenuPembeli user klik "Cek Daftar Barang"
+        // Kurangi stok produk sesuai jumlah yang dibeli
         for (CartProduct cartProduct : keranjangList) {
             for (User user : userList) {
                 if (user instanceof Penjual penjual) {
                     Product product = penjual.getProductRepo().getProductById(cartProduct.getProductId());
                     if (product != null) {
-
-                        // Jadi ini ngurangin stokProduk yang ada dengan yang diinput pembeli. Terus diupdate
                         int stokBaru = product.getProductStock() - cartProduct.getProductAmount();
                         product.setProductStock(stokBaru);
                     }
@@ -391,24 +379,32 @@ public class SystemPembeli implements SystemMenu {
             }
         }
 
-        // Menambahkan transaksi ke TransaksiRepository.java
-        // List produkDibeli
+        // Tambahkan transaksi ke repository
         List<TransactionProduct> produkDibeli = new ArrayList<>();
         for (CartProduct cartProduct : keranjangList) {
             produkDibeli.add(new TransactionProduct(cartProduct.getProductId(), cartProduct.getProductAmount()));
         }
+
+        // Pastikan nama toko ditemukan
+        if (namaToko == null) {
+            System.out.println("Nama toko tidak ditemukan. Transaksi dibatalkan.");
+            return;
+        }
+
+        // Buat transaksi baru
         Transaksi transaksiBaru = new Transaksi(
                 "TRX" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%04d", mainRepository.getTransaksiRepo().getList().size() + 1),
                 activePembeli.getUsername(),
-                null, //nama penjual,
-                null,
+                namaToko, // Isi namePenjual dengan nama toko
+                null, // namePengirim tetap null sampai pengirim mengambil job
                 kodeDiskon.equalsIgnoreCase("skip") ? null : kodeDiskon,
                 produkDibeli,
                 pilihanPengiriman == 1 ? "Instant" : pilihanPengiriman == 2 ? "Next Day" : "Regular"
         );
 
-        // Tambah Transaksi ke dalam list transaksi
+        // Tambahkan transaksi ke dalam repository
         mainRepository.getTransaksiRepo().addTransaksi(transaksiBaru);
+        System.out.println("Transaksi berhasil dibuat!");
     }
 
     public void handleLacakBarang() {
