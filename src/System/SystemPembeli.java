@@ -525,7 +525,7 @@ public class SystemPembeli implements SystemMenu {
                 adaTransaksi = true;
 
                 // Tampilkan header jika ada transaksi
-                System.out.println("======= RIWAYAT TRANSAKSI =======");
+                System.out.println("===================== RIWAYAT TRANSAKSI =====================");
                 System.out.printf("%-15s %-15s %-10s %-20s%n", "ID Transaksi", "Tanggal", "Nominal", "Keterangan");
                 System.out.println("------------------------------------------------------------");
 
@@ -572,7 +572,7 @@ public class SystemPembeli implements SystemMenu {
                 double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
 
                 // Tampilkan informasi transaksi
-                System.out.printf("%-15s %-15s %-10.2f %-20s%n", transaksi.getId(), tanggal, total, "Pembelian produk");
+                System.out.printf("%-15s %-15s - %-10.2f %-20s%n", transaksi.getId(), tanggal, total, "Pembelian produk");
             }
         }
 
