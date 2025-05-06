@@ -112,20 +112,21 @@ public class SystemPengirim implements SystemMenu {
         for (Transaksi transaksi : transaksiList) {
             if (transaksi.getId().equals(idTransaksi)) {
                 if (transaksi.getNamePengirim() != null) {
-                    System.out.println("Pesanan ini sudah diambil oleh pengirim lain.");
+                    System.out.println("Pesanan ini sudah diambil oleh pengirim lain.\n");
                     return;
                 }
 
                 // Validasi tambahan: pastikan pengirim tidak mengambil pesanan yang bukan miliknya
-                if (!transaksi.getNamePembeli().equals(activePengirim.getUsername())) {
-                    System.out.println("Anda tidak dapat mengambil pesanan ini karena bukan pembeli terkait");
+                if (transaksi.getNamePembeli().equals(activePengirim.getUsername())) {
+                    System.out.println("Anda tidak dapat mengambil pesanan ini karena bukan pembeli terkait\n");
                     return;
                 }
 
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s.%n", activePengirim.getUsername());
+                System.out.printf("Pesanan berhasil diambil oleh %s.", activePengirim.getUsername());
+                System.out.println("\n");
                 return;
             }
         }
