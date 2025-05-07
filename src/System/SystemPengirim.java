@@ -115,21 +115,20 @@ public class SystemPengirim implements SystemMenu {
 
                 // Validasi apakah pesanan sudah melewati tanggal pengiriman
                 if (transaksi.getCurrentStatus().equals(TransactionStatus.DIKEMBALIKAN)) {
-                    transaksi.setNamePengirim(activePengirim.getUsername());
                     System.out.println("Pesanan sudah melewati tanggal pengiriman!\n");
                     return;
                 }
 
+                // Validasi apakah status transaksi adalah MENUNGGU_PENGIRIM
                 if (!transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
-                    System.out.println("Tidak dapat mengambil pesanan ini." + "\n");
+                    System.out.println("Tidak dapat mengambil pesanan ini.\n");
                     return;
                 }
-                
+
                 // Set pengirim untuk transaksi
                 transaksi.setNamePengirim(activePengirim.getUsername());
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
-                System.out.printf("Pesanan berhasil diambil oleh %s. ", activePengirim.getUsername());
-                System.out.println("\n");
+                System.out.printf("Pesanan berhasil diambil oleh %s.\n", activePengirim.getUsername());
                 return;
             }
         }
