@@ -453,7 +453,7 @@ public class SystemPembeli implements SystemMenu {
 
                 // Perbarui status transaksi secara bertahap
                 String currentStatus = transaksi.getCurrentStatus();
-                if (currentStatus.equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
+                if (currentStatus.equals(TransactionStatus.MENUNGGU_PENGIRIM) && transaksi.getNamePengirim() != null) {
                     transaksi.addStatus(new TransactionStatus(TransactionStatus.SEDANG_DIKIRIM));
                 }
 
