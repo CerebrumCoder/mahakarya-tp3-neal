@@ -119,8 +119,16 @@ public class SystemPengirim implements SystemMenu {
                     return;
                 }
 
-                if (!transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
+                // Validasi apakah pengirim mencoba mengambil pesanan miliknya sendiri
+                // Alur logika yang kelupaan
+                if (transaksi.getNamePembeli().equals(activePengirim.getUsername())) {
                     System.out.println("Tidak dapat mengambil pesanan ini." + "\n");
+                    return;
+                }
+
+                // Validasi apakah pesanan sudah diambil oleh pengirim lain
+                if (transaksi.getNamePengirim() != null) {
+                    System.out.println("Pesanan sudah diambil oleh pengirim lain." + "\n");
                     return;
                 }
                 

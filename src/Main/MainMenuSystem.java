@@ -312,9 +312,16 @@ public class MainMenuSystem implements SystemMenu {
 
             // Kalo sekarang status SEDANG_DIKEMAS dan hari sudah berubah, maka ubah statusnya menjadi DIKEMBALIKAN
             // Cek logika nantinya untuk TRX...02 kan dia dari awal masih dikemas
-            } else if (currentDate.after(lastStatusDate) && transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKEMAS)) {
+            } else if (transaksi.getCurrentStatus().equals(TransactionStatus.SEDANG_DIKEMAS)) {
                 transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
                 transaksi.refund(mainRepository);
+            }
+            // Jika status sekarang "Menunggu Pengirim" dan hari sudah berubah, ubah status menjadi "Dikembalikan"
+            else if (transaksi.getCurrentStatus().equals(TransactionStatus.MENUNGGU_PENGIRIM)) {
+                if (currentDate.after(lastStatusDate)) {
+                    transaksi.addStatus(new TransactionStatus(TransactionStatus.DIKEMBALIKAN));
+                    transaksi.refund(mainRepository);
+                }
             }
         }
         System.out.println("Tanggal : " + tanggal);
