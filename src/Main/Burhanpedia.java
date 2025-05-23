@@ -104,8 +104,7 @@ public class Burhanpedia {
         }
 
         // Hitung total transaksi
-        double pajak = subtotal * 0.03; // Pajak 3%
-        double total = subtotal - hargaDiskon + pajak + transaksi.getBiayaOngkir();
+        double total = subtotal - hargaDiskon + transaksi.getBiayaOngkir();
 
         return Math.round(total); // Kembalikan total transaksi dalam bentuk long
     }
